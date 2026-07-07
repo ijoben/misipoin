@@ -1491,6 +1491,7 @@
 </head>
 <body>
 
+    <!-- GLOW ORBS -->
     <div class="glow-orb glow-orb-1"></div>
     <div class="glow-orb glow-orb-2"></div>
 
@@ -1611,7 +1612,7 @@
                             <div class="slide-icon"><i class="fas fa-crown"></i></div>
                             <h3>VIP Premium</h3>
                             <p>Upgrade VIP untuk mendapatkan <span class="slide-highlight">20x</span> kuota misi dan <span class="slide-highlight">2x lipat</span> poin setiap misi!</p>
-                            <span class="slide-badge">👑 Hanya 10.000 Poin</span>
+                            <span class="slide-badge">👑 Bayar via QRIS</span>
                         </div>
                         <div class="slider-slide" data-index="3">
                             <div class="slide-icon"><i class="fas fa-wallet"></i></div>
@@ -1649,7 +1650,7 @@
                         <div class="m-icon yt"><i class="fab fa-youtube"></i></div>
                         <div class="m-info">
                             <div class="m-title">Nonton YouTube</div>
-                            <div class="m-desc">15 detik • Fullscreen</div>
+                            <div class="m-desc">15 detik • Autoplay</div>
                             <div class="m-reward">+<span id="ytRewardDisplay">10</span> poin <span class="quota-badge" id="ytQuota">0/5</span></div>
                         </div>
                         <button class="m-btn" data-mission="yt" id="ytBtn">Tonton</button>
@@ -1659,7 +1660,7 @@
                         <div class="m-icon iklan"><i class="fas fa-ad"></i></div>
                         <div class="m-info">
                             <div class="m-title">Tonton Iklan</div>
-                            <div class="m-desc">15 detik • Fullscreen</div>
+                            <div class="m-desc">15 detik • Autoplay</div>
                             <div class="m-reward">+<span id="iklanRewardDisplay">5</span> poin <span class="quota-badge" id="iklanQuota">0/5</span></div>
                         </div>
                         <button class="m-btn" data-mission="iklan" id="iklanBtn">Tonton</button>
@@ -1682,10 +1683,10 @@
                         <i class="fas fa-crown"></i>
                         <div class="vip-text">
                             <h4>VIP <span id="vipStatusText">Tidak Aktif</span></h4>
-                            <p id="vipDesc">Free: 5x/hari • VIP: 20x/hari</p>
+                            <p id="vipDesc">Free: 5x/hari • VIP: 20x/hari • 2x lipat poin</p>
                         </div>
                     </div>
-                    <button class="vip-btn" id="btnUpgradeVIP">Upgrade 10K</button>
+                    <button class="vip-btn" id="btnUpgradeVIP">Upgrade via QRIS</button>
                 </div>
 
                 <!-- Daily Claim -->
@@ -1863,7 +1864,7 @@
                         <div class="admin-mission-item">
                             <div class="am-info">
                                 <div class="am-title">user@demo.com - Request VIP</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">10.000 poin • menunggu verifikasi</div>
+                                <div style="font-size:11px;color:var(--text-secondary);">via QRIS • menunggu verifikasi</div>
                             </div>
                             <div class="am-actions">
                                 <button class="am-edit" onclick="approveVIP(this)"><i class="fas fa-check"></i> Approve</button>
@@ -1991,14 +1992,14 @@
         <div class="modal-box">
             <div class="modal-icon"><i class="fas fa-qrcode"></i></div>
             <h3>Upgrade VIP</h3>
-            <p>Bayar 10.000 via QRIS untuk mendapatkan akses VIP</p>
+            <p>Bayar Rp 10.000 via QRIS untuk mendapatkan akses VIP</p>
             <div class="qris-placeholder">
                 <i class="fas fa-qrcode" style="font-size:80px;color:#0A0A0F;"></i>
                 <span>QRIS Midtrans</span>
                 <span class="sub">Scan untuk pembayaran</span>
                 <span class="sub" style="margin-top:4px;font-weight:700;color:#0A0A0F;">Rp 10.000</span>
             </div>
-            <button class="modal-btn confirm" id="confirmUpgrade">Konfirmasi Pembayaran</button>
+            <button class="modal-btn confirm" id="confirmUpgrade">Saya Sudah Bayar</button>
             <button class="modal-btn cancel" id="closeModal">Batal</button>
         </div>
     </div>
@@ -2037,23 +2038,12 @@
                 { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
                 { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
             ],
-            ref: { 
-                l1: 2, 
-                l2: 1, 
-                l3: 0,
-                bonusL1: 5,
-                bonusL2: 3,
-                bonusL3: 1
-            },
+            ref: { l1: 2, l2: 1, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
             logs: [],
             videoRunning: false,
             isLoggedIn: false,
-            wdRequests: [
-                { user: 'user@demo.com', item: 'Pulsa 10K', points: 10000, status: 'pending' }
-            ],
-            vipRequests: [
-                { user: 'user@demo.com', points: 10000, status: 'pending' }
-            ],
+            wdRequests: [{ user: 'user@demo.com', item: 'Pulsa 10K', points: 10000, status: 'pending' }],
+            vipRequests: [{ user: 'user@demo.com', status: 'pending' }],
             fsActive: false,
             fsInterval: null,
             fsRemaining: 0,
@@ -2064,10 +2054,8 @@
             scrollInterval: null,
             scrollRemaining: 0,
             scrollTotal: 10,
-            scrollCallback: null,
             sliderIndex: 0,
-            sliderInterval: null,
-            blockedIPs: ['192.168.1.100', '10.0.0.1']
+            sliderInterval: null
         };
 
         // ========== DOM REFS ==========
@@ -2163,134 +2151,37 @@
             }, 3000);
         }
 
-        // ========== SECURITY - VERIFICATION ==========
-        function checkIP() {
-            const ips = ['192.168.1.1', '10.0.0.5', '172.16.0.1'];
-            const randomIP = ips[Math.floor(Math.random() * ips.length)];
-            state.userIP = randomIP;
-            document.getElementById('userIP').textContent = randomIP;
-            
-            if (state.blockedIPs.includes(randomIP)) {
-                showToast('⛔ IP Anda terblokir karena aktivitas mencurigakan!', false);
-                return false;
-            }
-            return true;
-        }
-
-        function sendVerificationEmail(email) {
-            showToast(`📧 Kode verifikasi telah dikirim ke ${email}`);
-            return true;
-        }
-
-        function verifyEmail(code) {
-            if (code && code.length === 6) {
-                state.isVerified = true;
-                document.getElementById('userStatus').textContent = '✅ Terverifikasi';
-                document.getElementById('userStatus').className = 'value verified';
-                showToast('✅ Email berhasil diverifikasi!');
-                return true;
-            }
-            return false;
-        }
-
-        // ========== SCROLL MISSION ==========
-        function startScrollMission() {
-            if (state.scrollActive) {
-                showToast('⏳ Misi scroll sedang berjalan!');
+        // ========== LOGIN ==========
+        btnLogin.addEventListener('click', function() {
+            const email = document.getElementById('loginEmail').value;
+            if (!email) {
+                showToast('Masukkan email terlebih dahulu', false);
                 return;
             }
 
-            const maxCount = state.missions.scroll.max;
-            if (state.missions.scroll.count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
+            state.isLoggedIn = true;
+            loginPage.style.display = 'none';
+            appMain.classList.add('active');
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('avatarUser').innerHTML = email.charAt(0).toUpperCase() +
+                '<span class="verify-badge"><i class="fas fa-check"></i></span>';
 
-            // Open scroll link in new tab
-            if (state.scrollLink && state.scrollLink !== '') {
-                window.open(state.scrollLink, '_blank');
-            }
-
-            state.scrollActive = true;
-            state.scrollRemaining = state.scrollTotal;
-            
-            scrollTimer.textContent = `${state.scrollRemaining}s`;
-            scrollProgress.style.width = '0%';
-            scrollReward.textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
-            scrollWarning.classList.remove('show');
-            scrollOverlay.classList.add('active');
-
-            let elapsed = 0;
-            state.scrollInterval = setInterval(() => {
-                elapsed++;
-                const remaining = state.scrollTotal - elapsed;
-                state.scrollRemaining = remaining;
-                scrollTimer.textContent = `${remaining}s`;
-                scrollProgress.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
-
-                if (elapsed >= state.scrollTotal) {
-                    clearInterval(state.scrollInterval);
-                    state.scrollInterval = null;
-                    finishScrollMission();
-                }
-            }, 1000);
-
-            document.addEventListener('visibilitychange', handleScrollVisibilityChange);
-        }
-
-        function handleScrollVisibilityChange() {
-            if (document.hidden && state.scrollActive) {
-                if (state.scrollInterval) {
-                    clearInterval(state.scrollInterval);
-                    state.scrollInterval = null;
-                    scrollWarning.classList.add('show');
-                    scrollWarning.textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
-                }
-            } else if (!document.hidden && state.scrollActive) {
-                if (!state.scrollInterval && state.scrollRemaining > 0) {
-                    scrollWarning.classList.remove('show');
-                    const remaining = state.scrollRemaining;
-                    const total = state.scrollTotal;
-                    const elapsed = total - remaining;
-                    
-                    state.scrollInterval = setInterval(() => {
-                        const newRemaining = state.scrollRemaining - 1;
-                        state.scrollRemaining = newRemaining;
-                        scrollTimer.textContent = `${newRemaining}s`;
-                        scrollProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
-
-                        if (newRemaining <= 0) {
-                            clearInterval(state.scrollInterval);
-                            state.scrollInterval = null;
-                            finishScrollMission();
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function finishScrollMission() {
-            state.scrollActive = false;
-            document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-            
-            if (state.scrollInterval) {
-                clearInterval(state.scrollInterval);
-                state.scrollInterval = null;
-            }
-
-            const bonus = state.vip ? 2 : 1;
-            const finalReward = state.rewardPoints.scroll * bonus;
-            state.poin += finalReward;
-            state.missions.scroll.count++;
-
-            scrollOverlay.classList.remove('active');
-            
+            showToast('✅ Selamat datang, ' + email);
+            addLog('👋 Login sebagai ' + email);
             updateUI();
-            addLog(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
-            showToast(`+${finalReward} poin dari Scroll!`);
-        }
+            renderSocialMissions();
+            renderAdminMissions();
+            initSlider();
+        });
 
-        // ========== FULLSCREEN VIDEO ==========
+        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') btnLogin.click();
+        });
+        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') btnLogin.click();
+        });
+
+        // ========== FULLSCREEN VIDEO WITH AUTOPLAY ==========
         function startFullscreenVideo(duration, reward, type, callback) {
             if (state.fsActive) {
                 showToast('⏳ Video sedang diputar!');
@@ -2318,7 +2209,7 @@
             fsOverlay.classList.add('active');
 
             const videoUrl = document.getElementById('adminYtLink').value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-            fsVideoFrame.src = videoUrl + '?autoplay=1&rel=0&controls=0';
+            fsVideoFrame.src = videoUrl + '?autoplay=1&rel=0&controls=0&mute=1';
 
             let elapsed = 0;
             state.fsInterval = setInterval(() => {
@@ -2352,7 +2243,7 @@
                     const remaining = state.fsRemaining;
                     const total = state.fsTotal;
                     const elapsed = total - remaining;
-                    
+
                     state.fsInterval = setInterval(() => {
                         const newRemaining = state.fsRemaining - 1;
                         state.fsRemaining = newRemaining;
@@ -2363,7 +2254,8 @@
                             clearInterval(state.fsInterval);
                             state.fsInterval = null;
                             finishFullscreenVideo(
-                                state.fsType === 'YouTube' ? state.rewardPoints.yt : state.fsType === 'Iklan' ? state.rewardPoints.iklan : 0,
+                                state.fsType === 'YouTube' ? state.rewardPoints.yt : state.fsType === 'Iklan' ? state
+                                .rewardPoints.iklan : 0,
                                 state.fsType
                             );
                         }
@@ -2375,7 +2267,7 @@
         function finishFullscreenVideo(reward, type) {
             state.fsActive = false;
             document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-            
+
             if (state.fsInterval) {
                 clearInterval(state.fsInterval);
                 state.fsInterval = null;
@@ -2417,57 +2309,101 @@
             }
         });
 
-        // ========== LOGIN ==========
-        btnLogin.addEventListener('click', function() {
-            const email = document.getElementById('loginEmail').value;
-            if (!email) {
-                showToast('Masukkan email terlebih dahulu', false);
-                return;
-            }
-            
-            if (!email.includes('@') || !email.includes('.')) {
-                showToast('Format email tidak valid!', false);
+        // ========== SCROLL MISSION ==========
+        function startScrollMission() {
+            if (state.scrollActive) {
+                showToast('⏳ Misi scroll sedang berjalan!');
                 return;
             }
 
-            if (!checkIP()) {
+            const maxCount = state.missions.scroll.max;
+            if (state.missions.scroll.count >= maxCount) {
+                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
                 return;
             }
 
-            const usedEmails = ['spam@fake.com', 'test@test.com'];
-            if (usedEmails.includes(email)) {
-                showToast('⛔ Email ini terdeteksi spam!', false);
-                return;
+            if (state.scrollLink && state.scrollLink !== '') {
+                window.open(state.scrollLink, '_blank');
             }
 
-            state.isLoggedIn = true;
-            loginPage.style.display = 'none';
-            appMain.classList.add('active');
-            document.getElementById('userEmail').textContent = email;
-            document.getElementById('avatarUser').innerHTML = email.charAt(0).toUpperCase() + 
-                '<span class="verify-badge"><i class="fas fa-check"></i></span>';
-            
-            if (!state.isVerified) {
-                sendVerificationEmail(email);
-                setTimeout(() => {
-                    verifyEmail('123456');
-                }, 1500);
+            state.scrollActive = true;
+            state.scrollRemaining = state.scrollTotal;
+
+            scrollTimer.textContent = `${state.scrollRemaining}s`;
+            scrollProgress.style.width = '0%';
+            scrollReward.textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
+            scrollWarning.classList.remove('show');
+            scrollOverlay.classList.add('active');
+
+            let elapsed = 0;
+            state.scrollInterval = setInterval(() => {
+                elapsed++;
+                const remaining = state.scrollTotal - elapsed;
+                state.scrollRemaining = remaining;
+                scrollTimer.textContent = `${remaining}s`;
+                scrollProgress.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
+
+                if (elapsed >= state.scrollTotal) {
+                    clearInterval(state.scrollInterval);
+                    state.scrollInterval = null;
+                    finishScrollMission();
+                }
+            }, 1000);
+
+            document.addEventListener('visibilitychange', handleScrollVisibilityChange);
+        }
+
+        function handleScrollVisibilityChange() {
+            if (document.hidden && state.scrollActive) {
+                if (state.scrollInterval) {
+                    clearInterval(state.scrollInterval);
+                    state.scrollInterval = null;
+                    scrollWarning.classList.add('show');
+                    scrollWarning.textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
+                }
+            } else if (!document.hidden && state.scrollActive) {
+                if (!state.scrollInterval && state.scrollRemaining > 0) {
+                    scrollWarning.classList.remove('show');
+                    const remaining = state.scrollRemaining;
+                    const total = state.scrollTotal;
+                    const elapsed = total - remaining;
+
+                    state.scrollInterval = setInterval(() => {
+                        const newRemaining = state.scrollRemaining - 1;
+                        state.scrollRemaining = newRemaining;
+                        scrollTimer.textContent = `${newRemaining}s`;
+                        scrollProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
+
+                        if (newRemaining <= 0) {
+                            clearInterval(state.scrollInterval);
+                            state.scrollInterval = null;
+                            finishScrollMission();
+                        }
+                    }, 1000);
+                }
             }
-            
-            showToast('✅ Selamat datang, ' + email);
-            addLog('👋 Login sebagai ' + email + ' | IP: ' + state.userIP);
+        }
+
+        function finishScrollMission() {
+            state.scrollActive = false;
+            document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
+
+            if (state.scrollInterval) {
+                clearInterval(state.scrollInterval);
+                state.scrollInterval = null;
+            }
+
+            const bonus = state.vip ? 2 : 1;
+            const finalReward = state.rewardPoints.scroll * bonus;
+            state.poin += finalReward;
+            state.missions.scroll.count++;
+
+            scrollOverlay.classList.remove('active');
+
             updateUI();
-            renderSocialMissions();
-            renderAdminMissions();
-            initSlider();
-        });
-
-        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
-        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
+            addLog(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
+            showToast(`+${finalReward} poin dari Scroll!`);
+        }
 
         // ========== TOGGLE ADMIN MODE ==========
         document.getElementById('toggleAdminMode').addEventListener('click', function() {
@@ -2475,8 +2411,8 @@
             const adminPanels = document.querySelectorAll('.admin-panel');
             adminPanels.forEach(p => p.classList.toggle('show', state.isAdmin));
             this.classList.toggle('active', state.isAdmin);
-            this.innerHTML = state.isAdmin ? 
-                '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' : 
+            this.innerHTML = state.isAdmin ?
+                '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' :
                 '<i class="fas fa-shield-alt"></i> Aktifkan Mode Admin';
             showToast(state.isAdmin ? '🔓 Admin Mode Aktif' : '🔒 Admin Mode Nonaktif');
             if (state.isAdmin) {
@@ -2497,76 +2433,100 @@
         // ========== SAVE REWARD POINTS ==========
         document.getElementById('saveRewardBtn').addEventListener('click', function() {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
+
             const yt = parseInt(document.getElementById('rewardYtInput').value);
             const iklan = parseInt(document.getElementById('rewardIklanInput').value);
             const scroll = parseInt(document.getElementById('rewardScrollInput').value);
             const sub = parseInt(document.getElementById('rewardSubInput').value);
             const sosmed = parseInt(document.getElementById('rewardSosmedInput').value);
             const share = parseInt(document.getElementById('rewardShareInput').value);
-            
-            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share) || 
+
+            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share) ||
                 yt < 0 || iklan < 0 || scroll < 0 || sub < 0 || sosmed < 0 || share < 0) {
                 showToast('Masukkan angka yang valid!', false);
                 return;
             }
-            
+
             state.rewardPoints.yt = yt;
             state.rewardPoints.iklan = iklan;
             state.rewardPoints.scroll = scroll;
             state.rewardPoints.sub = sub;
             state.rewardPoints.sosmed = sosmed;
             state.rewardPoints.share = share;
-            
-            // Update social missions rewards
+
             state.socialMissions.find(m => m.id === 'sub').reward = sub;
             state.socialMissions.find(m => m.id === 'sosmed').reward = sosmed;
             state.socialMissions.find(m => m.id === 'share').reward = share;
-            
-            // Update display
+
             document.getElementById('ytRewardDisplay').textContent = yt;
             document.getElementById('iklanRewardDisplay').textContent = iklan;
             document.getElementById('scrollRewardDisplay').textContent = scroll;
             document.getElementById('subRewardDisplay').textContent = sub;
             document.getElementById('sosmedRewardDisplay').textContent = sosmed;
             document.getElementById('shareRewardDisplay').textContent = share;
-            
-            // Update slider
+
             document.querySelector('.slider-slide[data-index="0"] .slide-badge').textContent = `🎯 +${yt} / +${iklan} Poin`;
             document.querySelector('.slider-slide[data-index="1"] .slide-badge').textContent = `📱 +${scroll} Poin`;
-            document.querySelector('.slider-slide[data-index="5"] .slide-badge').textContent = `📅 +${sub}, +${sosmed}, +${share} Poin`;
-            
+            document.querySelector('.slider-slide[data-index="5"] .slide-badge').textContent =
+                `📅 +${sub}, +${sosmed}, +${share} Poin`;
+
             renderSocialMissions();
-            addLog(`⚙️ Admin update poin misi: YT=${yt}, Iklan=${iklan}, Scroll=${scroll}, Sub=${sub}, Sosmed=${sosmed}, Share=${share}`);
+            addLog(
+                `⚙️ Admin update poin misi: YT=${yt}, Iklan=${iklan}, Scroll=${scroll}, Sub=${sub}, Sosmed=${sosmed}, Share=${share}`);
             showToast(`✅ Poin misi berhasil diupdate!`);
         });
 
         // ========== SAVE BONUS REFERRAL ==========
         document.getElementById('saveBonusBtn').addEventListener('click', function() {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
+
             const l1 = parseInt(document.getElementById('bonusL1Input').value);
             const l2 = parseInt(document.getElementById('bonusL2Input').value);
             const l3 = parseInt(document.getElementById('bonusL3Input').value);
-            
+
             if (isNaN(l1) || isNaN(l2) || isNaN(l3) || l1 < 0 || l2 < 0 || l3 < 0) {
                 showToast('Masukkan angka yang valid!', false);
                 return;
             }
-            
+
             state.ref.bonusL1 = l1;
             state.ref.bonusL2 = l2;
             state.ref.bonusL3 = l3;
-            
+
             document.getElementById('bonusL1Display').textContent = `+${l1} poin/referral`;
             document.getElementById('bonusL2Display').textContent = `+${l2} poin/referral`;
             document.getElementById('bonusL3Display').textContent = `+${l3} poin/referral`;
-            
-            document.querySelector('.slider-slide[data-index="4"] p').innerHTML = 
+
+            document.querySelector('.slider-slide[data-index="4"] p').innerHTML =
                 `Dapatkan bonus dari referral! <span class="slide-highlight">Level 1: ${l1} poin • Level 2: ${l2} poin • Level 3: ${l3} poin</span>`;
-            
+
             addLog(`⚙️ Admin update bonus referral: L1=${l1}, L2=${l2}, L3=${l3}`);
             showToast(`✅ Bonus referral diupdate! L1: ${l1}, L2: ${l2}, L3: ${l3}`);
+        });
+
+        // ========== SAVE ADMIN LINKS ==========
+        document.getElementById('saveAdminLinks').addEventListener('click', function() {
+            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+
+            const ytLink = document.getElementById('adminYtLink').value;
+            const scrollLink = document.getElementById('adminScrollLink').value;
+            const sosmedLink = document.getElementById('adminSosmedLink').value;
+            const shareLink = document.getElementById('adminShareLink').value;
+
+            state.scrollLink = scrollLink;
+
+            const subMission = state.socialMissions.find(m => m.id === 'sub');
+            const sosmedMission = state.socialMissions.find(m => m.id === 'sosmed');
+            const shareMission = state.socialMissions.find(m => m.id === 'share');
+
+            if (subMission) subMission.link = ytLink;
+            if (sosmedMission) sosmedMission.link = sosmedLink;
+            if (shareMission) shareMission.link = shareLink;
+
+            renderSocialMissions();
+
+            showToast('✅ Semua link berhasil diupdate!');
+            addLog('🔧 Admin update semua link');
         });
 
         // ========== VIP APPROVE/REJECT ==========
@@ -2599,47 +2559,13 @@
             }
         };
 
-        // ========== SAVE ADMIN LINKS ==========
-        document.getElementById('saveAdminLinks').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
-            const ytLink = document.getElementById('adminYtLink').value;
-            const scrollLink = document.getElementById('adminScrollLink').value;
-            const sosmedLink = document.getElementById('adminSosmedLink').value;
-            const shareLink = document.getElementById('adminShareLink').value;
-            
-            // Update YouTube link
-            document.getElementById('ytFrame').src = ytLink;
-            document.getElementById('fsVideoFrame').src = ytLink + '?autoplay=0&rel=0';
-            
-            // Update scroll link
-            state.scrollLink = scrollLink;
-            
-            // Update social mission links
-            const subMission = state.socialMissions.find(m => m.id === 'sub');
-            const sosmedMission = state.socialMissions.find(m => m.id === 'sosmed');
-            const shareMission = state.socialMissions.find(m => m.id === 'share');
-            
-            if (subMission) subMission.link = ytLink;
-            if (sosmedMission) sosmedMission.link = sosmedLink;
-            if (shareMission) shareMission.link = shareLink;
-            
-            renderSocialMissions();
-            
-            showToast('✅ Semua link berhasil diupdate!');
-            addLog('🔧 Admin update semua link');
-        });
-
         // ========== QRIS MODAL ==========
         document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
             if (state.vip) {
                 showToast('👑 Anda sudah VIP!');
                 return;
             }
-            if (state.poin < 10000) {
-                showToast('Poin tidak cukup! Butuh 10.000 poin', false);
-                return;
-            }
+            // TIDAK CEK POIN - Upgrade via QRIS (bayar uang)
             qrisModal.classList.add('active');
         });
 
@@ -2648,17 +2574,11 @@
         });
 
         document.getElementById('confirmUpgrade').addEventListener('click', function() {
-            if (state.poin < 10000) {
-                showToast('Poin tidak cukup! Butuh 10.000 poin', false);
-                qrisModal.classList.remove('active');
-                return;
-            }
-            state.poin -= 10000;
-            state.vipRequests.push({ user: document.getElementById('userEmail').textContent, points: 10000, status: 'pending' });
+            // User sudah bayar via QRIS
+            state.vipRequests.push({ user: document.getElementById('userEmail').textContent, status: 'pending' });
             qrisModal.classList.remove('active');
-            updateUI();
-            addLog('💳 Request upgrade VIP - menunggu verifikasi admin');
-            showToast('✅ Request upgrade VIP terkirim! Menunggu verifikasi admin.');
+            addLog('💳 Request upgrade VIP via QRIS - menunggu verifikasi admin');
+            showToast('✅ Pembayaran berhasil! Menunggu verifikasi admin.');
         });
 
         // ========== UTILITY ==========
@@ -2679,12 +2599,12 @@
                 vipBtn.textContent = '✅ VIP';
                 vipBtn.className = 'vip-btn vip-active';
                 vipBtn.disabled = true;
-                document.getElementById('vipDesc').textContent = 'VIP Aktif • 20x/hari';
+                document.getElementById('vipDesc').textContent = 'VIP Aktif • 20x/hari • 2x lipat poin';
             } else {
-                vipBtn.textContent = 'Upgrade 10K';
+                vipBtn.textContent = 'Upgrade via QRIS';
                 vipBtn.className = 'vip-btn';
                 vipBtn.disabled = false;
-                document.getElementById('vipDesc').textContent = 'Free: 5x/hari • VIP: 20x/hari';
+                document.getElementById('vipDesc').textContent = 'Free: 5x/hari • VIP: 20x/hari • 2x lipat poin';
             }
 
             const dailyStatus = document.getElementById('dailyStatus');
@@ -2726,11 +2646,11 @@
             if (state.logs.length > 50) state.logs.pop();
             const container = document.getElementById('logContainer');
             container.innerHTML = state.logs.map(log => `
-                <div class="log-item">
-                    <span>${log.msg}</span>
-                    <span class="time">${log.time}</span>
-                </div>
-            `).join('');
+                    <div class="log-item">
+                        <span>${log.msg}</span>
+                        <span class="time">${log.time}</span>
+                    </div>
+                `).join('');
         }
 
         // ========== MISSIONS ==========
@@ -2773,24 +2693,25 @@
         function renderSocialMissions() {
             const container = document.getElementById('socialMissions');
             if (!container) return;
-            
+
             const iconMap = { sub: 'sub', sosmed: 'sosmed', share: 'share' };
             const iconFa = { sub: 'fa-users', sosmed: 'fa-share-alt', share: 'fa-share' };
             const btnText = { sub: 'Subscribe', sosmed: 'Ikuti', share: 'Share' };
-            
+
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                <div class="mission-card" data-mission-id="${m.id}">
-                    <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                    <div class="m-info">
-                        <div class="m-title">${m.name}</div>
-                        <div class="m-desc">1x sehari</div>
-                        <div class="m-reward">+${reward} poin</div>
-                    </div>
-                    <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
-                </div>
-            `}).join('');
+                        <div class="mission-card" data-mission-id="${m.id}">
+                            <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
+                            <div class="m-info">
+                                <div class="m-title">${m.name}</div>
+                                <div class="m-desc">1x sehari</div>
+                                <div class="m-reward">+${reward} poin</div>
+                            </div>
+                            <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
+                        </div>
+                    `;
+            }).join('');
 
             container.querySelectorAll('[data-mission]').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -2815,18 +2736,19 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                <div class="admin-mission-item">
-                    <div class="am-info">
-                        <div class="am-title">${m.name}</div>
-                        <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                        <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
-                    </div>
-                    <div class="am-actions">
-                        <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `}).join('');
+                        <div class="admin-mission-item">
+                            <div class="am-info">
+                                <div class="am-title">${m.name}</div>
+                                <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
+                                <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
+                            </div>
+                            <div class="am-actions">
+                                <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
         }
 
         window.editMission = function(id) {
@@ -2838,7 +2760,8 @@
             const newReward = prompt('Edit poin reward:', state.rewardPoints[id] || mission.reward);
             if (newReward !== null && !isNaN(newReward)) {
                 state.rewardPoints[id] = parseInt(newReward);
-                const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay', share: 'shareRewardDisplay' };
+                const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay',
+                share: 'shareRewardDisplay' };
                 if (displayMap[id]) {
                     document.getElementById(displayMap[id]).textContent = state.rewardPoints[id];
                 }
@@ -2869,7 +2792,7 @@
             const name = nameInput.value.trim();
             const reward = parseInt(rewardInput.value);
             const link = linkInput.value.trim();
-            
+
             if (!name || !reward) {
                 showToast('Isi nama dan poin reward!', false);
                 return;
@@ -2885,7 +2808,7 @@
             });
             state.missions[id] = { cooldown: false, lastDone: 0 };
             state.rewardPoints[id] = reward;
-            
+
             nameInput.value = '';
             rewardInput.value = '';
             linkInput.value = '';
@@ -2962,7 +2885,8 @@
                 if (state.poin < cost) return showToast(`Butuh ${cost.toLocaleString()} poin!`, false);
                 state.poin -= cost;
                 updateUI();
-                addLog(`💳 Request WD ${names[type]} -${cost.toLocaleString()} poin (pending approval)`);
+                addLog(
+                    `💳 Request WD ${names[type]} -${cost.toLocaleString()} poin (pending approval)`);
                 showToast(`✅ Request WD ${names[type]} terkirim! Menunggu approval admin.`);
             });
         });
@@ -2991,14 +2915,10 @@
         updateUI();
 
         console.log('🚀 MisiNonton Pro siap!');
-        console.log('📊 Bonus Referral: Level 1 = 5 poin, Level 2 = 3 poin, Level 3 = 1 poin');
-        console.log('🎯 Poin Misi: YT=' + state.rewardPoints.yt + ', Iklan=' + state.rewardPoints.iklan + 
-            ', Scroll=' + state.rewardPoints.scroll + ', Sub=' + state.rewardPoints.sub + 
-            ', Sosmed=' + state.rewardPoints.sosmed + ', Share=' + state.rewardPoints.share);
-        console.log('🔗 Link Scroll: ' + state.scrollLink);
-        console.log('🔒 Keamanan: Verifikasi Email + Deteksi IP');
+        console.log('💰 Upgrade VIP via QRIS (bayar uang, bukan poin)');
+        console.log('📱 Autoplay aktif untuk YouTube & Iklan');
         console.log('💡 Klik Masuk untuk preview');
-        console.log('🔑 Aktifkan "Mode Admin" di tab Akun untuk setting poin & link');
+        console.log('🔑 Aktifkan "Mode Admin" di tab Akun untuk setting');
     </script>
 </body>
 </html>
