@@ -6,6 +6,7 @@
     <title>MisiNonton Pro • Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        /* ========== ALL STYLES SAME AS BEFORE ========== */
         * {
             margin: 0;
             padding: 0;
@@ -994,6 +995,109 @@
             margin-top: 2px;
         }
 
+        /* ========== DOWNLINE SECTION ========== */
+        .downline-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .downline-section .downline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .downline-section .downline-header h4 {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .downline-section .downline-header h4 i {
+            color: #3B82F6;
+        }
+
+        .downline-section .downline-header .total-downline {
+            font-size: 13px;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .downline-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .downline-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .downline-item .dl-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .downline-item .dl-info .dl-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .downline-item .dl-info .dl-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .downline-item .dl-info .dl-email {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .downline-item .dl-level {
+            font-size: 11px;
+            color: var(--secondary);
+            font-weight: 600;
+            padding: 2px 10px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+
+        .downline-empty {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .downline-empty i {
+            font-size: 40px;
+            color: var(--text-secondary);
+            opacity: 0.3;
+            margin-bottom: 8px;
+            display: block;
+        }
+
         /* Pages */
         .page {
             display: none;
@@ -1475,6 +1579,7 @@
             .vip-card { padding: 14px 16px; }
             .daily-card { padding: 14px 16px; }
             .slider-slide p { max-width: 100%; }
+            .downline-item { flex-wrap: wrap; gap: 6px; }
         }
 
         /* Toast */
@@ -1563,7 +1668,7 @@
         <div class="fs-warning" id="fsWarning">⚠️ Jangan tutup layar! Timer akan berhenti</div>
     </div>
 
-    <!-- ========== SCROLL MISSION OVERLAY (WITH IFRAME) ========== -->
+    <!-- ========== SCROLL MISSION OVERLAY ========== -->
     <div class="scroll-overlay" id="scrollOverlay">
         <div class="scroll-header">
             <div class="scroll-timer" id="scrollTimer">10s</div>
@@ -1876,6 +1981,21 @@
                     </div>
                 </div>
 
+                <!-- ========== DOWNLINE SECTION ========== -->
+                <div class="downline-section">
+                    <div class="downline-header">
+                        <h4><i class="fas fa-users"></i> Downline Saya</h4>
+                        <span class="total-downline" id="totalDownline">Total: 0</span>
+                    </div>
+                    <div id="downlineList">
+                        <div class="downline-empty">
+                            <i class="fas fa-user-plus"></i>
+                            <p>Belum ada downline</p>
+                            <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Admin Toggle Button -->
                 <button class="admin-toggle-btn" id="toggleAdminMode">
                     <i class="fas fa-shield-alt"></i> Aktifkan Mode Admin
@@ -2063,6 +2183,13 @@
                 { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
             ],
             ref: { l1: 2, l2: 1, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
+            downline: [
+                { name: 'Budi Santoso', email: 'budi@email.com', level: 1, joined: '2024-01-15' },
+                { name: 'Siti Rahayu', email: 'siti@email.com', level: 1, joined: '2024-01-20' },
+                { name: 'Andi Wijaya', email: 'andi@email.com', level: 2, joined: '2024-02-01' },
+                { name: 'Dewi Lestari', email: 'dewi@email.com', level: 2, joined: '2024-02-10' },
+                { name: 'Rudi Hartono', email: 'rudi@email.com', level: 3, joined: '2024-02-15' }
+            ],
             logs: [],
             videoRunning: false,
             isLoggedIn: false,
@@ -2197,6 +2324,7 @@
             updateUI();
             renderSocialMissions();
             renderAdminMissions();
+            renderDownline();
             initSlider();
         });
 
@@ -2335,7 +2463,7 @@
             }
         });
 
-        // ========== SCROLL MISSION (WITH IFRAME) ==========
+        // ========== SCROLL MISSION ==========
         function startScrollMission() {
             if (state.scrollActive) {
                 showToast('⏳ Misi scroll sedang berjalan!');
@@ -2348,7 +2476,6 @@
                 return;
             }
 
-            // Load website in iframe
             const scrollUrl = document.getElementById('adminScrollLink').value || state.scrollLink;
             scrollIframe.src = scrollUrl;
 
@@ -2432,7 +2559,6 @@
             showToast(`+${finalReward} poin dari Scroll!`);
         }
 
-        // Close scroll overlay (cancel mission)
         scrollCloseBtn.addEventListener('click', function() {
             if (state.scrollActive) {
                 if (confirm('Batalkan misi scroll? Poin tidak akan didapatkan.')) {
@@ -2473,6 +2599,57 @@
                 document.getElementById('adminScrollLink').value = state.scrollLink;
             }
         });
+
+        // ========== RENDER DOWNLINE ==========
+        function renderDownline() {
+            const container = document.getElementById('downlineList');
+            const totalElement = document.getElementById('totalDownline');
+            
+            if (!container) return;
+
+            // Update total
+            const total = state.downline.length;
+            totalElement.textContent = `Total: ${total}`;
+
+            if (total === 0) {
+                container.innerHTML = `
+                            <div class="downline-empty">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Belum ada downline</p>
+                                <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
+                            </div>
+                        `;
+                return;
+            }
+
+            // Group by level
+            const levelColors = {
+                1: 'var(--secondary)',
+                2: '#3B82F6',
+                3: '#34D399'
+            };
+
+            const levelLabels = {
+                1: 'Level 1',
+                2: 'Level 2',
+                3: 'Level 3'
+            };
+
+            container.innerHTML = state.downline.map(dl => `
+                        <div class="downline-item">
+                            <div class="dl-info">
+                                <div class="dl-avatar">${dl.name.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <div class="dl-name">${dl.name}</div>
+                                    <div class="dl-email">${dl.email}</div>
+                                </div>
+                            </div>
+                            <div class="dl-level" style="border-color: ${levelColors[dl.level] || 'var(--text-secondary)'}; color: ${levelColors[dl.level] || 'var(--text-secondary)'}">
+                                ${levelLabels[dl.level] || 'Level ' + dl.level}
+                            </div>
+                        </div>
+                    `).join('');
+        }
 
         // ========== SAVE REWARD POINTS ==========
         document.getElementById('saveRewardBtn').addEventListener('click', function() {
@@ -2663,6 +2840,7 @@
 
             updateQuotaDisplay();
             renderSocialMissions();
+            renderDownline();
         }
 
         function updateQuotaDisplay() {
@@ -2688,11 +2866,11 @@
             if (state.logs.length > 50) state.logs.pop();
             const container = document.getElementById('logContainer');
             container.innerHTML = state.logs.map(log => `
-                        <div class="log-item">
-                            <span>${log.msg}</span>
-                            <span class="time">${log.time}</span>
-                        </div>
-                    `).join('');
+                            <div class="log-item">
+                                <span>${log.msg}</span>
+                                <span class="time">${log.time}</span>
+                            </div>
+                        `).join('');
         }
 
         // ========== MISSIONS ==========
@@ -2743,16 +2921,16 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                            <div class="mission-card" data-mission-id="${m.id}">
-                                <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                                <div class="m-info">
-                                    <div class="m-title">${m.name}</div>
-                                    <div class="m-desc">1x sehari</div>
-                                    <div class="m-reward">+${reward} poin</div>
+                                <div class="mission-card" data-mission-id="${m.id}">
+                                    <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
+                                    <div class="m-info">
+                                        <div class="m-title">${m.name}</div>
+                                        <div class="m-desc">1x sehari</div>
+                                        <div class="m-reward">+${reward} poin</div>
+                                    </div>
+                                    <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
                                 </div>
-                                <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
-                            </div>
-                        `;
+                            `;
             }).join('');
 
             container.querySelectorAll('[data-mission]').forEach(btn => {
@@ -2778,18 +2956,18 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                            <div class="admin-mission-item">
-                                <div class="am-info">
-                                    <div class="am-title">${m.name}</div>
-                                    <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                                    <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
+                                <div class="admin-mission-item">
+                                    <div class="am-info">
+                                        <div class="am-title">${m.name}</div>
+                                        <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
+                                        <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
+                                    </div>
+                                    <div class="am-actions">
+                                        <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
+                                        <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
+                                    </div>
                                 </div>
-                                <div class="am-actions">
-                                    <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                                    <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        `;
+                            `;
             }).join('');
         }
 
@@ -2958,7 +3136,8 @@
 
         console.log('🚀 MisiNonton Pro siap!');
         console.log('💰 Upgrade VIP via QRIS (bayar uang, bukan poin)');
-        console.log('📱 Misi Scroll: website terbuka di dalam layar (iframe) - tidak bisa skip');
+        console.log('📱 Misi Scroll: website terbuka di dalam layar (iframe)');
+        console.log('👥 Downline: ' + state.downline.length + ' orang');
         console.log('💡 Klik Masuk untuk preview');
         console.log('🔑 Aktifkan "Mode Admin" di tab Akun untuk setting');
     </script>
