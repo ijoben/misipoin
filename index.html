@@ -569,13 +569,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(10, 10, 15, 0.92);
-            backdrop-filter: blur(8px);
+            background: #0A0A0F;
             z-index: 1000;
             display: none;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -583,57 +580,72 @@
             display: flex;
         }
 
-        .scroll-overlay .scroll-box {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            text-align: center;
+        .scroll-overlay .scroll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0 12px 0;
+            flex-shrink: 0;
         }
 
-        .scroll-overlay .scroll-box .scroll-icon {
-            font-size: 64px;
-            color: var(--secondary);
-            margin-bottom: 12px;
-            animation: scrollBounce 1s ease-in-out infinite;
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .scroll-overlay .scroll-box h3 {
+        .scroll-overlay .scroll-header .scroll-timer {
             font-size: 20px;
-            margin-bottom: 6px;
-        }
-
-        .scroll-overlay .scroll-box p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .scroll-overlay .scroll-box .scroll-timer {
-            font-size: 36px;
             font-weight: 700;
             color: var(--secondary);
             font-variant-numeric: tabular-nums;
-            margin: 8px 0;
         }
 
-        .scroll-overlay .scroll-box .scroll-progress {
+        .scroll-overlay .scroll-header .scroll-close {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .scroll-overlay .scroll-header .scroll-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .scroll-overlay .scroll-iframe-wrapper {
+            flex: 1;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+            min-height: 0;
+        }
+
+        .scroll-overlay .scroll-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .scroll-overlay .scroll-progress-wrapper {
+            flex-shrink: 0;
+            padding: 12px 0 8px 0;
+            width: 100%;
+        }
+
+        .scroll-overlay .scroll-progress-wrapper .scroll-progress-bar {
             width: 100%;
             height: 6px;
             background: rgba(255,255,255,0.05);
             border-radius: 3px;
             overflow: hidden;
-            margin-top: 8px;
         }
 
-        .scroll-overlay .scroll-box .scroll-progress .scroll-fill {
+        .scroll-overlay .scroll-progress-wrapper .scroll-progress-bar .scroll-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--secondary), #F59E0B);
             border-radius: 3px;
@@ -641,21 +653,28 @@
             width: 0%;
         }
 
-        .scroll-overlay .scroll-box .scroll-reward {
-            color: #34D399;
-            font-weight: 600;
+        .scroll-overlay .scroll-progress-wrapper .scroll-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        .scroll-overlay .scroll-box .scroll-warning {
+        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-reward {
+            color: #34D399;
+            font-weight: 600;
+        }
+
+        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-warning {
             color: #EF4444;
             font-size: 12px;
-            margin-top: 6px;
             display: none;
         }
 
-        .scroll-overlay .scroll-box .scroll-warning.show {
-            display: block;
+        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-warning.show {
+            display: inline;
         }
 
         /* Mission Cards */
@@ -1544,18 +1563,23 @@
         <div class="fs-warning" id="fsWarning">⚠️ Jangan tutup layar! Timer akan berhenti</div>
     </div>
 
-    <!-- ========== SCROLL MISSION OVERLAY ========== -->
+    <!-- ========== SCROLL MISSION OVERLAY (WITH IFRAME) ========== -->
     <div class="scroll-overlay" id="scrollOverlay">
-        <div class="scroll-box">
-            <div class="scroll-icon"><i class="fas fa-arrows-alt-v"></i></div>
-            <h3>Scroll Website</h3>
-            <p>Gulirkan layar ke bawah selama 10 detik</p>
+        <div class="scroll-header">
             <div class="scroll-timer" id="scrollTimer">10s</div>
-            <div class="scroll-progress">
-                <div class="scroll-fill" id="scrollProgress"></div>
+            <button class="scroll-close" id="scrollCloseBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="scroll-iframe-wrapper">
+            <iframe id="scrollIframe" src="https://misi-nonton.com" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
+        </div>
+        <div class="scroll-progress-wrapper">
+            <div class="scroll-progress-bar">
+                <div class="scroll-fill" id="scrollProgressFill"></div>
             </div>
-            <div class="scroll-reward" id="scrollReward">+8 poin</div>
-            <div class="scroll-warning" id="scrollWarning">⚠️ Jangan tutup layar! Timer akan berhenti</div>
+            <div class="scroll-info">
+                <span class="scroll-reward" id="scrollReward">+8 poin</span>
+                <span class="scroll-warning" id="scrollWarning">⚠️ Jangan tutup layar! Timer berhenti</span>
+            </div>
         </div>
     </div>
 
@@ -1605,7 +1629,7 @@
                         <div class="slider-slide" data-index="1">
                             <div class="slide-icon"><i class="fas fa-arrows-alt-v"></i></div>
                             <h3>Scroll Dapat Poin</h3>
-                            <p>Gulirkan layar selama 10 detik, dapatkan poin! <span class="slide-highlight">Free 5x/hari • VIP 20x/hari</span></p>
+                            <p>Scroll website selama 10 detik, dapatkan poin! <span class="slide-highlight">Free 5x/hari • VIP 20x/hari</span></p>
                             <span class="slide-badge">📱 +8 Poin</span>
                         </div>
                         <div class="slider-slide" data-index="2">
@@ -1670,7 +1694,7 @@
                         <div class="m-icon scroll"><i class="fas fa-arrows-alt-v"></i></div>
                         <div class="m-info">
                             <div class="m-title">Scroll Website</div>
-                            <div class="m-desc">10 detik • Scroll layar</div>
+                            <div class="m-desc">10 detik • Buka di layar</div>
                             <div class="m-reward">+<span id="scrollRewardDisplay">8</span> poin <span class="quota-badge" id="scrollQuota">0/5</span></div>
                         </div>
                         <button class="m-btn scroll-btn" data-mission="scroll" id="scrollBtn">Mulai Scroll</button>
@@ -1946,8 +1970,8 @@
                     <h4><i class="fas fa-link"></i> Link Settings</h4>
                     <label class="sub-label">Link YouTube (untuk fullscreen)</label>
                     <input type="text" id="adminYtLink" placeholder="Link YouTube" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                    <label class="sub-label">Link Website untuk Scroll</label>
-                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-nonton.com/scroll">
+                    <label class="sub-label">Link Website untuk Scroll (iframe)</label>
+                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-nonton.com">
                     <label class="sub-label">Link Sosmed (untuk Follow)</label>
                     <input type="text" id="adminSosmedLink" placeholder="Link Sosmed" value="https://instagram.com">
                     <label class="sub-label">Link Share</label>
@@ -2016,7 +2040,7 @@
             isAdmin: false,
             isVerified: true,
             userIP: '192.168.1.1',
-            scrollLink: 'https://misi-nonton.com/scroll',
+            scrollLink: 'https://misi-nonton.com',
             rewardPoints: {
                 yt: 10,
                 iklan: 5,
@@ -2073,9 +2097,11 @@
         const fsCloseBtn = document.getElementById('fsCloseBtn');
         const scrollOverlay = document.getElementById('scrollOverlay');
         const scrollTimer = document.getElementById('scrollTimer');
-        const scrollProgress = document.getElementById('scrollProgress');
+        const scrollProgressFill = document.getElementById('scrollProgressFill');
         const scrollReward = document.getElementById('scrollReward');
         const scrollWarning = document.getElementById('scrollWarning');
+        const scrollIframe = document.getElementById('scrollIframe');
+        const scrollCloseBtn = document.getElementById('scrollCloseBtn');
 
         // ========== SLIDER ==========
         const slides = document.querySelectorAll('.slider-slide');
@@ -2309,7 +2335,7 @@
             }
         });
 
-        // ========== SCROLL MISSION ==========
+        // ========== SCROLL MISSION (WITH IFRAME) ==========
         function startScrollMission() {
             if (state.scrollActive) {
                 showToast('⏳ Misi scroll sedang berjalan!');
@@ -2322,15 +2348,15 @@
                 return;
             }
 
-            if (state.scrollLink && state.scrollLink !== '') {
-                window.open(state.scrollLink, '_blank');
-            }
+            // Load website in iframe
+            const scrollUrl = document.getElementById('adminScrollLink').value || state.scrollLink;
+            scrollIframe.src = scrollUrl;
 
             state.scrollActive = true;
             state.scrollRemaining = state.scrollTotal;
 
             scrollTimer.textContent = `${state.scrollRemaining}s`;
-            scrollProgress.style.width = '0%';
+            scrollProgressFill.style.width = '0%';
             scrollReward.textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
             scrollWarning.classList.remove('show');
             scrollOverlay.classList.add('active');
@@ -2341,7 +2367,7 @@
                 const remaining = state.scrollTotal - elapsed;
                 state.scrollRemaining = remaining;
                 scrollTimer.textContent = `${remaining}s`;
-                scrollProgress.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
+                scrollProgressFill.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
 
                 if (elapsed >= state.scrollTotal) {
                     clearInterval(state.scrollInterval);
@@ -2372,7 +2398,7 @@
                         const newRemaining = state.scrollRemaining - 1;
                         state.scrollRemaining = newRemaining;
                         scrollTimer.textContent = `${newRemaining}s`;
-                        scrollProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
+                        scrollProgressFill.style.width = `${((total - newRemaining) / total) * 100}%`;
 
                         if (newRemaining <= 0) {
                             clearInterval(state.scrollInterval);
@@ -2399,11 +2425,29 @@
             state.missions.scroll.count++;
 
             scrollOverlay.classList.remove('active');
+            scrollIframe.src = 'about:blank';
 
             updateUI();
             addLog(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
             showToast(`+${finalReward} poin dari Scroll!`);
         }
+
+        // Close scroll overlay (cancel mission)
+        scrollCloseBtn.addEventListener('click', function() {
+            if (state.scrollActive) {
+                if (confirm('Batalkan misi scroll? Poin tidak akan didapatkan.')) {
+                    state.scrollActive = false;
+                    document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
+                    if (state.scrollInterval) {
+                        clearInterval(state.scrollInterval);
+                        state.scrollInterval = null;
+                    }
+                    scrollOverlay.classList.remove('active');
+                    scrollIframe.src = 'about:blank';
+                    showToast('⏹️ Misi scroll dibatalkan');
+                }
+            }
+        });
 
         // ========== TOGGLE ADMIN MODE ==========
         document.getElementById('toggleAdminMode').addEventListener('click', function() {
@@ -2565,7 +2609,6 @@
                 showToast('👑 Anda sudah VIP!');
                 return;
             }
-            // TIDAK CEK POIN - Upgrade via QRIS (bayar uang)
             qrisModal.classList.add('active');
         });
 
@@ -2574,7 +2617,6 @@
         });
 
         document.getElementById('confirmUpgrade').addEventListener('click', function() {
-            // User sudah bayar via QRIS
             state.vipRequests.push({ user: document.getElementById('userEmail').textContent, status: 'pending' });
             qrisModal.classList.remove('active');
             addLog('💳 Request upgrade VIP via QRIS - menunggu verifikasi admin');
@@ -2646,11 +2688,11 @@
             if (state.logs.length > 50) state.logs.pop();
             const container = document.getElementById('logContainer');
             container.innerHTML = state.logs.map(log => `
-                    <div class="log-item">
-                        <span>${log.msg}</span>
-                        <span class="time">${log.time}</span>
-                    </div>
-                `).join('');
+                        <div class="log-item">
+                            <span>${log.msg}</span>
+                            <span class="time">${log.time}</span>
+                        </div>
+                    `).join('');
         }
 
         // ========== MISSIONS ==========
@@ -2701,16 +2743,16 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                        <div class="mission-card" data-mission-id="${m.id}">
-                            <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                            <div class="m-info">
-                                <div class="m-title">${m.name}</div>
-                                <div class="m-desc">1x sehari</div>
-                                <div class="m-reward">+${reward} poin</div>
+                            <div class="mission-card" data-mission-id="${m.id}">
+                                <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
+                                <div class="m-info">
+                                    <div class="m-title">${m.name}</div>
+                                    <div class="m-desc">1x sehari</div>
+                                    <div class="m-reward">+${reward} poin</div>
+                                </div>
+                                <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
                             </div>
-                            <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
-                        </div>
-                    `;
+                        `;
             }).join('');
 
             container.querySelectorAll('[data-mission]').forEach(btn => {
@@ -2736,18 +2778,18 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">${m.name}</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                                <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
+                            <div class="admin-mission-item">
+                                <div class="am-info">
+                                    <div class="am-title">${m.name}</div>
+                                    <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
+                                    <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
+                                </div>
+                                <div class="am-actions">
+                                    <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
+                                    <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
+                                </div>
                             </div>
-                            <div class="am-actions">
-                                <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    `;
+                        `;
             }).join('');
         }
 
@@ -2761,7 +2803,7 @@
             if (newReward !== null && !isNaN(newReward)) {
                 state.rewardPoints[id] = parseInt(newReward);
                 const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay',
-                share: 'shareRewardDisplay' };
+                    share: 'shareRewardDisplay' };
                 if (displayMap[id]) {
                     document.getElementById(displayMap[id]).textContent = state.rewardPoints[id];
                 }
@@ -2916,7 +2958,7 @@
 
         console.log('🚀 MisiNonton Pro siap!');
         console.log('💰 Upgrade VIP via QRIS (bayar uang, bukan poin)');
-        console.log('📱 Autoplay aktif untuk YouTube & Iklan');
+        console.log('📱 Misi Scroll: website terbuka di dalam layar (iframe) - tidak bisa skip');
         console.log('💡 Klik Masuk untuk preview');
         console.log('🔑 Aktifkan "Mode Admin" di tab Akun untuk setting');
     </script>
