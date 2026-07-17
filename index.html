@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MisiNonton Pro • Premium</title>
+    <title>MisiNonton • User</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ========== ALL STYLES SAME AS BEFORE ========== */
+        /* ========== ALL STYLES ========== */
         * {
             margin: 0;
             padding: 0;
@@ -62,6 +63,45 @@
             padding: 0 16px 90px 16px;
             position: relative;
             z-index: 1;
+        }
+
+        /* ========== LOADING OVERLAY ========== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-overlay .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-overlay p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* ========== LOGIN PAGE ========== */
@@ -995,7 +1035,7 @@
             margin-top: 2px;
         }
 
-        /* ========== DOWNLINE SECTION ========== */
+        /* Downline Section */
         .downline-section {
             background: var(--bg-card);
             border-radius: 16px;
@@ -1318,154 +1358,26 @@
             transform: scale(0.97);
         }
 
-        /* Admin Panel */
-        .admin-panel {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-top: 12px;
-            display: none;
-        }
-
-        .admin-panel.show {
+        .admin-link {
             display: block;
-        }
-
-        .admin-panel h4 {
-            margin-bottom: 12px;
-            color: var(--secondary);
-            font-size: 15px;
-        }
-
-        .admin-panel .sub-label {
+            text-align: center;
             color: var(--text-secondary);
             font-size: 12px;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .admin-panel input, .admin-panel select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .admin-panel input::placeholder {
-            color: #475569;
-        }
-
-        .admin-panel .btn-save {
-            width: 100%;
+            margin-top: 12px;
             padding: 10px;
             border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 4px;
-        }
-
-        .admin-panel .btn-save.success {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.warning {
-            background: #F59E0B;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.danger {
-            background: #EF4444;
-            color: white;
-        }
-
-        .admin-mission-item {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .admin-mission-item .am-info {
-            font-size: 13px;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .admin-mission-item .am-info .am-title {
-            font-weight: 600;
-        }
-
-        .admin-mission-item .am-info .am-link {
-            font-size: 11px;
-            color: var(--text-secondary);
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-
-        .admin-mission-item .am-actions button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px 6px;
-            font-size: 14px;
+            border: 1px dashed var(--border-color);
             transition: 0.3s;
+            text-decoration: none;
         }
 
-        .admin-mission-item .am-actions button:hover {
-            color: white;
-        }
-
-        .admin-mission-item .am-actions .am-edit {
-            color: #3B82F6;
-        }
-
-        .admin-mission-item .am-actions .am-delete {
-            color: #EF4444;
-        }
-
-        /* Admin Toggle Button */
-        .admin-toggle-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px 16px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-            font-size: 13px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .admin-toggle-btn:hover {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .admin-toggle-btn.active {
+        .admin-link:hover {
             border-color: var(--secondary);
             color: var(--secondary);
+        }
+
+        .admin-link i {
+            margin-right: 6px;
         }
 
         /* QRIS Modal */
@@ -1475,7 +1387,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
             z-index: 200;
             display: none;
@@ -1560,7 +1472,7 @@
         }
 
         .modal-box .modal-btn.cancel {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
             margin-top: 8px;
         }
@@ -1571,15 +1483,34 @@
 
         /* Responsive */
         @media (max-width: 420px) {
-            .stats-grid { gap: 6px; }
-            .stat-card { padding: 10px 8px; }
-            .stat-card .stat-value { font-size: 16px; }
-            .mission-card { padding: 12px 14px; }
-            .login-page .login-box { padding: 28px 20px; }
-            .vip-card { padding: 14px 16px; }
-            .daily-card { padding: 14px 16px; }
-            .slider-slide p { max-width: 100%; }
-            .downline-item { flex-wrap: wrap; gap: 6px; }
+            .stats-grid {
+                gap: 6px;
+            }
+            .stat-card {
+                padding: 10px 8px;
+            }
+            .stat-card .stat-value {
+                font-size: 16px;
+            }
+            .mission-card {
+                padding: 12px 14px;
+            }
+            .login-page .login-box {
+                padding: 28px 20px;
+            }
+            .vip-card {
+                padding: 14px 16px;
+            }
+            .daily-card {
+                padding: 14px 16px;
+            }
+            .slider-slide p {
+                max-width: 100%;
+            }
+            .downline-item {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
         }
 
         /* Toast */
@@ -1608,16 +1539,24 @@
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- GLOW ORBS -->
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <p>Memuat data...</p>
+    </div>
 
     <!-- ========== LOGIN PAGE ========== -->
     <div class="login-page" id="loginPage">
@@ -1630,12 +1569,12 @@
 
             <div class="input-group">
                 <label><i class="fas fa-envelope"></i> Email</label>
-                <input type="email" id="loginEmail" placeholder="masukkan email anda" value="user@demo.com">
+                <input type="email" id="loginEmail" placeholder="masukkan email anda">
             </div>
 
             <div class="input-group">
                 <label><i class="fas fa-lock"></i> Password</label>
-                <input type="password" id="loginPassword" placeholder="••••••••" value="password123">
+                <input type="password" id="loginPassword" placeholder="••••••••">
             </div>
 
             <button class="btn-login" id="btnLogin">
@@ -1644,8 +1583,8 @@
 
             <div class="login-footer">
                 <p style="margin-bottom:4px;">Belum punya akun? <a href="#" id="btnShowRegister">Daftar</a></p>
-                <div class="demo-badge">
-                    <i class="fas fa-info-circle"></i> Demo: klik Masuk untuk preview
+                <div class="demo-badge" id="statusConnection">
+                    <i class="fas fa-circle" style="color:#EF4444;"></i> Belum terhubung
                 </div>
             </div>
         </div>
@@ -1957,15 +1896,15 @@
                 <div class="account-card">
                     <div class="field">
                         <span class="label"><i class="fas fa-envelope"></i> Email</span>
-                        <span class="value" id="userEmail">user@demo.com</span>
+                        <span class="value" id="userEmail">-</span>
                     </div>
                     <div class="field">
                         <span class="label"><i class="fas fa-check-circle"></i> Status</span>
-                        <span class="value verified" id="userStatus">✅ Terverifikasi</span>
+                        <span class="value unverified" id="userStatus">⏳ Belum diverifikasi</span>
                     </div>
                     <div class="field">
                         <span class="label"><i class="fas fa-shield-alt"></i> IP Address</span>
-                        <span class="value" id="userIP">192.168.1.1</span>
+                        <span class="value" id="userIP">-</span>
                     </div>
                     <div class="field">
                         <span class="label"><i class="fas fa-crown"></i> VIP</span>
@@ -1977,11 +1916,11 @@
                     </div>
                     <div class="field">
                         <span class="label"><i class="fas fa-link"></i> Referral</span>
-                        <span class="value">Level 1</span>
+                        <span class="value" id="akunRefCode">-</span>
                     </div>
                 </div>
 
-                <!-- ========== DOWNLINE SECTION ========== -->
+                <!-- Downline Section -->
                 <div class="downline-section">
                     <div class="downline-header">
                         <h4><i class="fas fa-users"></i> Downline Saya</h4>
@@ -1996,112 +1935,14 @@
                     </div>
                 </div>
 
-                <!-- Admin Toggle Button -->
-                <button class="admin-toggle-btn" id="toggleAdminMode">
-                    <i class="fas fa-shield-alt"></i> Aktifkan Mode Admin
-                </button>
-
-                <!-- Admin Panel - Verifikasi & Approve VIP -->
-                <div class="admin-panel" id="adminVipPanel">
-                    <h4><i class="fas fa-crown"></i> Verifikasi & Approve VIP</h4>
-                    <div id="vipRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">user@demo.com - Request VIP</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">via QRIS • menunggu verifikasi</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-edit" onclick="approveVIP(this)"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-delete" onclick="rejectVIP(this)"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Panel - Setting Poin Misi -->
-                <div class="admin-panel" id="adminRewardPanel">
-                    <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
-                    <label class="sub-label">YouTube (default: 10)</label>
-                    <input type="number" id="rewardYtInput" placeholder="Poin YouTube" value="10">
-                    <label class="sub-label">Iklan (default: 5)</label>
-                    <input type="number" id="rewardIklanInput" placeholder="Poin Iklan" value="5">
-                    <label class="sub-label">Scroll Website (default: 8)</label>
-                    <input type="number" id="rewardScrollInput" placeholder="Poin Scroll" value="8">
-                    <label class="sub-label">Subscribe YouTube (default: 15)</label>
-                    <input type="number" id="rewardSubInput" placeholder="Poin Subscribe" value="15">
-                    <label class="sub-label">Follow Sosmed (default: 10)</label>
-                    <input type="number" id="rewardSosmedInput" placeholder="Poin Follow" value="10">
-                    <label class="sub-label">Share (default: 20)</label>
-                    <input type="number" id="rewardShareInput" placeholder="Poin Share" value="20">
-                    <button class="btn-save warning" id="saveRewardBtn">
-                        <i class="fas fa-save"></i> Simpan Poin Misi
-                    </button>
-                </div>
-
-                <!-- Admin Panel - Kelola Misi Sosial -->
-                <div class="admin-panel" id="adminSocialPanel">
-                    <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
-                    <div id="adminMissionList"></div>
-                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="newMissionName" placeholder="Nama misi" style="flex:1;">
-                            <input type="number" id="newMissionReward" placeholder="Poin" style="flex:0.6;">
-                        </div>
-                        <input type="text" id="newMissionLink" placeholder="Link (YouTube/Sosmed)" style="width:100%;">
-                        <button class="btn-save" id="addMissionBtn">
-                            <i class="fas fa-plus"></i> Tambah Misi
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Admin Panel - Setting Bonus Referral -->
-                <div class="admin-panel" id="adminBonusPanel">
-                    <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
-                    <label class="sub-label">Level 1 (2 arah)</label>
-                    <input type="number" id="bonusL1Input" placeholder="Poin Level 1" value="5">
-                    <label class="sub-label">Level 2 (1 arah)</label>
-                    <input type="number" id="bonusL2Input" placeholder="Poin Level 2" value="3">
-                    <label class="sub-label">Level 3 (1 arah)</label>
-                    <input type="number" id="bonusL3Input" placeholder="Poin Level 3" value="1">
-                    <button class="btn-save success" id="saveBonusBtn">
-                        <i class="fas fa-save"></i> Simpan Bonus
-                    </button>
-                </div>
-
-                <!-- Admin Panel - Approve WD -->
-                <div class="admin-panel" id="adminWdPanel">
-                    <h4><i class="fas fa-check-circle"></i> Approve WD</h4>
-                    <div id="wdRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">user@demo.com - Pulsa 10K</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">10.000 poin • pending</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-edit" onclick="approveWD(this)"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-delete" onclick="rejectWD(this)"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Panel - Link Settings -->
-                <div class="admin-panel" id="adminLinkPanel">
-                    <h4><i class="fas fa-link"></i> Link Settings</h4>
-                    <label class="sub-label">Link YouTube (untuk fullscreen)</label>
-                    <input type="text" id="adminYtLink" placeholder="Link YouTube" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                    <label class="sub-label">Link Website untuk Scroll (iframe)</label>
-                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-nonton.com">
-                    <label class="sub-label">Link Sosmed (untuk Follow)</label>
-                    <input type="text" id="adminSosmedLink" placeholder="Link Sosmed" value="https://instagram.com">
-                    <label class="sub-label">Link Share</label>
-                    <input type="text" id="adminShareLink" placeholder="Link Share" value="https://twitter.com">
-                    <button class="btn-save" id="saveAdminLinks">Simpan Link</button>
-                </div>
-
                 <button class="btn-logout" id="btnLogout" style="margin-top:12px;">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
+
+                <!-- Link ke Admin (hanya untuk admin) -->
+                <a href="admin.html" class="admin-link" id="adminLink" style="display:none;">
+                    <i class="fas fa-shield-alt"></i> Buka Panel Admin
+                </a>
             </div>
 
             <!-- Bottom Navigation -->
@@ -2152,14 +1993,23 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ========== STATE ==========
+        // ============================================================
+        //  🔑 GANTI DENGAN CREDENTIAL SUPABASE ANDA
+        // ============================================================
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
+        // ============================================================
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================================
+        //  STATE
+        // ============================================================
         const state = {
             poin: 0,
             vip: false,
             dailyClaimed: false,
-            isAdmin: false,
-            isVerified: true,
-            userIP: '192.168.1.1',
+            userId: null,
             scrollLink: 'https://misi-nonton.com',
             rewardPoints: {
                 yt: 10,
@@ -2182,114 +2032,178 @@
                 { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
                 { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
             ],
-            ref: { l1: 2, l2: 1, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
-            downline: [
-                { name: 'Budi Santoso', email: 'budi@email.com', level: 1, joined: '2024-01-15' },
-                { name: 'Siti Rahayu', email: 'siti@email.com', level: 1, joined: '2024-01-20' },
-                { name: 'Andi Wijaya', email: 'andi@email.com', level: 2, joined: '2024-02-01' },
-                { name: 'Dewi Lestari', email: 'dewi@email.com', level: 2, joined: '2024-02-10' },
-                { name: 'Rudi Hartono', email: 'rudi@email.com', level: 3, joined: '2024-02-15' }
-            ],
+            ref: { l1: 0, l2: 0, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
+            downline: [],
             logs: [],
-            videoRunning: false,
-            isLoggedIn: false,
-            wdRequests: [{ user: 'user@demo.com', item: 'Pulsa 10K', points: 10000, status: 'pending' }],
-            vipRequests: [{ user: 'user@demo.com', status: 'pending' }],
-            fsActive: false,
-            fsInterval: null,
-            fsRemaining: 0,
-            fsTotal: 0,
-            fsCallback: null,
-            fsType: '',
-            scrollActive: false,
-            scrollInterval: null,
-            scrollRemaining: 0,
-            scrollTotal: 10,
-            sliderIndex: 0,
-            sliderInterval: null
+            isLoggedIn: false
         };
 
-        // ========== DOM REFS ==========
-        const loginPage = document.getElementById('loginPage');
-        const appMain = document.getElementById('appMain');
-        const btnLogin = document.getElementById('btnLogin');
-        const qrisModal = document.getElementById('qrisModal');
-        const fsOverlay = document.getElementById('fullscreenOverlay');
-        const fsTimer = document.getElementById('fsTimer');
-        const fsProgress = document.getElementById('fsProgressFill');
-        const fsLabel = document.getElementById('fsLabel');
-        const fsReward = document.getElementById('fsReward');
-        const fsWarning = document.getElementById('fsWarning');
-        const fsVideoFrame = document.getElementById('fsVideoFrame');
-        const fsCloseBtn = document.getElementById('fsCloseBtn');
-        const scrollOverlay = document.getElementById('scrollOverlay');
-        const scrollTimer = document.getElementById('scrollTimer');
-        const scrollProgressFill = document.getElementById('scrollProgressFill');
-        const scrollReward = document.getElementById('scrollReward');
-        const scrollWarning = document.getElementById('scrollWarning');
-        const scrollIframe = document.getElementById('scrollIframe');
-        const scrollCloseBtn = document.getElementById('scrollCloseBtn');
+        // ============================================================
+        //  CHECK ADMIN
+        // ============================================================
+        async function checkIfAdmin(email) {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('is_admin')
+                    .eq('email', email)
+                    .single();
 
-        // ========== SLIDER ==========
-        const slides = document.querySelectorAll('.slider-slide');
-        const sliderDots = document.getElementById('sliderDots');
-        const totalSlides = slides.length;
-
-        function initSlider() {
-            sliderDots.innerHTML = '';
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-                dot.dataset.index = i;
-                dot.addEventListener('click', () => goToSlide(i));
-                sliderDots.appendChild(dot);
+                if (error) return false;
+                return data?.is_admin || false;
+            } catch (e) {
+                return false;
             }
-            startSliderAuto();
         }
 
-        function goToSlide(index) {
-            const oldIndex = state.sliderIndex;
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active', 'exit');
-                if (i === index) {
-                    slide.classList.add('active');
-                } else if (i === oldIndex) {
-                    slide.classList.add('exit');
+        // ============================================================
+        //  LOAD USER DATA
+        // ============================================================
+        async function loadUserData(userId) {
+            try {
+                showLoading(true);
+
+                // Get user
+                const { data: user } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (!user) {
+                    showLoading(false);
+                    return;
                 }
-            });
-            state.sliderIndex = index;
-            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-            resetSliderAuto();
-        }
 
-        function nextSlide() {
-            const next = (state.sliderIndex + 1) % totalSlides;
-            goToSlide(next);
-        }
+                state.userId = userId;
+                state.poin = user.poin || 0;
+                state.vip = user.vip || false;
 
-        function prevSlide() {
-            const prev = (state.sliderIndex - 1 + totalSlides) % totalSlides;
-            goToSlide(prev);
-        }
+                // Get missions
+                const { data: missions } = await supabase
+                    .from('missions')
+                    .select('*')
+                    .eq('user_id', userId);
 
-        function startSliderAuto() {
-            if (state.sliderInterval) clearInterval(state.sliderInterval);
-            state.sliderInterval = setInterval(nextSlide, 4000);
-        }
+                if (missions) {
+                    missions.forEach(m => {
+                        if (state.missions[m.type]) {
+                            state.missions[m.type].count = m.count || 0;
+                            state.missions[m.type].max = m.max_count || 5;
+                            state.missions[m.type].lastDone = m.last_done || 0;
+                        }
+                    });
+                }
 
-        function resetSliderAuto() {
-            if (state.sliderInterval) {
-                clearInterval(state.sliderInterval);
-                startSliderAuto();
+                // Get rewards
+                const { data: rewards } = await supabase
+                    .from('missions_rewards')
+                    .select('*');
+
+                if (rewards) {
+                    rewards.forEach(r => {
+                        if (state.rewardPoints[r.mission_type] !== undefined) {
+                            state.rewardPoints[r.mission_type] = r.reward_points;
+                        }
+                    });
+                }
+
+                // Get referral bonus
+                const { data: bonuses } = await supabase
+                    .from('referral_bonus')
+                    .select('*')
+                    .order('level');
+
+                if (bonuses) {
+                    bonuses.forEach(b => {
+                        if (b.level === 1) state.ref.bonusL1 = b.bonus_points;
+                        if (b.level === 2) state.ref.bonusL2 = b.bonus_points;
+                        if (b.level === 3) state.ref.bonusL3 = b.bonus_points;
+                    });
+                }
+
+                // Get admin settings
+                const { data: settings } = await supabase
+                    .from('admin_settings')
+                    .select('*');
+
+                if (settings) {
+                    settings.forEach(s => {
+                        if (s.key === 'yt_link') document.getElementById('adminYtLink') && (document
+                            .getElementById('adminYtLink').value = s.value);
+                        if (s.key === 'scroll_link') {
+                            state.scrollLink = s.value;
+                            document.getElementById('adminScrollLink') && (document.getElementById(
+                                'adminScrollLink').value = s.value);
+                        }
+                        if (s.key === 'sosmed_link') document.getElementById('adminSosmedLink') && (document
+                            .getElementById('adminSosmedLink').value = s.value);
+                        if (s.key === 'share_link') document.getElementById('adminShareLink') && (document
+                            .getElementById('adminShareLink').value = s.value);
+                    });
+                }
+
+                // Get downline
+                const { data: downline } = await supabase
+                    .from('users')
+                    .select('id, email, referral_code, created_at')
+                    .eq('referrer_id', userId);
+
+                state.downline = (downline || []).map(d => ({
+                    name: d.email?.split('@')[0] || 'User',
+                    email: d.email || '-',
+                    level: 1
+                }));
+
+                // Get logs
+                const { data: logs } = await supabase
+                    .from('logs')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                state.logs = (logs || []).map(log => ({
+                    msg: log.message || 'Activity',
+                    time: new Date(log.created_at).toLocaleTimeString()
+                }));
+
+                // Check daily claim
+                const today = new Date().toISOString().split('T')[0];
+                const todayLog = state.logs.find(log =>
+                    log.msg === '✅ Claim daily +5 poin' &&
+                    new Date(log.time).toISOString().split('T')[0] === today
+                );
+                state.dailyClaimed = !!todayLog;
+
+                // Update UI
+                document.getElementById('userEmail').textContent = user.email || '-';
+                document.getElementById('akunRefCode').textContent = user.referral_code || '-';
+                document.getElementById('refLinkText').textContent =
+                    `https://misi-nonton.com/ref/${user.referral_code || 'ABC123'}`;
+                document.getElementById('userIP').textContent = user.ip_address || '-';
+
+                // Check if admin
+                const isAdmin = await checkIfAdmin(user.email);
+                if (isAdmin) {
+                    document.getElementById('adminLink').style.display = 'block';
+                }
+
+                updateUI();
+                showLoading(false);
+            } catch (error) {
+                console.error('Load user data error:', error);
+                showLoading(false);
             }
         }
 
-        document.getElementById('sliderNext').addEventListener('click', nextSlide);
-        document.getElementById('sliderPrev').addEventListener('click', prevSlide);
+        // ============================================================
+        //  UI FUNCTIONS
+        // ============================================================
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').classList.toggle('active', show);
+        }
 
-        // ========== TOAST ==========
         function showToast(msg, isSuccess = true) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -2304,503 +2218,6 @@
             }, 3000);
         }
 
-        // ========== LOGIN ==========
-        btnLogin.addEventListener('click', function() {
-            const email = document.getElementById('loginEmail').value;
-            if (!email) {
-                showToast('Masukkan email terlebih dahulu', false);
-                return;
-            }
-
-            state.isLoggedIn = true;
-            loginPage.style.display = 'none';
-            appMain.classList.add('active');
-            document.getElementById('userEmail').textContent = email;
-            document.getElementById('avatarUser').innerHTML = email.charAt(0).toUpperCase() +
-                '<span class="verify-badge"><i class="fas fa-check"></i></span>';
-
-            showToast('✅ Selamat datang, ' + email);
-            addLog('👋 Login sebagai ' + email);
-            updateUI();
-            renderSocialMissions();
-            renderAdminMissions();
-            renderDownline();
-            initSlider();
-        });
-
-        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
-        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
-
-        // ========== FULLSCREEN VIDEO WITH AUTOPLAY ==========
-        function startFullscreenVideo(duration, reward, type, callback) {
-            if (state.fsActive) {
-                showToast('⏳ Video sedang diputar!');
-                return;
-            }
-
-            const key = type === 'YouTube' ? 'yt' : 'iklan';
-            const maxCount = state.missions[key].max;
-            if (state.missions[key].count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
-
-            state.fsActive = true;
-            state.fsRemaining = duration;
-            state.fsTotal = duration;
-            state.fsType = type;
-            state.fsCallback = callback;
-
-            fsTimer.textContent = `${duration}s`;
-            fsProgress.style.width = '0%';
-            fsLabel.textContent = `Menonton ${type}`;
-            fsReward.textContent = `+${reward} poin${state.vip ? ' (VIP x2)' : ''}`;
-            fsWarning.classList.remove('show');
-            fsOverlay.classList.add('active');
-
-            const videoUrl = document.getElementById('adminYtLink').value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-            fsVideoFrame.src = videoUrl + '?autoplay=1&rel=0&controls=0&mute=1';
-
-            let elapsed = 0;
-            state.fsInterval = setInterval(() => {
-                elapsed++;
-                const remaining = duration - elapsed;
-                state.fsRemaining = remaining;
-                fsTimer.textContent = `${remaining}s`;
-                fsProgress.style.width = `${(elapsed / duration) * 100}%`;
-
-                if (elapsed >= duration) {
-                    clearInterval(state.fsInterval);
-                    state.fsInterval = null;
-                    finishFullscreenVideo(reward, type);
-                }
-            }, 1000);
-
-            document.addEventListener('visibilitychange', handleFsVisibilityChange);
-        }
-
-        function handleFsVisibilityChange() {
-            if (document.hidden && state.fsActive) {
-                if (state.fsInterval) {
-                    clearInterval(state.fsInterval);
-                    state.fsInterval = null;
-                    fsWarning.classList.add('show');
-                    fsWarning.textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
-                }
-            } else if (!document.hidden && state.fsActive) {
-                if (!state.fsInterval && state.fsRemaining > 0) {
-                    fsWarning.classList.remove('show');
-                    const remaining = state.fsRemaining;
-                    const total = state.fsTotal;
-                    const elapsed = total - remaining;
-
-                    state.fsInterval = setInterval(() => {
-                        const newRemaining = state.fsRemaining - 1;
-                        state.fsRemaining = newRemaining;
-                        fsTimer.textContent = `${newRemaining}s`;
-                        fsProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
-
-                        if (newRemaining <= 0) {
-                            clearInterval(state.fsInterval);
-                            state.fsInterval = null;
-                            finishFullscreenVideo(
-                                state.fsType === 'YouTube' ? state.rewardPoints.yt : state.fsType === 'Iklan' ? state
-                                .rewardPoints.iklan : 0,
-                                state.fsType
-                            );
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function finishFullscreenVideo(reward, type) {
-            state.fsActive = false;
-            document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-
-            if (state.fsInterval) {
-                clearInterval(state.fsInterval);
-                state.fsInterval = null;
-            }
-
-            const bonus = state.vip ? 2 : 1;
-            const finalReward = reward * bonus;
-            state.poin += finalReward;
-
-            if (type === 'YouTube') state.missions.yt.count++;
-            else if (type === 'Iklan') state.missions.iklan.count++;
-
-            fsOverlay.classList.remove('active');
-            fsVideoFrame.src = 'about:blank';
-
-            updateUI();
-            addLog(`✅ +${finalReward} poin dari ${type}${bonus > 1 ? ' (VIP x2)' : ''}`);
-            showToast(`+${finalReward} poin dari ${type}!`);
-
-            if (state.fsCallback) {
-                state.fsCallback();
-                state.fsCallback = null;
-            }
-        }
-
-        fsCloseBtn.addEventListener('click', function() {
-            if (state.fsActive) {
-                if (confirm('Batalkan misi? Poin tidak akan didapatkan.')) {
-                    state.fsActive = false;
-                    document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-                    if (state.fsInterval) {
-                        clearInterval(state.fsInterval);
-                        state.fsInterval = null;
-                    }
-                    fsOverlay.classList.remove('active');
-                    fsVideoFrame.src = 'about:blank';
-                    showToast('⏹️ Misi dibatalkan');
-                }
-            }
-        });
-
-        // ========== SCROLL MISSION ==========
-        function startScrollMission() {
-            if (state.scrollActive) {
-                showToast('⏳ Misi scroll sedang berjalan!');
-                return;
-            }
-
-            const maxCount = state.missions.scroll.max;
-            if (state.missions.scroll.count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
-
-            const scrollUrl = document.getElementById('adminScrollLink').value || state.scrollLink;
-            scrollIframe.src = scrollUrl;
-
-            state.scrollActive = true;
-            state.scrollRemaining = state.scrollTotal;
-
-            scrollTimer.textContent = `${state.scrollRemaining}s`;
-            scrollProgressFill.style.width = '0%';
-            scrollReward.textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
-            scrollWarning.classList.remove('show');
-            scrollOverlay.classList.add('active');
-
-            let elapsed = 0;
-            state.scrollInterval = setInterval(() => {
-                elapsed++;
-                const remaining = state.scrollTotal - elapsed;
-                state.scrollRemaining = remaining;
-                scrollTimer.textContent = `${remaining}s`;
-                scrollProgressFill.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
-
-                if (elapsed >= state.scrollTotal) {
-                    clearInterval(state.scrollInterval);
-                    state.scrollInterval = null;
-                    finishScrollMission();
-                }
-            }, 1000);
-
-            document.addEventListener('visibilitychange', handleScrollVisibilityChange);
-        }
-
-        function handleScrollVisibilityChange() {
-            if (document.hidden && state.scrollActive) {
-                if (state.scrollInterval) {
-                    clearInterval(state.scrollInterval);
-                    state.scrollInterval = null;
-                    scrollWarning.classList.add('show');
-                    scrollWarning.textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
-                }
-            } else if (!document.hidden && state.scrollActive) {
-                if (!state.scrollInterval && state.scrollRemaining > 0) {
-                    scrollWarning.classList.remove('show');
-                    const remaining = state.scrollRemaining;
-                    const total = state.scrollTotal;
-                    const elapsed = total - remaining;
-
-                    state.scrollInterval = setInterval(() => {
-                        const newRemaining = state.scrollRemaining - 1;
-                        state.scrollRemaining = newRemaining;
-                        scrollTimer.textContent = `${newRemaining}s`;
-                        scrollProgressFill.style.width = `${((total - newRemaining) / total) * 100}%`;
-
-                        if (newRemaining <= 0) {
-                            clearInterval(state.scrollInterval);
-                            state.scrollInterval = null;
-                            finishScrollMission();
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function finishScrollMission() {
-            state.scrollActive = false;
-            document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-
-            if (state.scrollInterval) {
-                clearInterval(state.scrollInterval);
-                state.scrollInterval = null;
-            }
-
-            const bonus = state.vip ? 2 : 1;
-            const finalReward = state.rewardPoints.scroll * bonus;
-            state.poin += finalReward;
-            state.missions.scroll.count++;
-
-            scrollOverlay.classList.remove('active');
-            scrollIframe.src = 'about:blank';
-
-            updateUI();
-            addLog(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
-            showToast(`+${finalReward} poin dari Scroll!`);
-        }
-
-        scrollCloseBtn.addEventListener('click', function() {
-            if (state.scrollActive) {
-                if (confirm('Batalkan misi scroll? Poin tidak akan didapatkan.')) {
-                    state.scrollActive = false;
-                    document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-                    if (state.scrollInterval) {
-                        clearInterval(state.scrollInterval);
-                        state.scrollInterval = null;
-                    }
-                    scrollOverlay.classList.remove('active');
-                    scrollIframe.src = 'about:blank';
-                    showToast('⏹️ Misi scroll dibatalkan');
-                }
-            }
-        });
-
-        // ========== TOGGLE ADMIN MODE ==========
-        document.getElementById('toggleAdminMode').addEventListener('click', function() {
-            state.isAdmin = !state.isAdmin;
-            const adminPanels = document.querySelectorAll('.admin-panel');
-            adminPanels.forEach(p => p.classList.toggle('show', state.isAdmin));
-            this.classList.toggle('active', state.isAdmin);
-            this.innerHTML = state.isAdmin ?
-                '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' :
-                '<i class="fas fa-shield-alt"></i> Aktifkan Mode Admin';
-            showToast(state.isAdmin ? '🔓 Admin Mode Aktif' : '🔒 Admin Mode Nonaktif');
-            if (state.isAdmin) {
-                renderAdminMissions();
-                document.getElementById('rewardYtInput').value = state.rewardPoints.yt;
-                document.getElementById('rewardIklanInput').value = state.rewardPoints.iklan;
-                document.getElementById('rewardScrollInput').value = state.rewardPoints.scroll;
-                document.getElementById('rewardSubInput').value = state.rewardPoints.sub;
-                document.getElementById('rewardSosmedInput').value = state.rewardPoints.sosmed;
-                document.getElementById('rewardShareInput').value = state.rewardPoints.share;
-                document.getElementById('bonusL1Input').value = state.ref.bonusL1;
-                document.getElementById('bonusL2Input').value = state.ref.bonusL2;
-                document.getElementById('bonusL3Input').value = state.ref.bonusL3;
-                document.getElementById('adminScrollLink').value = state.scrollLink;
-            }
-        });
-
-        // ========== RENDER DOWNLINE ==========
-        function renderDownline() {
-            const container = document.getElementById('downlineList');
-            const totalElement = document.getElementById('totalDownline');
-            
-            if (!container) return;
-
-            // Update total
-            const total = state.downline.length;
-            totalElement.textContent = `Total: ${total}`;
-
-            if (total === 0) {
-                container.innerHTML = `
-                            <div class="downline-empty">
-                                <i class="fas fa-user-plus"></i>
-                                <p>Belum ada downline</p>
-                                <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
-                            </div>
-                        `;
-                return;
-            }
-
-            // Group by level
-            const levelColors = {
-                1: 'var(--secondary)',
-                2: '#3B82F6',
-                3: '#34D399'
-            };
-
-            const levelLabels = {
-                1: 'Level 1',
-                2: 'Level 2',
-                3: 'Level 3'
-            };
-
-            container.innerHTML = state.downline.map(dl => `
-                        <div class="downline-item">
-                            <div class="dl-info">
-                                <div class="dl-avatar">${dl.name.charAt(0).toUpperCase()}</div>
-                                <div>
-                                    <div class="dl-name">${dl.name}</div>
-                                    <div class="dl-email">${dl.email}</div>
-                                </div>
-                            </div>
-                            <div class="dl-level" style="border-color: ${levelColors[dl.level] || 'var(--text-secondary)'}; color: ${levelColors[dl.level] || 'var(--text-secondary)'}">
-                                ${levelLabels[dl.level] || 'Level ' + dl.level}
-                            </div>
-                        </div>
-                    `).join('');
-        }
-
-        // ========== SAVE REWARD POINTS ==========
-        document.getElementById('saveRewardBtn').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
-            const yt = parseInt(document.getElementById('rewardYtInput').value);
-            const iklan = parseInt(document.getElementById('rewardIklanInput').value);
-            const scroll = parseInt(document.getElementById('rewardScrollInput').value);
-            const sub = parseInt(document.getElementById('rewardSubInput').value);
-            const sosmed = parseInt(document.getElementById('rewardSosmedInput').value);
-            const share = parseInt(document.getElementById('rewardShareInput').value);
-
-            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share) ||
-                yt < 0 || iklan < 0 || scroll < 0 || sub < 0 || sosmed < 0 || share < 0) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
-            }
-
-            state.rewardPoints.yt = yt;
-            state.rewardPoints.iklan = iklan;
-            state.rewardPoints.scroll = scroll;
-            state.rewardPoints.sub = sub;
-            state.rewardPoints.sosmed = sosmed;
-            state.rewardPoints.share = share;
-
-            state.socialMissions.find(m => m.id === 'sub').reward = sub;
-            state.socialMissions.find(m => m.id === 'sosmed').reward = sosmed;
-            state.socialMissions.find(m => m.id === 'share').reward = share;
-
-            document.getElementById('ytRewardDisplay').textContent = yt;
-            document.getElementById('iklanRewardDisplay').textContent = iklan;
-            document.getElementById('scrollRewardDisplay').textContent = scroll;
-            document.getElementById('subRewardDisplay').textContent = sub;
-            document.getElementById('sosmedRewardDisplay').textContent = sosmed;
-            document.getElementById('shareRewardDisplay').textContent = share;
-
-            document.querySelector('.slider-slide[data-index="0"] .slide-badge').textContent = `🎯 +${yt} / +${iklan} Poin`;
-            document.querySelector('.slider-slide[data-index="1"] .slide-badge').textContent = `📱 +${scroll} Poin`;
-            document.querySelector('.slider-slide[data-index="5"] .slide-badge').textContent =
-                `📅 +${sub}, +${sosmed}, +${share} Poin`;
-
-            renderSocialMissions();
-            addLog(
-                `⚙️ Admin update poin misi: YT=${yt}, Iklan=${iklan}, Scroll=${scroll}, Sub=${sub}, Sosmed=${sosmed}, Share=${share}`);
-            showToast(`✅ Poin misi berhasil diupdate!`);
-        });
-
-        // ========== SAVE BONUS REFERRAL ==========
-        document.getElementById('saveBonusBtn').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
-            const l1 = parseInt(document.getElementById('bonusL1Input').value);
-            const l2 = parseInt(document.getElementById('bonusL2Input').value);
-            const l3 = parseInt(document.getElementById('bonusL3Input').value);
-
-            if (isNaN(l1) || isNaN(l2) || isNaN(l3) || l1 < 0 || l2 < 0 || l3 < 0) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
-            }
-
-            state.ref.bonusL1 = l1;
-            state.ref.bonusL2 = l2;
-            state.ref.bonusL3 = l3;
-
-            document.getElementById('bonusL1Display').textContent = `+${l1} poin/referral`;
-            document.getElementById('bonusL2Display').textContent = `+${l2} poin/referral`;
-            document.getElementById('bonusL3Display').textContent = `+${l3} poin/referral`;
-
-            document.querySelector('.slider-slide[data-index="4"] p').innerHTML =
-                `Dapatkan bonus dari referral! <span class="slide-highlight">Level 1: ${l1} poin • Level 2: ${l2} poin • Level 3: ${l3} poin</span>`;
-
-            addLog(`⚙️ Admin update bonus referral: L1=${l1}, L2=${l2}, L3=${l3}`);
-            showToast(`✅ Bonus referral diupdate! L1: ${l1}, L2: ${l2}, L3: ${l3}`);
-        });
-
-        // ========== SAVE ADMIN LINKS ==========
-        document.getElementById('saveAdminLinks').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
-            const ytLink = document.getElementById('adminYtLink').value;
-            const scrollLink = document.getElementById('adminScrollLink').value;
-            const sosmedLink = document.getElementById('adminSosmedLink').value;
-            const shareLink = document.getElementById('adminShareLink').value;
-
-            state.scrollLink = scrollLink;
-
-            const subMission = state.socialMissions.find(m => m.id === 'sub');
-            const sosmedMission = state.socialMissions.find(m => m.id === 'sosmed');
-            const shareMission = state.socialMissions.find(m => m.id === 'share');
-
-            if (subMission) subMission.link = ytLink;
-            if (sosmedMission) sosmedMission.link = sosmedLink;
-            if (shareMission) shareMission.link = shareLink;
-
-            renderSocialMissions();
-
-            showToast('✅ Semua link berhasil diupdate!');
-            addLog('🔧 Admin update semua link');
-        });
-
-        // ========== VIP APPROVE/REJECT ==========
-        window.approveVIP = function(btn) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const item = btn.closest('.admin-mission-item');
-            if (item) {
-                item.style.opacity = '0.5';
-                item.querySelector('.am-info .am-title').textContent += ' ✅ Disetujui';
-                btn.parentElement.innerHTML = '<span style="color:#34D399;font-size:12px;">VIP Active</span>';
-                showToast('✅ VIP berhasil diaktifkan!');
-                addLog('👑 Admin approve VIP');
-                state.vip = true;
-                state.missions.yt.max = 20;
-                state.missions.iklan.max = 20;
-                state.missions.scroll.max = 20;
-                updateUI();
-            }
-        };
-
-        window.rejectVIP = function(btn) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const item = btn.closest('.admin-mission-item');
-            if (item) {
-                item.style.opacity = '0.3';
-                item.querySelector('.am-info .am-title').textContent += ' ❌ Ditolak';
-                btn.parentElement.innerHTML = '<span style="color:#EF4444;font-size:12px;">Rejected</span>';
-                showToast('❌ Request VIP ditolak');
-                addLog('❌ Admin reject VIP');
-            }
-        };
-
-        // ========== QRIS MODAL ==========
-        document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
-            if (state.vip) {
-                showToast('👑 Anda sudah VIP!');
-                return;
-            }
-            qrisModal.classList.add('active');
-        });
-
-        document.getElementById('closeModal').addEventListener('click', function() {
-            qrisModal.classList.remove('active');
-        });
-
-        document.getElementById('confirmUpgrade').addEventListener('click', function() {
-            state.vipRequests.push({ user: document.getElementById('userEmail').textContent, status: 'pending' });
-            qrisModal.classList.remove('active');
-            addLog('💳 Request upgrade VIP via QRIS - menunggu verifikasi admin');
-            showToast('✅ Pembayaran berhasil! Menunggu verifikasi admin.');
-        });
-
-        // ========== UTILITY ==========
         function updateUI() {
             document.getElementById('statPoin').textContent = state.poin;
             const todayMisi = Object.values(state.missions).filter(m => m.lastDone === new Date().toDateString()).length;
@@ -2841,6 +2258,7 @@
             updateQuotaDisplay();
             renderSocialMissions();
             renderDownline();
+            renderLogs();
         }
 
         function updateQuotaDisplay() {
@@ -2854,62 +2272,55 @@
             document.getElementById('ytQuota').textContent = `${ytCount}/${ytMax}`;
             document.getElementById('iklanQuota').textContent = `${iklanCount}/${iklanMax}`;
             document.getElementById('scrollQuota').textContent = `${scrollCount}/${scrollMax}`;
-
-            document.getElementById('ytBtn').disabled = ytCount >= ytMax || state.fsActive;
-            document.getElementById('iklanBtn').disabled = iklanCount >= iklanMax || state.fsActive;
-            document.getElementById('scrollBtn').disabled = scrollCount >= scrollMax || state.scrollActive;
         }
 
-        function addLog(msg) {
-            const time = new Date().toLocaleTimeString();
-            state.logs.unshift({ msg, time });
-            if (state.logs.length > 50) state.logs.pop();
+        function renderLogs() {
             const container = document.getElementById('logContainer');
+            if (!container) return;
             container.innerHTML = state.logs.map(log => `
-                            <div class="log-item">
-                                <span>${log.msg}</span>
-                                <span class="time">${log.time}</span>
+                        <div class="log-item">
+                            <span>${log.msg}</span>
+                            <span class="time">${log.time}</span>
+                        </div>
+                    `).join('');
+        }
+
+        function renderDownline() {
+            const container = document.getElementById('downlineList');
+            const totalElement = document.getElementById('totalDownline');
+            if (!container) return;
+
+            const total = state.downline.length;
+            totalElement.textContent = `Total: ${total}`;
+
+            if (total === 0) {
+                container.innerHTML = `
+                            <div class="downline-empty">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Belum ada downline</p>
+                                <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
                             </div>
-                        `).join('');
-        }
-
-        // ========== MISSIONS ==========
-        function doMission(type, reward, duration, label) {
-            const mission = state.missions[type];
-            if (!mission) return;
-
-            if (type === 'scroll') {
-                if (state.scrollActive) return showToast('⏳ Misi scroll sedang berjalan!');
-                startScrollMission();
+                        `;
                 return;
             }
 
-            if (['sub', 'sosmed', 'share'].includes(type)) {
-                const today = new Date().toDateString();
-                if (mission.lastDone === today) {
-                    showToast('⏳ Misi ini hanya 1x sehari!', false);
-                    return;
-                }
-                const bonus = state.vip ? 2 : 1;
-                const finalReward = reward * bonus;
-                state.poin += finalReward;
-                mission.lastDone = today;
-                updateUI();
-                addLog(`✅ +${finalReward} poin dari ${label}${bonus > 1 ? ' (VIP x2)' : ''}`);
-                showToast(`+${finalReward} poin dari ${label}!`);
-                return;
-            }
-
-            if (type === 'yt' || type === 'iklan') {
-                const rewardAmount = type === 'yt' ? state.rewardPoints.yt : state.rewardPoints.iklan;
-                const labelName = type === 'yt' ? 'YouTube' : 'Iklan';
-                startFullscreenVideo(duration, rewardAmount, labelName, () => {
-                    updateUI();
-                });
-            }
+            container.innerHTML = state.downline.map(dl => `
+                        <div class="downline-item">
+                            <div class="dl-info">
+                                <div class="dl-avatar">${dl.name.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <div class="dl-name">${dl.name}</div>
+                                    <div class="dl-email">${dl.email}</div>
+                                </div>
+                            </div>
+                            <div class="dl-level">Level 1</div>
+                        </div>
+                    `).join('');
         }
 
-        // ========== RENDER SOCIAL MISSIONS ==========
+        // ============================================================
+        //  SOCIAL MISSIONS
+        // ============================================================
         function renderSocialMissions() {
             const container = document.getElementById('socialMissions');
             if (!container) return;
@@ -2921,16 +2332,16 @@
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
                 return `
-                                <div class="mission-card" data-mission-id="${m.id}">
-                                    <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                                    <div class="m-info">
-                                        <div class="m-title">${m.name}</div>
-                                        <div class="m-desc">1x sehari</div>
-                                        <div class="m-reward">+${reward} poin</div>
-                                    </div>
-                                    <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
+                            <div class="mission-card" data-mission-id="${m.id}">
+                                <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
+                                <div class="m-info">
+                                    <div class="m-title">${m.name}</div>
+                                    <div class="m-desc">1x sehari</div>
+                                    <div class="m-reward">+${reward} poin</div>
                                 </div>
-                            `;
+                                <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
+                            </div>
+                        `;
             }).join('');
 
             container.querySelectorAll('[data-mission]').forEach(btn => {
@@ -2948,122 +2359,676 @@
             });
         }
 
-        // ========== ADMIN - MANAGE SOCIAL MISSIONS ==========
-        function renderAdminMissions() {
-            const container = document.getElementById('adminMissionList');
-            if (!container) return;
-
-            container.innerHTML = state.socialMissions.map(m => {
-                const reward = state.rewardPoints[m.id] || m.reward;
-                return `
-                                <div class="admin-mission-item">
-                                    <div class="am-info">
-                                        <div class="am-title">${m.name}</div>
-                                        <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                                        <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
-                                    </div>
-                                    <div class="am-actions">
-                                        <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                                        <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            `;
-            }).join('');
-        }
-
-        window.editMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const mission = state.socialMissions.find(m => m.id === id);
+        // ============================================================
+        //  MISSIONS
+        // ============================================================
+        async function doMission(type, reward, duration, label) {
+            const mission = state.missions[type];
             if (!mission) return;
-            const newName = prompt('Edit nama misi:', mission.name);
-            if (newName !== null && newName !== '') mission.name = newName;
-            const newReward = prompt('Edit poin reward:', state.rewardPoints[id] || mission.reward);
-            if (newReward !== null && !isNaN(newReward)) {
-                state.rewardPoints[id] = parseInt(newReward);
-                const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay',
-                    share: 'shareRewardDisplay' };
-                if (displayMap[id]) {
-                    document.getElementById(displayMap[id]).textContent = state.rewardPoints[id];
-                }
-            }
-            const newLink = prompt('Edit link misi:', mission.link || '');
-            if (newLink !== null) mission.link = newLink;
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`✏️ Admin edit misi: ${mission.name}`);
-            showToast('✅ Misi berhasil diupdate!');
-        };
 
-        window.deleteMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            if (!confirm('Hapus misi ini?')) return;
-            state.socialMissions = state.socialMissions.filter(m => m.id !== id);
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`🗑️ Admin hapus misi`);
-            showToast('✅ Misi dihapus!');
-        };
-
-        document.getElementById('addMissionBtn').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const nameInput = document.getElementById('newMissionName');
-            const rewardInput = document.getElementById('newMissionReward');
-            const linkInput = document.getElementById('newMissionLink');
-            const name = nameInput.value.trim();
-            const reward = parseInt(rewardInput.value);
-            const link = linkInput.value.trim();
-
-            if (!name || !reward) {
-                showToast('Isi nama dan poin reward!', false);
+            if (!state.userId) {
+                showToast('Silakan login terlebih dahulu!', false);
                 return;
             }
 
-            const id = 'custom_' + Date.now();
-            state.socialMissions.push({
-                id: id,
-                name: name,
-                reward: reward,
-                icon: 'share',
-                link: link || ''
-            });
-            state.missions[id] = { cooldown: false, lastDone: 0 };
-            state.rewardPoints[id] = reward;
+            if (type === 'scroll') {
+                if (scrollActive) return showToast('⏳ Misi scroll sedang berjalan!');
+                startScrollMission();
+                return;
+            }
 
-            nameInput.value = '';
-            rewardInput.value = '';
-            linkInput.value = '';
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`➕ Admin tambah misi: ${name} (+${reward} poin)`);
-            showToast(`✅ Misi "${name}" ditambahkan!`);
+            if (['sub', 'sosmed', 'share'].includes(type)) {
+                const today = new Date().toDateString();
+                if (mission.lastDone === today) {
+                    showToast('⏳ Misi ini hanya 1x sehari!', false);
+                    return;
+                }
+                const bonus = state.vip ? 2 : 1;
+                const finalReward = reward * bonus;
+                state.poin += finalReward;
+                mission.lastDone = today;
+
+                await completeMission(state.userId, type, finalReward);
+
+                updateUI();
+                addLog(`✅ +${finalReward} poin dari ${label}${bonus > 1 ? ' (VIP x2)' : ''}`);
+                showToast(`+${finalReward} poin dari ${label}!`);
+                return;
+            }
+
+            if (type === 'yt' || type === 'iklan') {
+                const rewardAmount = type === 'yt' ? state.rewardPoints.yt : state.rewardPoints.iklan;
+                const labelName = type === 'yt' ? 'YouTube' : 'Iklan';
+
+                const maxCount = state.missions[type].max;
+                if (state.missions[type].count >= maxCount) {
+                    showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
+                    return;
+                }
+
+                startFullscreenVideo(duration, rewardAmount, labelName, async () => {
+                    const bonus = state.vip ? 2 : 1;
+                    const finalReward = rewardAmount * bonus;
+                    await completeMission(state.userId, type, finalReward);
+                    updateUI();
+                });
+            }
+        }
+
+        async function completeMission(userId, type, reward) {
+            try {
+                const { data: user } = await supabase
+                    .from('users')
+                    .select('poin')
+                    .eq('id', userId)
+                    .single();
+
+                const newPoin = (user?.poin || 0) + reward;
+
+                await supabase
+                    .from('users')
+                    .update({ poin: newPoin })
+                    .eq('id', userId);
+
+                const today = new Date().toISOString().split('T')[0];
+                const { data: mission } = await supabase
+                    .from('missions')
+                    .select('count')
+                    .eq('user_id', userId)
+                    .eq('type', type)
+                    .single();
+
+                const newCount = (mission?.count || 0) + 1;
+
+                await supabase
+                    .from('missions')
+                    .update({
+                        count: newCount,
+                        last_done: today
+                    })
+                    .eq('user_id', userId)
+                    .eq('type', type);
+
+                await addLog(userId, `✅ +${reward} poin dari ${type}`);
+
+                return { success: true };
+            } catch (error) {
+                console.error('Complete mission error:', error);
+                return { success: false };
+            }
+        }
+
+        async function addLog(userId, message) {
+            try {
+                await supabase
+                    .from('logs')
+                    .insert({
+                        user_id: userId,
+                        message: message
+                    });
+            } catch (error) {
+                console.error('Add log error:', error);
+            }
+        }
+
+        function addLogLocal(msg) {
+            const time = new Date().toLocaleTimeString();
+            state.logs.unshift({ msg, time });
+            if (state.logs.length > 50) state.logs.pop();
+            renderLogs();
+        }
+
+        // ============================================================
+        //  FULLSCREEN VIDEO
+        // ============================================================
+        let fsActive = false;
+        let fsInterval = null;
+        let fsRemaining = 0;
+        let fsTotal = 0;
+        let fsType = '';
+        let fsCallback = null;
+
+        function startFullscreenVideo(duration, reward, type, callback) {
+            if (fsActive) {
+                showToast('⏳ Video sedang diputar!');
+                return;
+            }
+
+            fsActive = true;
+            fsRemaining = duration;
+            fsTotal = duration;
+            fsType = type;
+            fsCallback = callback;
+
+            document.getElementById('fsTimer').textContent = `${duration}s`;
+            document.getElementById('fsProgressFill').style.width = '0%';
+            document.getElementById('fsLabel').textContent = `Menonton ${type}`;
+            document.getElementById('fsReward').textContent = `+${reward} poin${state.vip ? ' (VIP x2)' : ''}`;
+            document.getElementById('fsWarning').classList.remove('show');
+            document.getElementById('fullscreenOverlay').classList.add('active');
+
+            const videoUrl = document.getElementById('adminYtLink')?.value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+            document.getElementById('fsVideoFrame').src = videoUrl + '?autoplay=1&rel=0&controls=0&mute=1';
+
+            let elapsed = 0;
+            fsInterval = setInterval(() => {
+                elapsed++;
+                const remaining = duration - elapsed;
+                fsRemaining = remaining;
+                document.getElementById('fsTimer').textContent = `${remaining}s`;
+                document.getElementById('fsProgressFill').style.width = `${(elapsed / duration) * 100}%`;
+
+                if (elapsed >= duration) {
+                    clearInterval(fsInterval);
+                    fsInterval = null;
+                    finishFullscreenVideo(reward, type);
+                }
+            }, 1000);
+
+            document.addEventListener('visibilitychange', handleFsVisibilityChange);
+        }
+
+        function handleFsVisibilityChange() {
+            if (document.hidden && fsActive) {
+                if (fsInterval) {
+                    clearInterval(fsInterval);
+                    fsInterval = null;
+                    document.getElementById('fsWarning').classList.add('show');
+                    document.getElementById('fsWarning').textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
+                }
+            } else if (!document.hidden && fsActive) {
+                if (!fsInterval && fsRemaining > 0) {
+                    document.getElementById('fsWarning').classList.remove('show');
+                    const remaining = fsRemaining;
+                    const total = fsTotal;
+                    const elapsed = total - remaining;
+
+                    fsInterval = setInterval(() => {
+                        const newRemaining = fsRemaining - 1;
+                        fsRemaining = newRemaining;
+                        document.getElementById('fsTimer').textContent = `${newRemaining}s`;
+                        document.getElementById('fsProgressFill').style.width = `${((total - newRemaining) / total) * 100}%`;
+
+                        if (newRemaining <= 0) {
+                            clearInterval(fsInterval);
+                            fsInterval = null;
+                            const reward = fsType === 'YouTube' ? state.rewardPoints.yt : fsType === 'Iklan' ? state
+                                .rewardPoints.iklan : 0;
+                            finishFullscreenVideo(reward, fsType);
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function finishFullscreenVideo(reward, type) {
+            fsActive = false;
+            document.removeEventListener('visibilitychange', handleFsVisibilityChange);
+
+            if (fsInterval) {
+                clearInterval(fsInterval);
+                fsInterval = null;
+            }
+
+            const bonus = state.vip ? 2 : 1;
+            const finalReward = reward * bonus;
+
+            document.getElementById('fullscreenOverlay').classList.remove('active');
+            document.getElementById('fsVideoFrame').src = 'about:blank';
+
+            if (fsCallback) {
+                fsCallback();
+                fsCallback = null;
+            }
+        }
+
+        document.getElementById('fsCloseBtn').addEventListener('click', function() {
+            if (fsActive) {
+                if (confirm('Batalkan misi? Poin tidak akan didapatkan.')) {
+                    fsActive = false;
+                    document.removeEventListener('visibilitychange', handleFsVisibilityChange);
+                    if (fsInterval) {
+                        clearInterval(fsInterval);
+                        fsInterval = null;
+                    }
+                    document.getElementById('fullscreenOverlay').classList.remove('active');
+                    document.getElementById('fsVideoFrame').src = 'about:blank';
+                    showToast('⏹️ Misi dibatalkan');
+                }
+            }
         });
 
-        // ========== WD APPROVAL ==========
-        window.approveWD = function(btn) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const item = btn.closest('.admin-mission-item');
-            if (item) {
-                item.style.opacity = '0.5';
-                item.querySelector('.am-info .am-title').textContent += ' ✅ Approved';
-                btn.parentElement.innerHTML = '<span style="color:#34D399;font-size:12px;">Approved</span>';
-                showToast('✅ WD disetujui!');
-                addLog('✅ Admin approve WD');
-            }
-        };
+        // ============================================================
+        //  SCROLL MISSION
+        // ============================================================
+        let scrollActive = false;
+        let scrollInterval = null;
+        let scrollRemaining = 0;
+        let scrollTotal = 10;
 
-        window.rejectWD = function(btn) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const item = btn.closest('.admin-mission-item');
-            if (item) {
-                item.style.opacity = '0.3';
-                item.querySelector('.am-info .am-title').textContent += ' ❌ Rejected';
-                btn.parentElement.innerHTML = '<span style="color:#EF4444;font-size:12px;">Rejected</span>';
-                showToast('❌ WD ditolak');
-                addLog('❌ Admin reject WD');
+        function startScrollMission() {
+            if (scrollActive) {
+                showToast('⏳ Misi scroll sedang berjalan!');
+                return;
             }
-        };
 
-        // ========== EVENT LISTENERS ==========
+            const maxCount = state.missions.scroll.max;
+            if (state.missions.scroll.count >= maxCount) {
+                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
+                return;
+            }
+
+            const scrollUrl = document.getElementById('adminScrollLink')?.value || state.scrollLink;
+            document.getElementById('scrollIframe').src = scrollUrl;
+
+            scrollActive = true;
+            scrollRemaining = scrollTotal;
+
+            document.getElementById('scrollTimer').textContent = `${scrollRemaining}s`;
+            document.getElementById('scrollProgressFill').style.width = '0%';
+            document.getElementById('scrollReward').textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
+            document.getElementById('scrollWarning').classList.remove('show');
+            document.getElementById('scrollOverlay').classList.add('active');
+
+            let elapsed = 0;
+            scrollInterval = setInterval(() => {
+                elapsed++;
+                const remaining = scrollTotal - elapsed;
+                scrollRemaining = remaining;
+                document.getElementById('scrollTimer').textContent = `${remaining}s`;
+                document.getElementById('scrollProgressFill').style.width = `${(elapsed / scrollTotal) * 100}%`;
+
+                if (elapsed >= scrollTotal) {
+                    clearInterval(scrollInterval);
+                    scrollInterval = null;
+                    finishScrollMission();
+                }
+            }, 1000);
+
+            document.addEventListener('visibilitychange', handleScrollVisibilityChange);
+        }
+
+        function handleScrollVisibilityChange() {
+            if (document.hidden && scrollActive) {
+                if (scrollInterval) {
+                    clearInterval(scrollInterval);
+                    scrollInterval = null;
+                    document.getElementById('scrollWarning').classList.add('show');
+                    document.getElementById('scrollWarning').textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
+                }
+            } else if (!document.hidden && scrollActive) {
+                if (!scrollInterval && scrollRemaining > 0) {
+                    document.getElementById('scrollWarning').classList.remove('show');
+                    const remaining = scrollRemaining;
+                    const total = scrollTotal;
+                    const elapsed = total - remaining;
+
+                    scrollInterval = setInterval(() => {
+                        const newRemaining = scrollRemaining - 1;
+                        scrollRemaining = newRemaining;
+                        document.getElementById('scrollTimer').textContent = `${newRemaining}s`;
+                        document.getElementById('scrollProgressFill').style.width = `${((total - newRemaining) / total) * 100}%`;
+
+                        if (newRemaining <= 0) {
+                            clearInterval(scrollInterval);
+                            scrollInterval = null;
+                            finishScrollMission();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function finishScrollMission() {
+            scrollActive = false;
+            document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
+
+            if (scrollInterval) {
+                clearInterval(scrollInterval);
+                scrollInterval = null;
+            }
+
+            const bonus = state.vip ? 2 : 1;
+            const finalReward = state.rewardPoints.scroll * bonus;
+            state.poin += finalReward;
+            state.missions.scroll.count++;
+
+            document.getElementById('scrollOverlay').classList.remove('active');
+            document.getElementById('scrollIframe').src = 'about:blank';
+
+            updateUI();
+            addLogLocal(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
+            showToast(`+${finalReward} poin dari Scroll!`);
+        }
+
+        document.getElementById('scrollCloseBtn').addEventListener('click', function() {
+            if (scrollActive) {
+                if (confirm('Batalkan misi scroll? Poin tidak akan didapatkan.')) {
+                    scrollActive = false;
+                    document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
+                    if (scrollInterval) {
+                        clearInterval(scrollInterval);
+                        scrollInterval = null;
+                    }
+                    document.getElementById('scrollOverlay').classList.remove('active');
+                    document.getElementById('scrollIframe').src = 'about:blank';
+                    showToast('⏹️ Misi scroll dibatalkan');
+                }
+            }
+        });
+
+        // ============================================================
+        //  SLIDER
+        // ============================================================
+        const slides = document.querySelectorAll('.slider-slide');
+        const sliderDots = document.getElementById('sliderDots');
+        const totalSlides = slides.length;
+        let sliderIndex = 0;
+        let sliderInterval = null;
+
+        function initSlider() {
+            sliderDots.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => goToSlide(i));
+                sliderDots.appendChild(dot);
+            }
+            startSliderAuto();
+        }
+
+        function goToSlide(index) {
+            const oldIndex = sliderIndex;
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'exit');
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i === oldIndex) {
+                    slide.classList.add('exit');
+                }
+            });
+            sliderIndex = index;
+            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            resetSliderAuto();
+        }
+
+        function startSliderAuto() {
+            if (sliderInterval) clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+                const next = (sliderIndex + 1) % totalSlides;
+                goToSlide(next);
+            }, 4000);
+        }
+
+        function resetSliderAuto() {
+            if (sliderInterval) {
+                clearInterval(sliderInterval);
+                startSliderAuto();
+            }
+        }
+
+        document.getElementById('sliderNext').addEventListener('click', () => {
+            const next = (sliderIndex + 1) % totalSlides;
+            goToSlide(next);
+        });
+        document.getElementById('sliderPrev').addEventListener('click', () => {
+            const prev = (sliderIndex - 1 + totalSlides) % totalSlides;
+            goToSlide(prev);
+        });
+
+        // ============================================================
+        //  EVENT LISTENERS
+        // ============================================================
+
+        // --- LOGIN ---
+        document.getElementById('btnLogin').addEventListener('click', async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showToast('Masukkan email dan password!', false);
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const hashedPassword = btoa(password);
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', hashedPassword)
+                    .single();
+
+                if (error || !data) {
+                    showLoading(false);
+                    showToast('Email atau password salah!', false);
+                    return;
+                }
+
+                state.isLoggedIn = true;
+                state.userId = data.id;
+
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('appMain').classList.add('active');
+
+                await loadUserData(data.id);
+                showToast('✅ Selamat datang, ' + email);
+                initSlider();
+            } catch (error) {
+                showLoading(false);
+                showToast('Login gagal: ' + error.message, false);
+            }
+        });
+
+        // --- REGISTER ---
+        document.getElementById('btnShowRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = prompt('Masukkan email untuk daftar:');
+            if (!email) return;
+            const password = prompt('Masukkan password:');
+            if (!password) return;
+
+            registerUser(email, password);
+        });
+
+        async function registerUser(email, password) {
+            try {
+                showLoading(true);
+
+                const hashedPassword = btoa(password);
+                const refCode = generateReferralCode(email);
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert({
+                        email: email,
+                        password: hashedPassword,
+                        referral_code: refCode,
+                        ip_address: getUserIP()
+                    })
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                // Create default missions
+                const missionTypes = ['yt', 'iklan', 'scroll', 'sub', 'sosmed', 'share'];
+                const missions = missionTypes.map(type => ({
+                    user_id: data.id,
+                    type: type,
+                    count: 0,
+                    max_count: 5,
+                    last_done: null
+                }));
+                await supabase.from('missions').insert(missions);
+
+                showLoading(false);
+                showToast('✅ Pendaftaran berhasil! Silakan login.');
+            } catch (error) {
+                showLoading(false);
+                showToast('❌ Gagal daftar: ' + error.message, false);
+            }
+        }
+
+        function generateReferralCode(email) {
+            const prefix = email.split('@')[0].substring(0, 4);
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return `${prefix}${random}`;
+        }
+
+        function getUserIP() {
+            const ips = ['192.168.1.1', '10.0.0.5', '172.16.0.1'];
+            return ips[Math.floor(Math.random() * ips.length)];
+        }
+
+        // --- DAILY CLAIM ---
+        document.getElementById('btnDailyClaim').addEventListener('click', async function() {
+            if (state.dailyClaimed) return showToast('Sudah claim hari ini!', false);
+            if (!state.userId) return showToast('Silakan login terlebih dahulu!', false);
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+
+                const { data: user } = await supabase
+                    .from('users')
+                    .select('poin')
+                    .eq('id', state.userId)
+                    .single();
+
+                await supabase
+                    .from('users')
+                    .update({ poin: (user?.poin || 0) + 5 })
+                    .eq('id', state.userId);
+
+                await addLog(state.userId, '✅ Claim daily +5 poin');
+
+                state.poin += 5;
+                state.dailyClaimed = true;
+                updateUI();
+                showToast('🎉 +5 poin daily claim!');
+            } catch (error) {
+                showToast('Gagal claim daily!', false);
+            }
+        });
+
+        // --- UPGRADE VIP ---
+        document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
+            if (state.vip) {
+                showToast('👑 Anda sudah VIP!');
+                return;
+            }
+            if (!state.userId) {
+                showToast('Silakan login terlebih dahulu!', false);
+                return;
+            }
+            document.getElementById('qrisModal').classList.add('active');
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('qrisModal').classList.remove('active');
+        });
+
+        document.getElementById('confirmUpgrade').addEventListener('click', async function() {
+            if (!state.userId) {
+                showToast('Silakan login terlebih dahulu!', false);
+                return;
+            }
+
+            try {
+                await supabase
+                    .from('vip_requests')
+                    .insert({
+                        user_id: state.userId,
+                        status: 'pending'
+                    });
+
+                await addLog(state.userId, '💳 Request upgrade VIP via QRIS - menunggu verifikasi admin');
+
+                document.getElementById('qrisModal').classList.remove('active');
+                showToast('✅ Pembayaran berhasil! Menunggu verifikasi admin.');
+            } catch (error) {
+                showToast('Gagal request VIP!', false);
+            }
+        });
+
+        // --- WITHDRAW ---
+        document.querySelectorAll('[data-redeem]').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const type = this.dataset.redeem;
+                const costs = { pulsa: 10000, uang: 10000, pulsa20: 20000 };
+                const names = { pulsa: 'Pulsa 10K', uang: 'Uang 10K', pulsa20: 'Pulsa 20K' };
+                const cost = costs[type];
+                const name = names[type];
+
+                if (!state.userId) {
+                    showToast('Silakan login terlebih dahulu!', false);
+                    return;
+                }
+
+                if (state.poin < cost) {
+                    showToast(`Butuh ${cost.toLocaleString()} poin!`, false);
+                    return;
+                }
+
+                try {
+                    const { data: user } = await supabase
+                        .from('users')
+                        .select('poin')
+                        .eq('id', state.userId)
+                        .single();
+
+                    await supabase
+                        .from('users')
+                        .update({ poin: (user?.poin || 0) - cost })
+                        .eq('id', state.userId);
+
+                    await supabase
+                        .from('withdraw_requests')
+                        .insert({
+                            user_id: state.userId,
+                            item: name,
+                            points: cost,
+                            status: 'pending'
+                        });
+
+                    await addLog(state.userId,
+                        `💳 Request WD ${name} - ${cost} poin (pending approval)`);
+
+                    state.poin -= cost;
+                    updateUI();
+                    showToast(`✅ Request WD ${name} terkirim! Menunggu approval admin.`);
+                } catch (error) {
+                    showToast('Gagal request WD!', false);
+                }
+            });
+        });
+
+        // --- COPY REFERRAL LINK ---
+        document.getElementById('copyRefLink').addEventListener('click', function() {
+            const text = document.getElementById('refLinkText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 Link referral dicopy!');
+            }).catch(() => {
+                showToast('Salin manual: ' + text);
+            });
+        });
+
+        // --- LOGOUT ---
+        document.getElementById('btnLogout').addEventListener('click', function() {
+            state.isLoggedIn = false;
+            state.userId = null;
+            document.getElementById('appMain').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            showToast('🚪 Logout berhasil');
+        });
+
+        // --- NAVIGATION ---
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3074,6 +3039,7 @@
             });
         });
 
+        // --- DASHBOARD MISSIONS ---
         document.querySelectorAll('#dashboardMissions [data-mission]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const type = this.dataset.mission;
@@ -3087,59 +3053,30 @@
             });
         });
 
-        document.getElementById('btnDailyClaim').addEventListener('click', function() {
-            if (state.dailyClaimed) return showToast('Sudah claim hari ini!', false);
-            state.poin += 5;
-            state.dailyClaimed = true;
-            updateUI();
-            addLog('✅ Claim daily +5 poin');
-            showToast('🎉 +5 poin daily claim!');
-        });
+        // ============================================================
+        //  CHECK CONNECTION
+        // ============================================================
+        async function checkConnection() {
+            try {
+                const { error } = await supabase.from('users').select('count', { count: 'exact', head: true });
+                if (error) throw error;
+                document.getElementById('statusConnection').innerHTML =
+                    '<i class="fas fa-circle" style="color:#34D399;"></i> Terhubung ke Supabase';
+                console.log('✅ Koneksi Supabase berhasil!');
+            } catch (error) {
+                console.error('❌ Koneksi Supabase gagal:', error.message);
+                document.getElementById('statusConnection').innerHTML =
+                    '<i class="fas fa-circle" style="color:#EF4444;"></i> Gagal koneksi: ' + error.message;
+            }
+        }
 
-        document.querySelectorAll('[data-redeem]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const type = this.dataset.redeem;
-                const costs = { pulsa: 10000, uang: 10000, pulsa20: 20000 };
-                const names = { pulsa: 'Pulsa 10K', uang: 'Uang 10K', pulsa20: 'Pulsa 20K' };
-                const cost = costs[type];
-                if (state.poin < cost) return showToast(`Butuh ${cost.toLocaleString()} poin!`, false);
-                state.poin -= cost;
-                updateUI();
-                addLog(
-                    `💳 Request WD ${names[type]} -${cost.toLocaleString()} poin (pending approval)`);
-                showToast(`✅ Request WD ${names[type]} terkirim! Menunggu approval admin.`);
-            });
-        });
-
-        document.getElementById('copyRefLink').addEventListener('click', function() {
-            const text = document.getElementById('refLinkText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 Link referral dicopy!');
-            }).catch(() => {
-                showToast('Salin manual: ' + text);
-            });
-        });
-
-        document.getElementById('btnLogout').addEventListener('click', function() {
-            state.isLoggedIn = false;
-            appMain.classList.remove('active');
-            loginPage.style.display = 'flex';
-            showToast('🚪 Logout berhasil');
-        });
-
-        // ========== INIT ==========
-        state.ref.l1 = 2;
-        state.ref.l2 = 1;
-        state.ref.l3 = 0;
-        addLog('👋 Selamat datang di MisiNonton!');
-        updateUI();
-
-        console.log('🚀 MisiNonton Pro siap!');
-        console.log('💰 Upgrade VIP via QRIS (bayar uang, bukan poin)');
-        console.log('📱 Misi Scroll: website terbuka di dalam layar (iframe)');
-        console.log('👥 Downline: ' + state.downline.length + ' orang');
-        console.log('💡 Klik Masuk untuk preview');
-        console.log('🔑 Aktifkan "Mode Admin" di tab Akun untuk setting');
+        // ============================================================
+        //  INIT
+        // ============================================================
+        checkConnection();
+        console.log('🚀 MisiNonton User siap!');
+        console.log('📱 Koneksi Supabase: ' + SUPABASE_URL);
+        console.log('💡 Login menggunakan akun yang sudah terdaftar');
     </script>
 </body>
 </html>
