@@ -14,44 +14,48 @@
         .glow-orb-1 { width: 300px; height: 300px; background: rgba(108,60,225,0.25); top: -100px; right: -100px; }
         .glow-orb-2 { width: 200px; height: 200px; background: rgba(251,191,36,0.15); bottom: 100px; left: -50px; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 16px 16px 90px 16px; position: relative; z-index: 1; }
+        .container { max-width: 480px; margin: 0 auto; padding: 0 16px 90px 16px; position: relative; z-index: 1; }
 
         /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); }
         .logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--secondary), #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo i { -webkit-text-fill-color: var(--secondary); margin-right: 8px; }
-        .header-actions { display: flex; gap: 12px; align-items: center; }
-        .header-actions a { color: var(--text-secondary); text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border-color); transition: 0.3s; }
+        .header-actions { display: flex; gap: 8px; }
+        .header-actions a { color: var(--text-secondary); text-decoration: none; font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border-color); transition: 0.3s; }
         .header-actions a:hover { background: rgba(255,255,255,0.05); border-color: var(--secondary); }
 
         /* Stats Admin */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--bg-card); border-radius: 14px; padding: 16px; text-align: center; border: 1px solid var(--border-color); }
-        .stat-card .stat-icon { font-size: 24px; color: var(--secondary); margin-bottom: 4px; }
-        .stat-card .stat-value { font-size: 24px; font-weight: 700; color: white; }
-        .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+        .stat-card { background: var(--bg-card); border-radius: 12px; padding: 12px 8px; text-align: center; border: 1px solid var(--border-color); }
+        .stat-card .stat-icon { font-size: 18px; color: var(--secondary); margin-bottom: 2px; }
+        .stat-card .stat-value { font-size: 18px; font-weight: 700; color: white; }
+        .stat-card .stat-label { font-size: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Tabs */
-        .admin-tabs { display: flex; gap: 6px; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 4px; overflow-x: auto; }
-        .admin-tabs button { flex: 1; min-width: 80px; padding: 10px 14px; border: none; border-radius: 10px; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 12px; white-space: nowrap; }
-        .admin-tabs button.active { background: var(--primary); color: white; }
-        .admin-tabs button:active { transform: scale(0.95); }
+        /* Bottom Nav Admin */
+        .bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 460px; background: rgba(15,15,26,0.92); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 8px; z-index: 100; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 6px 8px; border-radius: 14px; transition: 0.3s; border: none; background: none; color: #475569; font-size: 9px; min-width: 40px; position: relative; }
+        .nav-item i { font-size: 18px; transition: 0.3s; }
+        .nav-item span { font-size: 8px; font-weight: 500; }
+        .nav-item.active { color: var(--secondary); background: rgba(251,191,36,0.08); }
+        .nav-item.active i { transform: translateY(-2px); }
+        .nav-item:active { transform: scale(0.9); }
+        .nav-item .badge-dot { position: absolute; top: 2px; right: 2px; width: 6px; height: 6px; background: #EF4444; border-radius: 50%; }
 
-        /* Tab Content */
-        .tab-content { display: none; animation: fadeUp 0.3s ease; }
-        .tab-content.active { display: block; }
+        /* Pages */
+        .page { display: none; animation: fadeUp 0.3s ease; padding-bottom: 12px; }
+        .page.active { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Cards */
-        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 16px; }
-        .card h4 { margin-bottom: 12px; color: var(--secondary); font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 12px; }
+        .card h4 { margin-bottom: 10px; color: var(--secondary); font-size: 14px; display: flex; align-items: center; gap: 8px; }
 
-        .admin-item { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-        .admin-item .item-info { font-size: 13px; flex: 1; min-width: 120px; }
+        .admin-item { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .admin-item .item-info { font-size: 12px; flex: 1; min-width: 100px; }
         .admin-item .item-info .item-title { font-weight: 600; }
-        .admin-item .item-info .item-sub { font-size: 11px; color: var(--text-secondary); }
-        .admin-item .item-actions { display: flex; gap: 6px; }
-        .admin-item .item-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 6px 12px; border-radius: 8px; font-size: 12px; transition: 0.3s; font-weight: 500; }
+        .admin-item .item-info .item-sub { font-size: 10px; color: var(--text-secondary); }
+        .admin-item .item-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+        .admin-item .item-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 11px; transition: 0.3s; font-weight: 500; }
         .admin-item .item-actions .approve { background: rgba(52,211,153,0.15); color: #34D399; }
         .admin-item .item-actions .approve:hover { background: rgba(52,211,153,0.25); }
         .admin-item .item-actions .reject { background: rgba(239,68,68,0.15); color: #EF4444; }
@@ -61,20 +65,27 @@
         .admin-item .item-actions .delete { background: rgba(239,68,68,0.15); color: #EF4444; }
         .admin-item .item-actions .delete:hover { background: rgba(239,68,68,0.25); }
 
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: white; font-size: 14px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: white; font-size: 13px; }
         .form-group input:focus { outline: none; border-color: var(--primary); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-        .btn-save { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 8px; }
+        .btn-save { width: 100%; padding: 10px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 6px; font-size: 13px; }
         .btn-save:active { transform: scale(0.97); }
         .btn-save.success { background: #34D399; color: #0A0A0F; }
         .btn-save.warning { background: #F59E0B; color: #0A0A0F; }
         .btn-save.danger { background: #EF4444; color: white; }
 
-        .btn-logout { width: 100%; padding: 14px; border-radius: 14px; border: none; background: rgba(239,68,68,0.15); color: #EF4444; font-weight: 600; cursor: pointer; transition: 0.3s; border: 1px solid rgba(239,68,68,0.2); margin-top: 12px; }
-        .btn-logout:active { transform: scale(0.97); }
+        .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 9px; font-weight: 600; }
+        .badge-success { background: rgba(52,211,153,0.15); color: #34D399; }
+        .badge-warning { background: rgba(251,191,36,0.15); color: #FBBF24; }
+        .badge-danger { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .badge-info { background: rgba(59,130,246,0.15); color: #3B82F6; }
+
+        .empty-state { text-align: center; padding: 20px; color: var(--text-secondary); }
+        .empty-state i { font-size: 32px; margin-bottom: 8px; opacity: 0.3; }
+        .empty-state p { font-size: 12px; }
 
         .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; width: 90%; max-width: 400px; }
         .toast { background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: white; font-size: 14px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; margin-bottom: 8px; }
@@ -83,20 +94,12 @@
         .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.6s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 420px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .stat-card { padding: 8px 6px; }
+            .stat-card .stat-value { font-size: 14px; }
             .form-row { grid-template-columns: 1fr; }
         }
-
-        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
-        .badge-success { background: rgba(52,211,153,0.15); color: #34D399; }
-        .badge-warning { background: rgba(251,191,36,0.15); color: #FBBF24; }
-        .badge-danger { background: rgba(239,68,68,0.15); color: #EF4444; }
-        .badge-info { background: rgba(59,130,246,0.15); color: #3B82F6; }
-
-        .empty-state { text-align: center; padding: 30px 20px; color: var(--text-secondary); }
-        .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.3; }
-        .empty-state p { font-size: 14px; }
     </style>
 </head>
 <body>
@@ -109,7 +112,7 @@
         <div class="header">
             <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
             <div class="header-actions">
-                <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+                <a href="index.html"><i class="fas fa-home"></i></a>
             </div>
         </div>
 
@@ -118,17 +121,17 @@
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-users"></i></div>
                 <div class="stat-value" id="totalUsers">0</div>
-                <div class="stat-label">Total User</div>
+                <div class="stat-label">User</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-crown"></i></div>
                 <div class="stat-value" id="totalVip">0</div>
-                <div class="stat-label">User VIP</div>
+                <div class="stat-label">VIP</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-star"></i></div>
                 <div class="stat-value" id="totalPoin">0</div>
-                <div class="stat-label">Total Poin</div>
+                <div class="stat-label">Poin</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-clock"></i></div>
@@ -137,187 +140,106 @@
             </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="admin-tabs" id="adminTabs">
-            <button class="active" data-tab="statistik"><i class="fas fa-chart-bar"></i> Statistik</button>
-            <button data-tab="deposit"><i class="fas fa-crown"></i> VIP</button>
-            <button data-tab="wd"><i class="fas fa-wallet"></i> WD</button>
-            <button data-tab="setting"><i class="fas fa-cog"></i> Setting</button>
-        </div>
-
-        <!-- Tab: Statistik -->
-        <div class="tab-content active" id="tab-statistik">
+        <!-- PAGES -->
+        <!-- STATISTIK -->
+        <div class="page active" id="page-statistik">
             <div class="card">
                 <h4><i class="fas fa-chart-line"></i> Statistik User</h4>
-                <div id="userStats">
-                    <div class="admin-item">
-                        <div class="item-info">
-                            <div class="item-title">Total User Terdaftar</div>
-                            <div class="item-sub" id="statTotalUsers">0</div>
-                        </div>
-                    </div>
-                    <div class="admin-item">
-                        <div class="item-info">
-                            <div class="item-title">User VIP Aktif</div>
-                            <div class="item-sub" id="statVipUsers">0</div>
-                        </div>
-                    </div>
-                    <div class="admin-item">
-                        <div class="item-info">
-                            <div class="item-title">Total Poin Dikumpulkan</div>
-                            <div class="item-sub" id="statTotalPoin">0</div>
-                        </div>
-                    </div>
-                    <div class="admin-item">
-                        <div class="item-info">
-                            <div class="item-title">Pending Request</div>
-                            <div class="item-sub" id="statPending">0</div>
-                        </div>
-                    </div>
+                <div class="admin-item">
+                    <div class="item-info"><div class="item-title">Total User Terdaftar</div><div class="item-sub" id="statTotalUsers">0</div></div>
+                </div>
+                <div class="admin-item">
+                    <div class="item-info"><div class="item-title">User VIP Aktif</div><div class="item-sub" id="statVipUsers">0</div></div>
+                </div>
+                <div class="admin-item">
+                    <div class="item-info"><div class="item-title">Total Poin Dikumpulkan</div><div class="item-sub" id="statTotalPoin">0</div></div>
+                </div>
+                <div class="admin-item">
+                    <div class="item-info"><div class="item-title">Pending Request</div><div class="item-sub" id="statPending">0</div></div>
                 </div>
             </div>
 
             <div class="card">
                 <h4><i class="fas fa-list"></i> Daftar User</h4>
                 <div id="userList">
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>Loading data...</p>
-                    </div>
+                    <div class="empty-state"><i class="fas fa-users"></i><p>Loading...</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab: Deposit / VIP -->
-        <div class="tab-content" id="tab-deposit">
+        <!-- VIP / DEPOSIT -->
+        <div class="page" id="page-vip">
             <div class="card">
                 <h4><i class="fas fa-crown"></i> Request Upgrade VIP</h4>
                 <div id="vipRequests">
-                    <div class="empty-state">
-                        <i class="fas fa-check-circle"></i>
-                        <p>Tidak ada request VIP</p>
-                    </div>
+                    <div class="empty-state"><i class="fas fa-check-circle"></i><p>Tidak ada request VIP</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab: WD -->
-        <div class="tab-content" id="tab-wd">
+        <!-- WD -->
+        <div class="page" id="page-wd">
             <div class="card">
-                <h4><i class="fas fa-wallet"></i> Request Penarikan (WD)</h4>
+                <h4><i class="fas fa-wallet"></i> Request Penarikan</h4>
                 <div id="wdRequests">
-                    <div class="empty-state">
-                        <i class="fas fa-check-circle"></i>
-                        <p>Tidak ada request WD</p>
-                    </div>
+                    <div class="empty-state"><i class="fas fa-check-circle"></i><p>Tidak ada request WD</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab: Setting -->
-        <div class="tab-content" id="tab-setting">
+        <!-- MISI / SETTING -->
+        <div class="page" id="page-misi">
             <div class="card">
                 <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
-                <div class="form-group">
-                    <label>YouTube (default: 10)</label>
-                    <input type="number" id="rewardYtInput" value="10">
-                </div>
-                <div class="form-group">
-                    <label>Iklan (default: 5)</label>
-                    <input type="number" id="rewardIklanInput" value="5">
-                </div>
-                <div class="form-group">
-                    <label>Scroll Website (default: 8)</label>
-                    <input type="number" id="rewardScrollInput" value="8">
-                </div>
+                <div class="form-group"><label>YouTube</label><input type="number" id="rewardYtInput" value="10"></div>
+                <div class="form-group"><label>Iklan</label><input type="number" id="rewardIklanInput" value="5"></div>
+                <div class="form-group"><label>Scroll Website</label><input type="number" id="rewardScrollInput" value="8"></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Subscribe (default: 15)</label>
-                        <input type="number" id="rewardSubInput" value="15">
-                    </div>
-                    <div class="form-group">
-                        <label>Follow Sosmed (default: 10)</label>
-                        <input type="number" id="rewardSosmedInput" value="10">
-                    </div>
+                    <div class="form-group"><label>Subscribe</label><input type="number" id="rewardSubInput" value="15"></div>
+                    <div class="form-group"><label>Follow Sosmed</label><input type="number" id="rewardSosmedInput" value="10"></div>
                 </div>
-                <div class="form-group">
-                    <label>Share (default: 20)</label>
-                    <input type="number" id="rewardShareInput" value="20">
-                </div>
-                <button class="btn-save warning" id="saveRewardBtn">
-                    <i class="fas fa-save"></i> Simpan Poin Misi
-                </button>
+                <div class="form-group"><label>Share</label><input type="number" id="rewardShareInput" value="20"></div>
+                <button class="btn-save warning" id="saveRewardBtn"><i class="fas fa-save"></i> Simpan Poin</button>
             </div>
 
             <div class="card">
-                <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
+                <h4><i class="fas fa-coins"></i> Bonus Referral</h4>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Level 1 (2 arah)</label>
-                        <input type="number" id="bonusL1Input" value="5">
-                    </div>
-                    <div class="form-group">
-                        <label>Level 2 (1 arah)</label>
-                        <input type="number" id="bonusL2Input" value="3">
-                    </div>
-                    <div class="form-group">
-                        <label>Level 3 (1 arah)</label>
-                        <input type="number" id="bonusL3Input" value="1">
-                    </div>
+                    <div class="form-group"><label>Level 1</label><input type="number" id="bonusL1Input" value="5"></div>
+                    <div class="form-group"><label>Level 2</label><input type="number" id="bonusL2Input" value="3"></div>
+                    <div class="form-group"><label>Level 3</label><input type="number" id="bonusL3Input" value="1"></div>
                 </div>
-                <button class="btn-save success" id="saveBonusBtn">
-                    <i class="fas fa-save"></i> Simpan Bonus
-                </button>
+                <button class="btn-save success" id="saveBonusBtn"><i class="fas fa-save"></i> Simpan Bonus</button>
             </div>
 
             <div class="card">
                 <h4><i class="fas fa-link"></i> Link Settings</h4>
-                <div class="form-group">
-                    <label>Link YouTube (Fullscreen)</label>
-                    <input type="text" id="adminYtLink" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                </div>
-                <div class="form-group">
-                    <label>Link Website Scroll</label>
-                    <input type="text" id="adminScrollLink" value="https://misi-poin.com/scroll">
-                </div>
-                <div class="form-group">
-                    <label>Link Sosmed (Follow)</label>
-                    <input type="text" id="adminSosmedLink" value="https://instagram.com">
-                </div>
-                <div class="form-group">
-                    <label>Link Share</label>
-                    <input type="text" id="adminShareLink" value="https://twitter.com">
-                </div>
-                <button class="btn-save" id="saveAdminLinks">
-                    <i class="fas fa-save"></i> Simpan Link
-                </button>
+                <div class="form-group"><label>YouTube</label><input type="text" id="adminYtLink" value="https://www.youtube.com/embed/dQw4w9WgXcQ"></div>
+                <div class="form-group"><label>Scroll</label><input type="text" id="adminScrollLink" value="https://misi-poin.com/scroll"></div>
+                <div class="form-group"><label>Sosmed</label><input type="text" id="adminSosmedLink" value="https://instagram.com"></div>
+                <div class="form-group"><label>Share</label><input type="text" id="adminShareLink" value="https://twitter.com"></div>
+                <button class="btn-save" id="saveAdminLinks"><i class="fas fa-save"></i> Simpan Link</button>
             </div>
 
             <div class="card">
                 <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
                 <div id="adminMissionList"></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Nama Misi</label>
-                        <input type="text" id="newMissionName" placeholder="Nama misi">
-                    </div>
-                    <div class="form-group">
-                        <label>Poin</label>
-                        <input type="number" id="newMissionReward" placeholder="Poin">
-                    </div>
+                    <div class="form-group"><label>Nama</label><input type="text" id="newMissionName" placeholder="Nama misi"></div>
+                    <div class="form-group"><label>Poin</label><input type="number" id="newMissionReward" placeholder="Poin"></div>
                 </div>
-                <div class="form-group">
-                    <label>Link</label>
-                    <input type="text" id="newMissionLink" placeholder="Link misi">
-                </div>
-                <button class="btn-save success" id="addMissionBtn">
-                    <i class="fas fa-plus"></i> Tambah Misi
-                </button>
+                <div class="form-group"><label>Link</label><input type="text" id="newMissionLink" placeholder="Link misi"></div>
+                <button class="btn-save success" id="addMissionBtn"><i class="fas fa-plus"></i> Tambah Misi</button>
             </div>
         </div>
 
-        <!-- Logout -->
-        <button class="btn-logout" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <!-- Bottom Navigation Admin -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-page="statistik"><i class="fas fa-chart-bar"></i><span>Statistik</span></button>
+            <button class="nav-item" data-page="vip"><i class="fas fa-crown"></i><span>VIP</span><span class="badge-dot" id="vipBadge"></span></button>
+            <button class="nav-item" data-page="wd"><i class="fas fa-wallet"></i><span>WD</span><span class="badge-dot" id="wdBadge"></span></button>
+            <button class="nav-item" data-page="misi"><i class="fas fa-cog"></i><span>Misi</span></button>
+        </div>
     </div>
 
     <!-- Toast Container -->
@@ -331,10 +253,9 @@
 
         let currentUser = null;
         let currentUserId = null;
-        let isAdmin = false;
 
         const rewardPoints = { yt: 10, iklan: 5, scroll: 8, sub: 15, sosmed: 10, share: 20 };
-        const socialMissions = [
+        let socialMissions = [
             { id: 'sub', name: 'Subscribe YouTube', reward: 15, icon: 'sub', link: 'https://youtube.com/channel/xxx' },
             { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
             { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
@@ -355,14 +276,15 @@
             }, 3000);
         }
 
-        // ========== TABS ==========
-        document.querySelectorAll('.admin-tabs button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+        // ========== NAVIGATION ==========
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 this.classList.add('active');
-                const tab = this.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                document.getElementById(`tab-${tab}`).classList.add('active');
+                const page = this.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                const target = document.getElementById(`page-${page}`);
+                if (target) target.classList.add('active');
             });
         });
 
@@ -386,7 +308,6 @@
                 return;
             }
 
-            isAdmin = true;
             await loadAllData();
         }
 
@@ -423,9 +344,11 @@
                 document.getElementById('statVipUsers').textContent = vip;
                 document.getElementById('statTotalPoin').textContent = poin.toLocaleString();
                 document.getElementById('statPending').textContent = pending;
-            } catch (error) {
-                console.error('Load stats error:', error);
-            }
+
+                // Badge notifications
+                document.getElementById('vipBadge').style.display = (vipReqs?.length || 0) > 0 ? 'block' : 'none';
+                document.getElementById('wdBadge').style.display = (wdReqs?.length || 0) > 0 ? 'block' : 'none';
+            } catch (error) { console.error('Load stats error:', error); }
         }
 
         async function loadUsers() {
@@ -439,7 +362,7 @@
 
                 const container = document.getElementById('userList');
                 if (!data || data.length === 0) {
-                    container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Belum ada user terdaftar</p></div>`;
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Belum ada user</p></div>`;
                     return;
                 }
 
@@ -449,12 +372,8 @@
                             <div class="item-title">${u.email}</div>
                             <div class="item-sub">
                                 ${u.username || '-'} • Poin: ${u.poin || 0}
-                                <span class="badge ${u.is_vip ? 'badge-success' : 'badge-warning'}">
-                                    ${u.is_vip ? '👑 VIP' : 'Free'}
-                                </span>
-                                <span class="badge ${u.is_verified ? 'badge-success' : 'badge-danger'}">
-                                    ${u.is_verified ? '✅ Verified' : '⏳ Unverified'}
-                                </span>
+                                <span class="badge ${u.is_vip ? 'badge-success' : 'badge-warning'}">${u.is_vip ? '👑 VIP' : 'Free'}</span>
+                                <span class="badge ${u.is_verified ? 'badge-success' : 'badge-danger'}">${u.is_verified ? '✅' : '⏳'}</span>
                             </div>
                         </div>
                         <div class="item-actions">
@@ -462,9 +381,7 @@
                         </div>
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Load users error:', error);
-            }
+            } catch (error) { console.error('Load users error:', error); }
         }
 
         async function loadVIPRequests() {
@@ -487,7 +404,7 @@
                     <div class="admin-item">
                         <div class="item-info">
                             <div class="item-title">${req.users?.email || 'Unknown'}</div>
-                            <div class="item-sub">Request VIP • ${req.users?.username || '-'} • <span class="badge badge-warning">Pending</span></div>
+                            <div class="item-sub">Request VIP • ${req.users?.username || '-'}</div>
                         </div>
                         <div class="item-actions">
                             <button class="approve" onclick="approveVIP('${req.id}')"><i class="fas fa-check"></i> Approve</button>
@@ -495,9 +412,7 @@
                         </div>
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Load VIP requests error:', error);
-            }
+            } catch (error) { console.error('Load VIP requests error:', error); }
         }
 
         async function loadWDRequests() {
@@ -520,10 +435,7 @@
                     <div class="admin-item">
                         <div class="item-info">
                             <div class="item-title">${req.users?.email || 'Unknown'}</div>
-                            <div class="item-sub">
-                                ${req.type} • ${req.amount.toLocaleString()} poin
-                                <span class="badge badge-warning">Pending</span>
-                            </div>
+                            <div class="item-sub">${req.type} • ${req.amount.toLocaleString()} poin</div>
                         </div>
                         <div class="item-actions">
                             <button class="approve" onclick="approveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
@@ -531,50 +443,38 @@
                         </div>
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Load WD requests error:', error);
-            }
+            } catch (error) { console.error('Load WD requests error:', error); }
         }
 
         async function loadMissionSettings() {
             try {
                 const { data, error } = await supabaseClient.from('mission_settings').select('*');
                 if (error) throw error;
-
                 data.forEach(setting => {
-                    if (rewardPoints[setting.mission_type] !== undefined) {
-                        rewardPoints[setting.mission_type] = setting.reward_points;
-                    }
+                    if (rewardPoints[setting.mission_type] !== undefined) rewardPoints[setting.mission_type] = setting.reward_points;
                 });
-
                 document.getElementById('rewardYtInput').value = rewardPoints.yt;
                 document.getElementById('rewardIklanInput').value = rewardPoints.iklan;
                 document.getElementById('rewardScrollInput').value = rewardPoints.scroll;
                 document.getElementById('rewardSubInput').value = rewardPoints.sub;
                 document.getElementById('rewardSosmedInput').value = rewardPoints.sosmed;
                 document.getElementById('rewardShareInput').value = rewardPoints.share;
-            } catch (error) {
-                console.error('Load mission settings error:', error);
-            }
+            } catch (error) { console.error('Load mission settings error:', error); }
         }
 
         async function loadBonusSettings() {
             try {
                 const { data, error } = await supabaseClient.from('bonus_settings').select('*');
                 if (error) throw error;
-
                 data.forEach(bonus => {
                     if (bonus.level === 1) refBonus.l1 = bonus.bonus_points;
                     if (bonus.level === 2) refBonus.l2 = bonus.bonus_points;
                     if (bonus.level === 3) refBonus.l3 = bonus.bonus_points;
                 });
-
                 document.getElementById('bonusL1Input').value = refBonus.l1;
                 document.getElementById('bonusL2Input').value = refBonus.l2;
                 document.getElementById('bonusL3Input').value = refBonus.l3;
-            } catch (error) {
-                console.error('Load bonus settings error:', error);
-            }
+            } catch (error) { console.error('Load bonus settings error:', error); }
         }
 
         function loadSocialMissions() {
@@ -585,7 +485,7 @@
                 <div class="admin-item">
                     <div class="item-info">
                         <div class="item-title">${m.name}</div>
-                        <div class="item-sub">+${rewardPoints[m.id] || m.reward} poin • 1x sehari</div>
+                        <div class="item-sub">+${rewardPoints[m.id] || m.reward} poin</div>
                     </div>
                     <div class="item-actions">
                         <button class="edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
@@ -601,16 +501,10 @@
                 const { data: req } = await supabaseClient
                     .from('vip_requests').update({ status: 'approved', approved_at: new Date().toISOString() })
                     .eq('id', id).select('user_id').single();
-
-                if (req) {
-                    await supabaseClient.from('users').update({ is_vip: true }).eq('id', req.user_id);
-                }
-
+                if (req) await supabaseClient.from('users').update({ is_vip: true }).eq('id', req.user_id);
                 showToast('✅ VIP berhasil diaktifkan!');
                 await loadAllData();
-            } catch (error) {
-                showToast('❌ Gagal approve VIP', false);
-            }
+            } catch (error) { showToast('❌ Gagal approve VIP', false); }
         };
 
         window.rejectVIP = async function(id) {
@@ -618,9 +512,7 @@
                 await supabaseClient.from('vip_requests').update({ status: 'rejected' }).eq('id', id);
                 showToast('❌ Request VIP ditolak');
                 await loadAllData();
-            } catch (error) {
-                showToast('❌ Gagal reject VIP', false);
-            }
+            } catch (error) { showToast('❌ Gagal reject VIP', false); }
         };
 
         window.approveWD = async function(id) {
@@ -628,9 +520,7 @@
                 await supabaseClient.from('withdrawals').update({ status: 'approved' }).eq('id', id);
                 showToast('✅ WD disetujui!');
                 await loadAllData();
-            } catch (error) {
-                showToast('❌ Gagal approve WD', false);
-            }
+            } catch (error) { showToast('❌ Gagal approve WD', false); }
         };
 
         window.rejectWD = async function(id) {
@@ -638,9 +528,7 @@
                 await supabaseClient.from('withdrawals').update({ status: 'rejected' }).eq('id', id);
                 showToast('❌ WD ditolak');
                 await loadAllData();
-            } catch (error) {
-                showToast('❌ Gagal reject WD', false);
-            }
+            } catch (error) { showToast('❌ Gagal reject WD', false); }
         };
 
         window.editUser = async function(id) {
@@ -650,27 +538,19 @@
                     await supabaseClient.from('users').update({ poin: parseInt(newPoin) }).eq('id', id);
                     showToast('✅ Poin user diupdate!');
                     await loadAllData();
-                } catch (error) {
-                    showToast('❌ Gagal update poin', false);
-                }
+                } catch (error) { showToast('❌ Gagal update poin', false); }
             }
         };
 
         window.editMission = function(id) {
             const mission = socialMissions.find(m => m.id === id);
             if (!mission) return;
-
             const newName = prompt('Edit nama misi:', mission.name);
             if (newName !== null && newName !== '') mission.name = newName;
-
             const newReward = prompt('Edit poin reward:', rewardPoints[id] || mission.reward);
-            if (newReward !== null && !isNaN(newReward)) {
-                rewardPoints[id] = parseInt(newReward);
-            }
-
+            if (newReward !== null && !isNaN(newReward)) rewardPoints[id] = parseInt(newReward);
             const newLink = prompt('Edit link misi:', mission.link || '');
             if (newLink !== null) mission.link = newLink;
-
             loadSocialMissions();
             showToast('✅ Misi diupdate!');
         };
@@ -678,11 +558,7 @@
         window.deleteMission = function(id) {
             if (!confirm('Hapus misi ini?')) return;
             const index = socialMissions.findIndex(m => m.id === id);
-            if (index !== -1) {
-                socialMissions.splice(index, 1);
-                loadSocialMissions();
-                showToast('✅ Misi dihapus!');
-            }
+            if (index !== -1) { socialMissions.splice(index, 1); loadSocialMissions(); showToast('✅ Misi dihapus!'); }
         };
 
         // ========== SAVE SETTINGS ==========
@@ -693,12 +569,9 @@
             const sub = parseInt(document.getElementById('rewardSubInput').value);
             const sosmed = parseInt(document.getElementById('rewardSosmedInput').value);
             const share = parseInt(document.getElementById('rewardShareInput').value);
-
             if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share)) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
+                showToast('Masukkan angka valid!', false); return;
             }
-
             try {
                 const updates = [
                     { mission_type: 'yt', reward_points: yt },
@@ -708,53 +581,32 @@
                     { mission_type: 'sosmed', reward_points: sosmed },
                     { mission_type: 'share', reward_points: share }
                 ];
-
                 for (const update of updates) {
                     await supabaseClient.from('mission_settings').upsert(update, { onConflict: 'mission_type' });
                 }
-
-                rewardPoints.yt = yt;
-                rewardPoints.iklan = iklan;
-                rewardPoints.scroll = scroll;
-                rewardPoints.sub = sub;
-                rewardPoints.sosmed = sosmed;
-                rewardPoints.share = share;
-
+                rewardPoints.yt = yt; rewardPoints.iklan = iklan; rewardPoints.scroll = scroll;
+                rewardPoints.sub = sub; rewardPoints.sosmed = sosmed; rewardPoints.share = share;
                 showToast('✅ Poin misi diupdate!');
-            } catch (error) {
-                showToast('❌ Gagal update poin', false);
-            }
+            } catch (error) { showToast('❌ Gagal update', false); }
         });
 
         document.getElementById('saveBonusBtn').addEventListener('click', async function() {
             const l1 = parseInt(document.getElementById('bonusL1Input').value);
             const l2 = parseInt(document.getElementById('bonusL2Input').value);
             const l3 = parseInt(document.getElementById('bonusL3Input').value);
-
-            if (isNaN(l1) || isNaN(l2) || isNaN(l3)) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
-            }
-
+            if (isNaN(l1) || isNaN(l2) || isNaN(l3)) { showToast('Masukkan angka valid!', false); return; }
             try {
                 const updates = [
                     { level: 1, bonus_points: l1 },
                     { level: 2, bonus_points: l2 },
                     { level: 3, bonus_points: l3 }
                 ];
-
                 for (const update of updates) {
                     await supabaseClient.from('bonus_settings').upsert(update, { onConflict: 'level' });
                 }
-
-                refBonus.l1 = l1;
-                refBonus.l2 = l2;
-                refBonus.l3 = l3;
-
+                refBonus.l1 = l1; refBonus.l2 = l2; refBonus.l3 = l3;
                 showToast('✅ Bonus referral diupdate!');
-            } catch (error) {
-                showToast('❌ Gagal update bonus', false);
-            }
+            } catch (error) { showToast('❌ Gagal update', false); }
         });
 
         document.getElementById('saveAdminLinks').addEventListener('click', function() {
@@ -762,15 +614,12 @@
             const scrollLink = document.getElementById('adminScrollLink').value;
             const sosmedLink = document.getElementById('adminSosmedLink').value;
             const shareLink = document.getElementById('adminShareLink').value;
-
             const sub = socialMissions.find(m => m.id === 'sub');
             const sosmed = socialMissions.find(m => m.id === 'sosmed');
             const share = socialMissions.find(m => m.id === 'share');
-
             if (sub) sub.link = ytLink;
             if (sosmed) sosmed.link = sosmedLink;
             if (share) share.link = shareLink;
-
             loadSocialMissions();
             showToast('✅ Link diupdate!');
         });
@@ -779,38 +628,25 @@
             const name = document.getElementById('newMissionName').value.trim();
             const reward = parseInt(document.getElementById('newMissionReward').value);
             const link = document.getElementById('newMissionLink').value.trim();
-
-            if (!name || !reward) {
-                showToast('Isi nama dan poin!', false);
-                return;
-            }
-
-            socialMissions.push({
-                id: 'custom_' + Date.now(),
-                name: name,
-                reward: reward,
-                icon: 'share',
-                link: link || ''
-            });
+            if (!name || !reward) { showToast('Isi nama dan poin!', false); return; }
+            socialMissions.push({ id: 'custom_' + Date.now(), name, reward, icon: 'share', link: link || '' });
             rewardPoints[socialMissions[socialMissions.length - 1].id] = reward;
-
             document.getElementById('newMissionName').value = '';
             document.getElementById('newMissionReward').value = '';
             document.getElementById('newMissionLink').value = '';
-
             loadSocialMissions();
             showToast(`✅ Misi "${name}" ditambahkan!`);
         });
 
         // ========== LOGOUT ==========
-        document.getElementById('btnLogout').addEventListener('click', async function() {
+        document.getElementById('btnLogout')?.addEventListener('click', async function() {
             await supabaseClient.auth.signOut();
             window.location.href = 'index.html';
         });
 
         // ========== INIT ==========
         checkAuth();
-        console.log('🚀 Admin Dashboard connected to Supabase!');
+        console.log('🚀 Admin Dashboard connected!');
     </script>
 </body>
 </html>
