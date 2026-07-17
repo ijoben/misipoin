@@ -7,1546 +7,231 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        :root {
-            --primary: #6C3CE1;
-            --primary-dark: #5A2FC7;
-            --secondary: #FBBF24;
-            --bg-dark: #0A0A0F;
-            --bg-card: rgba(255, 255, 255, 0.04);
-            --text-primary: #F1F5F9;
-            --text-secondary: #94A3B8;
-            --border-color: rgba(255, 255, 255, 0.06);
-            --shadow-glow: 0 8px 32px rgba(108, 60, 225, 0.3);
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .glow-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .glow-orb-1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(108, 60, 225, 0.25);
-            top: -100px;
-            right: -100px;
-        }
-        .glow-orb-2 {
-            width: 200px;
-            height: 200px;
-            background: rgba(251, 191, 36, 0.15);
-            bottom: 100px;
-            left: -50px;
-        }
-
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px 90px 16px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ========== LOGIN PAGE ========== */
-        .login-page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            position: relative;
-            z-index: 1;
-            background: var(--bg-dark);
-        }
-
-        .login-page .login-box {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            padding: 40px 28px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .login-page .logo-large {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .login-page .logo-large i {
-            font-size: 48px;
-            color: var(--secondary);
-            background: rgba(251, 191, 36, 0.15);
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-        }
-
-        .login-page .logo-large h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--secondary), #F59E0B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .login-page .logo-large p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .login-page .input-group {
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .login-page .input-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .login-page .input-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        .login-page .input-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 60, 225, 0.2);
-        }
-
-        .login-page .input-group input::placeholder {
-            color: #475569;
-        }
-
-        .login-page .btn-login {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 8px;
-            box-shadow: 0 4px 20px rgba(108, 60, 225, 0.3);
-        }
-
-        .login-page .btn-login:active {
-            transform: scale(0.97);
-        }
-
-        .login-page .btn-login:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .login-page .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .login-page .login-footer a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .login-page .login-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .login-page .demo-badge {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #475569;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .login-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 4px;
-        }
-
-        .login-tabs button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            background: transparent;
-            color: var(--text-secondary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-
-        .login-tabs button.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .login-tabs button:active {
-            transform: scale(0.95);
-        }
-
-        /* ========== MAIN APP ========== */
-        .app-main {
-            display: none;
-        }
-
-        .app-main.active {
-            display: block;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            margin-bottom: 8px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--secondary), #F59E0B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo i {
-            -webkit-text-fill-color: var(--secondary);
-            margin-right: 8px;
-        }
-
-        .user-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #8B5CF6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .user-avatar .verify-badge {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            background: #34D399;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            font-size: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg-dark);
-        }
-
-        .user-avatar:active {
-            transform: scale(0.95);
-        }
-
-        /* Stat Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border-radius: 14px;
-            padding: 14px 12px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-card .stat-icon {
-            font-size: 20px;
-            color: var(--secondary);
-            margin-bottom: 4px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .stat-card .stat-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-
-        /* ========== SLIDER CAROUSEL ========== */
-        .slider-wrapper {
-            background: linear-gradient(145deg, rgba(108, 60, 225, 0.08), rgba(251, 191, 36, 0.04));
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            position: relative;
-            min-height: 180px;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 180px;
-        }
-
-        .slider-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 24px 20px;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 180px;
-        }
-
-        .slider-slide.active {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: auto;
-        }
-
-        .slider-slide.exit {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-
-        .slider-slide .slide-icon {
-            font-size: 36px;
-            color: var(--secondary);
-            margin-bottom: 8px;
-        }
-
-        .slider-slide h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-
-        .slider-slide p {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 90%;
-        }
-
-        .slider-slide .slide-badge {
-            display: inline-block;
-            background: rgba(251, 191, 36, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            border-radius: 20px;
-            padding: 3px 14px;
-            font-size: 11px;
-            color: var(--secondary);
-            margin-top: 6px;
-            align-self: flex-start;
-        }
-
-        .slider-slide .slide-highlight {
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        .slider-controls {
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            display: flex;
-            gap: 6px;
-            z-index: 5;
-        }
-
-        .slider-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 0;
-        }
-
-        .slider-dot.active {
-            background: var(--secondary);
-            width: 24px;
-            border-radius: 4px;
-        }
-
-        .slider-dot:active {
-            transform: scale(0.8);
-        }
-
-        .slider-arrows {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 8px;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .slider-arrow {
-            pointer-events: auto;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-
-        .slider-arrow:active {
-            transform: scale(0.9);
-            background: rgba(251, 191, 36, 0.2);
-        }
-
-        .slider-arrow:hover {
-            border-color: var(--secondary);
-        }
-
-        /* ========== FULLSCREEN VIDEO OVERLAY ========== */
-        .fullscreen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000000;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .fullscreen-overlay.active {
-            display: flex;
-        }
-
-        .fullscreen-overlay .fs-header {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        .fullscreen-overlay .fs-header .fs-timer {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .fullscreen-overlay .fs-header .fs-close {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #EF4444;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .fullscreen-overlay .fs-header .fs-close:hover {
-            background: rgba(239, 68, 68, 0.15);
-        }
-
-        .fullscreen-overlay .fs-video-wrapper {
-            width: 100%;
-            max-width: 480px;
-            aspect-ratio: 16/9;
-            background: #0A0A0F;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .fullscreen-overlay .fs-video-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .fullscreen-overlay .fs-progress {
-            width: 100%;
-            max-width: 480px;
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 3px;
-            margin-top: 16px;
-            overflow: hidden;
-        }
-
-        .fullscreen-overlay .fs-progress .fs-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), #F59E0B);
-            border-radius: 3px;
-            transition: width 0.3s;
-            width: 0%;
-        }
-
-        .fullscreen-overlay .fs-label {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 12px;
-        }
-
-        .fullscreen-overlay .fs-reward {
-            color: var(--secondary);
-            font-weight: 700;
-            font-size: 16px;
-            margin-top: 4px;
-        }
-
-        .fullscreen-overlay .fs-warning {
-            color: #EF4444;
-            font-size: 12px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .fullscreen-overlay .fs-warning.show {
-            display: block;
-        }
-
-        /* ========== SCROLL MISSION OVERLAY ========== */
-        .scroll-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(10, 10, 15, 0.92);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .scroll-overlay.active {
-            display: flex;
-        }
-
-        .scroll-overlay .scroll-box {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .scroll-overlay .scroll-box .scroll-icon {
-            font-size: 64px;
-            color: var(--secondary);
-            margin-bottom: 12px;
-            animation: scrollBounce 1s ease-in-out infinite;
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .scroll-overlay .scroll-box h3 {
-            font-size: 20px;
-            margin-bottom: 6px;
-        }
-
-        .scroll-overlay .scroll-box p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .scroll-overlay .scroll-box .scroll-timer {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-variant-numeric: tabular-nums;
-            margin: 8px 0;
-        }
-
-        .scroll-overlay .scroll-box .scroll-progress {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .scroll-overlay .scroll-box .scroll-progress .scroll-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), #F59E0B);
-            border-radius: 3px;
-            transition: width 0.3s;
-            width: 0%;
-        }
-
-        .scroll-overlay .scroll-box .scroll-reward {
-            color: #34D399;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .scroll-overlay .scroll-box .scroll-warning {
-            color: #EF4444;
-            font-size: 12px;
-            margin-top: 6px;
-            display: none;
-        }
-
-        .scroll-overlay .scroll-box .scroll-warning.show {
-            display: block;
-        }
+        /* ========== SAME STYLE AS BEFORE ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        :root { --primary: #6C3CE1; --primary-dark: #5A2FC7; --secondary: #FBBF24; --bg-dark: #0A0A0F; --bg-card: rgba(255,255,255,0.04); --text-primary: #F1F5F9; --text-secondary: #94A3B8; --border-color: rgba(255,255,255,0.06); --shadow-glow: 0 8px 32px rgba(108,60,225,0.3); }
+        body { background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; position: relative; overflow-x: hidden; }
+        .glow-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+        .glow-orb-1 { width: 300px; height: 300px; background: rgba(108,60,225,0.25); top: -100px; right: -100px; }
+        .glow-orb-2 { width: 200px; height: 200px; background: rgba(251,191,36,0.15); bottom: 100px; left: -50px; }
+        .container { max-width: 480px; margin: 0 auto; padding: 0 16px 90px 16px; position: relative; z-index: 1; }
+
+        /* Login Page */
+        .login-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; position: relative; z-index: 1; background: var(--bg-dark); }
+        .login-page .login-box { width: 100%; max-width: 400px; background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border-radius: 32px; padding: 40px 28px; border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow-glow); }
+        .login-page .logo-large { text-align: center; margin-bottom: 32px; }
+        .login-page .logo-large i { font-size: 48px; color: var(--secondary); background: rgba(251,191,36,0.15); padding: 16px; border-radius: 20px; margin-bottom: 12px; }
+        .login-page .logo-large h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--secondary), #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .login-page .logo-large p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+        .login-page .input-group { margin-bottom: 16px; position: relative; }
+        .login-page .input-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 500; }
+        .login-page .input-group input { width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: white; font-size: 15px; transition: 0.3s; }
+        .login-page .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,60,225,0.2); }
+        .login-page .input-group input::placeholder { color: #475569; }
+        .login-page .btn-login { width: 100%; padding: 16px; border-radius: 14px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 8px; box-shadow: 0 4px 20px rgba(108,60,225,0.3); }
+        .login-page .btn-login:active { transform: scale(0.97); }
+        .login-page .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+        .login-page .login-footer { text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 13px; }
+        .login-page .demo-badge { text-align: center; margin-top: 12px; font-size: 12px; color: #475569; background: rgba(255,255,255,0.03); padding: 8px 16px; border-radius: 20px; display: inline-block; }
+        .login-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 4px; }
+        .login-tabs button { flex: 1; padding: 10px; border: none; border-radius: 10px; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .login-tabs button.active { background: var(--primary); color: white; }
+        .login-tabs button:active { transform: scale(0.95); }
+
+        /* Main App */
+        .app-main { display: none; }
+        .app-main.active { display: block; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; margin-bottom: 8px; }
+        .logo { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, var(--secondary), #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo i { -webkit-text-fill-color: var(--secondary); margin-right: 8px; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #8B5CF6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; position: relative; }
+        .user-avatar .verify-badge { position: absolute; bottom: -2px; right: -2px; background: #34D399; border-radius: 50%; width: 14px; height: 14px; font-size: 8px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-dark); }
+        .user-avatar:active { transform: scale(0.95); }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+        .stat-card { background: var(--bg-card); border-radius: 14px; padding: 14px 12px; text-align: center; border: 1px solid var(--border-color); backdrop-filter: blur(10px); }
+        .stat-card .stat-icon { font-size: 20px; color: var(--secondary); margin-bottom: 4px; }
+        .stat-card .stat-value { font-size: 20px; font-weight: 700; color: white; }
+        .stat-card .stat-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+        /* Slider */
+        .slider-wrapper { background: linear-gradient(145deg, rgba(108,60,225,0.08), rgba(251,191,36,0.04)); border-radius: 20px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border-color); position: relative; min-height: 180px; }
+        .slider-container { position: relative; width: 100%; height: 100%; min-height: 180px; }
+        .slider-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 24px 20px; opacity: 0; transform: translateX(30px); transition: all 0.6s cubic-bezier(0.4,0,0.2,1); pointer-events: none; display: flex; flex-direction: column; justify-content: center; min-height: 180px; }
+        .slider-slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+        .slider-slide.exit { opacity: 0; transform: translateX(-30px); }
+        .slider-slide .slide-icon { font-size: 36px; color: var(--secondary); margin-bottom: 8px; }
+        .slider-slide h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
+        .slider-slide p { color: var(--text-secondary); font-size: 13px; line-height: 1.5; max-width: 90%; }
+        .slider-slide .slide-badge { display: inline-block; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.2); border-radius: 20px; padding: 3px 14px; font-size: 11px; color: var(--secondary); margin-top: 6px; align-self: flex-start; }
+        .slider-slide .slide-highlight { color: var(--secondary); font-weight: 600; }
+        .slider-controls { position: absolute; bottom: 12px; right: 16px; display: flex; gap: 6px; z-index: 5; }
+        .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; cursor: pointer; transition: 0.3s; padding: 0; }
+        .slider-dot.active { background: var(--secondary); width: 24px; border-radius: 4px; }
+        .slider-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 8px; z-index: 5; pointer-events: none; }
+        .slider-arrow { pointer-events: auto; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .slider-arrow:active { transform: scale(0.9); background: rgba(251,191,36,0.2); }
+
+        /* Fullscreen Overlay */
+        .fullscreen-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000000; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .fullscreen-overlay.active { display: flex; }
+        .fullscreen-overlay .fs-header { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 12px; }
+        .fullscreen-overlay .fs-header .fs-timer { font-size: 18px; font-weight: 700; color: var(--secondary); font-variant-numeric: tabular-nums; }
+        .fullscreen-overlay .fs-header .fs-close { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #EF4444; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .fullscreen-overlay .fs-header .fs-close:hover { background: rgba(239,68,68,0.15); }
+        .fullscreen-overlay .fs-video-wrapper { width: 100%; max-width: 480px; aspect-ratio: 16/9; background: #0A0A0F; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); position: relative; }
+        .fullscreen-overlay .fs-video-wrapper iframe { width: 100%; height: 100%; border: none; }
+        .fullscreen-overlay .fs-progress { width: 100%; max-width: 480px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-top: 16px; overflow: hidden; }
+        .fullscreen-overlay .fs-progress .fs-fill { height: 100%; background: linear-gradient(90deg, var(--secondary), #F59E0B); border-radius: 3px; transition: width 0.3s; width: 0%; }
+        .fullscreen-overlay .fs-label { color: var(--text-secondary); font-size: 14px; margin-top: 12px; }
+        .fullscreen-overlay .fs-reward { color: var(--secondary); font-weight: 700; font-size: 16px; margin-top: 4px; }
+        .fullscreen-overlay .fs-warning { color: #EF4444; font-size: 12px; margin-top: 8px; display: none; }
+        .fullscreen-overlay .fs-warning.show { display: block; }
+
+        /* Scroll Overlay */
+        .scroll-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10,10,15,0.92); backdrop-filter: blur(8px); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .scroll-overlay.active { display: flex; }
+        .scroll-overlay .scroll-box { background: var(--bg-card); border-radius: 24px; padding: 32px 24px; max-width: 400px; width: 100%; border: 1px solid var(--border-color); text-align: center; }
+        .scroll-overlay .scroll-box .scroll-icon { font-size: 64px; color: var(--secondary); margin-bottom: 12px; animation: scrollBounce 1s ease-in-out infinite; }
+        @keyframes scrollBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .scroll-overlay .scroll-box h3 { font-size: 20px; margin-bottom: 6px; }
+        .scroll-overlay .scroll-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+        .scroll-overlay .scroll-box .scroll-timer { font-size: 36px; font-weight: 700; color: var(--secondary); font-variant-numeric: tabular-nums; margin: 8px 0; }
+        .scroll-overlay .scroll-box .scroll-progress { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+        .scroll-overlay .scroll-box .scroll-progress .scroll-fill { height: 100%; background: linear-gradient(90deg, var(--secondary), #F59E0B); border-radius: 3px; transition: width 0.3s; width: 0%; }
+        .scroll-overlay .scroll-box .scroll-reward { color: #34D399; font-weight: 600; margin-top: 8px; }
+        .scroll-overlay .scroll-box .scroll-warning { color: #EF4444; font-size: 12px; margin-top: 6px; display: none; }
+        .scroll-overlay .scroll-box .scroll-warning.show { display: block; }
 
         /* Mission Cards */
-        .mission-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .mission-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 100%;
-        }
-
-        .mission-card:active {
-            transform: scale(0.98);
-        }
-
-        .mission-card .m-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .mission-card .m-icon.yt { background: rgba(255, 0, 0, 0.15); color: #FF0000; }
-        .mission-card .m-icon.iklan { background: rgba(251, 191, 36, 0.15); color: var(--secondary); }
-        .mission-card .m-icon.scroll { background: rgba(52, 211, 153, 0.15); color: #34D399; }
-        .mission-card .m-icon.sub { background: rgba(52, 211, 153, 0.15); color: #34D399; }
-        .mission-card .m-icon.sosmed { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
-        .mission-card .m-icon.share { background: rgba(236, 72, 153, 0.15); color: #EC4899; }
-
-        .mission-card .m-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .mission-card .m-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .mission-card .m-desc {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .mission-card .m-reward {
-            font-size: 13px;
-            color: var(--secondary);
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .mission-card .m-btn {
-            padding: 8px 20px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .mission-card .m-btn:active {
-            transform: scale(0.95);
-        }
-
-        .mission-card .m-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .mission-card .m-btn.social-btn {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .mission-card .m-btn.scroll-btn {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .quota-badge {
-            background: rgba(251, 191, 36, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: 20px;
-            padding: 2px 12px;
-            font-size: 10px;
-            color: var(--secondary);
-            font-weight: 600;
-            margin-left: 6px;
-            white-space: nowrap;
-        }
+        .mission-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .mission-card { background: var(--bg-card); border-radius: 16px; padding: 16px 18px; border: 1px solid var(--border-color); transition: 0.3s; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 14px; width: 100%; }
+        .mission-card:active { transform: scale(0.98); }
+        .mission-card .m-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .mission-card .m-icon.yt { background: rgba(255,0,0,0.15); color: #FF0000; }
+        .mission-card .m-icon.iklan { background: rgba(251,191,36,0.15); color: var(--secondary); }
+        .mission-card .m-icon.scroll { background: rgba(52,211,153,0.15); color: #34D399; }
+        .mission-card .m-icon.sub { background: rgba(52,211,153,0.15); color: #34D399; }
+        .mission-card .m-icon.sosmed { background: rgba(59,130,246,0.15); color: #3B82F6; }
+        .mission-card .m-icon.share { background: rgba(236,72,153,0.15); color: #EC4899; }
+        .mission-card .m-info { flex: 1; min-width: 0; }
+        .mission-card .m-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .mission-card .m-desc { font-size: 11px; color: var(--text-secondary); }
+        .mission-card .m-reward { font-size: 13px; color: var(--secondary); font-weight: 600; margin-top: 2px; }
+        .mission-card .m-btn { padding: 8px 20px; border-radius: 10px; border: none; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.3s; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; flex-shrink: 0; }
+        .mission-card .m-btn:active { transform: scale(0.95); }
+        .mission-card .m-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .mission-card .m-btn.social-btn { background: #34D399; color: #0A0A0F; }
+        .mission-card .m-btn.scroll-btn { background: #34D399; color: #0A0A0F; }
+        .quota-badge { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.15); border-radius: 20px; padding: 2px 12px; font-size: 10px; color: var(--secondary); font-weight: 600; margin-left: 6px; white-space: nowrap; }
 
         /* VIP Card */
-        .vip-card {
-            background: linear-gradient(135deg, rgba(108, 60, 225, 0.2), rgba(139, 92, 246, 0.1));
-            border-radius: 16px;
-            padding: 16px 20px;
-            border: 1px solid rgba(108, 60, 225, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-        }
-
-        .vip-card .vip-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .vip-card .vip-left i {
-            font-size: 28px;
-            color: var(--secondary);
-        }
-
-        .vip-card .vip-left .vip-text h4 {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .vip-card .vip-left .vip-text p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .vip-card .vip-btn {
-            background: var(--secondary);
-            color: #0A0A0F;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            flex-shrink: 0;
-        }
-
-        .vip-card .vip-btn:active {
-            transform: scale(0.95);
-        }
-
-        .vip-card .vip-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .vip-card .vip-btn.vip-active {
-            background: #34D399;
-            color: #0A0A0F;
-        }
+        .vip-card { background: linear-gradient(135deg, rgba(108,60,225,0.2), rgba(139,92,246,0.1)); border-radius: 16px; padding: 16px 20px; border: 1px solid rgba(108,60,225,0.2); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; backdrop-filter: blur(10px); width: 100%; }
+        .vip-card .vip-left { display: flex; align-items: center; gap: 12px; }
+        .vip-card .vip-left i { font-size: 28px; color: var(--secondary); }
+        .vip-card .vip-left .vip-text h4 { font-size: 15px; font-weight: 600; }
+        .vip-card .vip-left .vip-text p { font-size: 12px; color: var(--text-secondary); }
+        .vip-card .vip-btn { background: var(--secondary); color: #0A0A0F; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
+        .vip-card .vip-btn:active { transform: scale(0.95); }
+        .vip-card .vip-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .vip-card .vip-btn.vip-active { background: #34D399; color: #0A0A0F; }
 
         /* Daily Claim */
-        .daily-card {
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            padding: 16px 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-        }
+        .daily-card { background: rgba(59,130,246,0.1); border-radius: 16px; padding: 16px 20px; border: 1px solid rgba(59,130,246,0.2); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; backdrop-filter: blur(10px); width: 100%; }
+        .daily-card .daily-left { display: flex; align-items: center; gap: 12px; }
+        .daily-card .daily-left i { font-size: 28px; color: #3B82F6; }
+        .daily-card .daily-left .daily-text h4 { font-size: 15px; font-weight: 600; }
+        .daily-card .daily-left .daily-text p { font-size: 12px; color: var(--text-secondary); }
+        .daily-card .daily-btn { background: #3B82F6; color: white; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
+        .daily-card .daily-btn:active { transform: scale(0.95); }
+        .daily-card .daily-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .daily-card .daily-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .daily-card .daily-left i {
-            font-size: 28px;
-            color: #3B82F6;
-        }
-
-        .daily-card .daily-left .daily-text h4 {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .daily-card .daily-left .daily-text p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .daily-card .daily-btn {
-            background: #3B82F6;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            flex-shrink: 0;
-        }
-
-        .daily-card .daily-btn:active {
-            transform: scale(0.95);
-        }
-
-        .daily-card .daily-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        /* Referral Section */
-        .ref-section {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .ref-section .ref-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .ref-section .ref-header h4 {
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .ref-section .ref-header h4 i {
-            color: var(--secondary);
-        }
-
-        .ref-link-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .ref-link-box .link-text {
-            font-size: 12px;
-            color: var(--text-secondary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-        }
-
-        .ref-link-box .copy-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 4px 10px;
-            font-size: 16px;
-        }
-
-        .ref-levels {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-        }
-
-        .ref-level {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .ref-level .lvl {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        .ref-level .count {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--secondary);
-        }
-        .ref-level .bonus {
-            font-size: 10px;
-            color: #34D399;
-        }
-        .ref-level .bonus-detail {
-            font-size: 9px;
-            color: #FBBF24;
-            margin-top: 2px;
-        }
+        /* Referral */
+        .ref-section { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 16px; backdrop-filter: blur(10px); }
+        .ref-section .ref-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .ref-section .ref-header h4 { font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .ref-section .ref-header h4 i { color: var(--secondary); }
+        .ref-link-box { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .ref-link-box .link-text { font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+        .ref-link-box .copy-btn { background: none; border: none; color: var(--primary); cursor: pointer; padding: 4px 10px; font-size: 16px; }
+        .ref-levels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .ref-level { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; text-align: center; }
+        .ref-level .lvl { font-size: 11px; color: var(--text-secondary); }
+        .ref-level .count { font-size: 18px; font-weight: 700; color: var(--secondary); }
+        .ref-level .bonus { font-size: 10px; color: #34D399; }
+        .ref-level .bonus-detail { font-size: 9px; color: #FBBF24; margin-top: 2px; }
 
         /* Pages */
-        .page {
-            display: none;
-            animation: fadeUp 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .page { display: none; animation: fadeUp 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 460px;
-            background: rgba(15, 15, 26, 0.92);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 6px 8px;
-            z-index: 100;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-        }
+        .bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 460px; background: rgba(15,15,26,0.92); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 8px; z-index: 100; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 6px 10px; border-radius: 14px; transition: 0.3s; border: none; background: none; color: #475569; font-size: 10px; min-width: 48px; position: relative; }
+        .nav-item i { font-size: 20px; transition: 0.3s; }
+        .nav-item span { font-size: 9px; font-weight: 500; }
+        .nav-item.active { color: var(--secondary); background: rgba(251,191,36,0.08); }
+        .nav-item.active i { transform: translateY(-2px); }
+        .nav-item:active { transform: scale(0.9); }
+        .nav-item .badge-dot { position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: #EF4444; border-radius: 50%; }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 14px;
-            transition: 0.3s;
-            border: none;
-            background: none;
-            color: #475569;
-            font-size: 10px;
-            min-width: 48px;
-            position: relative;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            transition: 0.3s;
-        }
-
-        .nav-item span {
-            font-size: 9px;
-            font-weight: 500;
-        }
-
-        .nav-item.active {
-            color: var(--secondary);
-            background: rgba(251, 191, 36, 0.08);
-        }
-
-        .nav-item.active i {
-            transform: translateY(-2px);
-        }
-
-        .nav-item:active {
-            transform: scale(0.9);
-        }
-
-        .nav-item .badge-dot {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 6px;
-            height: 6px;
-            background: #EF4444;
-            border-radius: 50%;
-        }
-
-        /* Log Page */
-        .log-item {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 3px solid var(--secondary);
-            font-size: 13px;
-        }
-
-        .log-item .time {
-            color: var(--text-secondary);
-            font-size: 11px;
-        }
-
-        /* WD Page */
-        .wd-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .wd-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .wd-item:last-child {
-            border-bottom: none;
-        }
-
-        .wd-item .wd-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .wd-item .wd-info i {
-            font-size: 20px;
-            color: var(--secondary);
-            width: 32px;
-        }
-
-        .wd-item .wd-info .wd-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .wd-item .wd-info .wd-cost {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .wd-item .wd-btn {
-            background: #34D399;
-            color: #0A0A0F;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .wd-item .wd-btn:active {
-            transform: scale(0.95);
-        }
-
-        .wd-item .wd-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
+        /* Log & WD */
+        .log-item { background: var(--bg-card); border-radius: 12px; padding: 12px 16px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--secondary); font-size: 13px; }
+        .log-item .time { color: var(--text-secondary); font-size: 11px; }
+        .wd-card { background: var(--bg-card); border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); }
+        .wd-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        .wd-item:last-child { border-bottom: none; }
+        .wd-item .wd-info { display: flex; align-items: center; gap: 12px; }
+        .wd-item .wd-info i { font-size: 20px; color: var(--secondary); width: 32px; }
+        .wd-item .wd-info .wd-name { font-weight: 500; font-size: 14px; }
+        .wd-item .wd-info .wd-cost { font-size: 12px; color: var(--text-secondary); }
+        .wd-item .wd-btn { background: #34D399; color: #0A0A0F; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .wd-item .wd-btn:active { transform: scale(0.95); }
+        .wd-item .wd-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         /* Akun Page */
-        .account-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-        }
+        .account-card { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 12px; }
+        .account-card .field { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .account-card .field:last-child { border-bottom: none; }
+        .account-card .field .label { color: var(--text-secondary); font-size: 13px; }
+        .account-card .field .value { font-weight: 500; font-size: 13px; }
+        .account-card .field .value.verified { color: #34D399; }
+        .account-card .field .value.unverified { color: #F59E0B; }
 
-        .account-card .field {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
+        /* Admin Button - Link ke Admin Dashboard */
+        .admin-link-btn { background: rgba(108,60,225,0.15); border: 1px solid rgba(108,60,225,0.3); border-radius: 12px; padding: 12px 16px; color: var(--secondary); cursor: pointer; transition: 0.3s; width: 100%; font-size: 14px; margin-top: 8px; display: none; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+        .admin-link-btn.visible { display: flex; }
+        .admin-link-btn:hover { background: rgba(108,60,225,0.25); }
+        .admin-link-btn i { font-size: 18px; }
 
-        .account-card .field:last-child {
-            border-bottom: none;
-        }
+        .btn-logout { width: 100%; padding: 14px; border-radius: 14px; border: none; background: rgba(239,68,68,0.15); color: #EF4444; font-weight: 600; cursor: pointer; transition: 0.3s; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-logout:active { transform: scale(0.97); }
 
-        .account-card .field .label {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: #1a1a2e; border-radius: 24px; padding: 32px 24px; max-width: 400px; width: 100%; border: 1px solid var(--border-color); text-align: center; }
+        .modal-box .modal-icon { font-size: 64px; color: var(--secondary); margin-bottom: 16px; }
+        .modal-box h3 { font-size: 20px; margin-bottom: 8px; }
+        .modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
+        .modal-box .qris-placeholder { background: white; border-radius: 16px; padding: 40px 20px; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .modal-box .qris-placeholder i { font-size: 48px; color: #0A0A0F; }
+        .modal-box .qris-placeholder span { color: #0A0A0F; font-weight: 600; font-size: 14px; }
+        .modal-box .qris-placeholder .sub { font-size: 12px; font-weight: 400; color: #64748b; }
+        .modal-box .modal-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; }
+        .modal-box .modal-btn.confirm { background: var(--secondary); color: #0A0A0F; }
+        .modal-box .modal-btn.cancel { background: rgba(255,255,255,0.05); color: var(--text-secondary); margin-top: 8px; }
 
-        .account-card .field .value {
-            font-weight: 500;
-            font-size: 13px;
-        }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .account-card .field .value.verified {
-            color: #34D399;
-        }
+        @media (max-width: 420px) { .stats-grid { gap: 6px; } .stat-card { padding: 10px 8px; } .stat-card .stat-value { font-size: 16px; } .mission-card { padding: 12px 14px; } .login-page .login-box { padding: 28px 20px; } .vip-card { padding: 14px 16px; } .daily-card { padding: 14px 16px; } .slider-slide p { max-width: 100%; } }
 
-        .account-card .field .value.unverified {
-            color: #F59E0B;
-        }
-
-        .btn-logout {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            background: rgba(239, 68, 68, 0.15);
-            color: #EF4444;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .btn-logout:active {
-            transform: scale(0.97);
-        }
-
-        /* Admin Panel - HANYA TERLIHAT UNTUK ADMIN */
-        .admin-toggle-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px 16px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-            font-size: 13px;
-            margin-top: 8px;
-            display: none; /* Hidden by default, only visible for admin */
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .admin-toggle-btn.visible {
-            display: flex;
-        }
-
-        .admin-toggle-btn:hover {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .admin-toggle-btn.active {
-            border-color: var(--secondary);
-            color: var(--secondary);
-        }
-
-        .admin-panel {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-top: 12px;
-            display: none; /* Hidden by default */
-        }
-
-        .admin-panel.show {
-            display: block;
-        }
-
-        .admin-panel h4 {
-            margin-bottom: 12px;
-            color: var(--secondary);
-            font-size: 15px;
-        }
-
-        .admin-panel .sub-label {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .admin-panel input, .admin-panel select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .admin-panel input::placeholder {
-            color: #475569;
-        }
-
-        .admin-panel .btn-save {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 4px;
-        }
-
-        .admin-panel .btn-save.success {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.warning {
-            background: #F59E0B;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.danger {
-            background: #EF4444;
-            color: white;
-        }
-
-        .admin-mission-item {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .admin-mission-item .am-info {
-            font-size: 13px;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .admin-mission-item .am-info .am-title {
-            font-weight: 600;
-        }
-
-        .admin-mission-item .am-info .am-link {
-            font-size: 11px;
-            color: var(--text-secondary);
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-
-        .admin-mission-item .am-actions button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px 6px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .admin-mission-item .am-actions button:hover {
-            color: white;
-        }
-
-        .admin-mission-item .am-actions .am-edit {
-            color: #3B82F6;
-        }
-
-        .admin-mission-item .am-actions .am-delete {
-            color: #EF4444;
-        }
-
-        /* QRIS Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-box {
-            background: #1a1a2e;
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .modal-box .modal-icon {
-            font-size: 64px;
-            color: var(--secondary);
-            margin-bottom: 16px;
-        }
-
-        .modal-box h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .modal-box p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .modal-box .qris-placeholder {
-            background: white;
-            border-radius: 16px;
-            padding: 40px 20px;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-box .qris-placeholder i {
-            font-size: 48px;
-            color: #0A0A0F;
-        }
-
-        .modal-box .qris-placeholder span {
-            color: #0A0A0F;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .modal-box .qris-placeholder .sub {
-            font-size: 12px;
-            font-weight: 400;
-            color: #64748b;
-        }
-
-        .modal-box .modal-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .modal-box .modal-btn.confirm {
-            background: var(--secondary);
-            color: #0A0A0F;
-        }
-
-        .modal-box .modal-btn.cancel {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-
-        .modal-box .modal-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: var(--secondary);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
-        @media (max-width: 420px) {
-            .stats-grid { gap: 6px; }
-            .stat-card { padding: 10px 8px; }
-            .stat-card .stat-value { font-size: 16px; }
-            .mission-card { padding: 12px 14px; }
-            .login-page .login-box { padding: 28px 20px; }
-            .vip-card { padding: 14px 16px; }
-            .daily-card { padding: 14px 16px; }
-            .slider-slide p { max-width: 100%; }
-        }
-
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .toast {
-            background: rgba(15, 15, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px 20px;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-            animation: slideDown 0.3s ease;
-            margin-bottom: 8px;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; width: 90%; max-width: 400px; }
+        .toast { background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: white; font-size: 14px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; margin-bottom: 8px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -1568,7 +253,6 @@
                 <button data-tab="register">Daftar</button>
             </div>
 
-            <!-- Login Form -->
             <div id="loginForm">
                 <div class="input-group">
                     <label><i class="fas fa-envelope"></i> Email</label>
@@ -1583,7 +267,6 @@
                 </button>
             </div>
 
-            <!-- Register Form -->
             <div id="registerForm" style="display:none;">
                 <div class="input-group">
                     <label><i class="fas fa-user"></i> Username</label>
@@ -1677,10 +360,9 @@
                 </div>
             </div>
 
-            <!-- PAGES -->
             <!-- DASHBOARD -->
             <div class="page active" id="page-dashboard">
-                <!-- SLIDER CAROUSEL -->
+                <!-- Slider -->
                 <div class="slider-wrapper">
                     <div class="slider-container" id="sliderContainer">
                         <div class="slider-slide active" data-index="0">
@@ -1698,13 +380,13 @@
                         <div class="slider-slide" data-index="2">
                             <div class="slide-icon"><i class="fas fa-crown"></i></div>
                             <h3>VIP Premium</h3>
-                            <p>Upgrade VIP untuk mendapatkan <span class="slide-highlight">20x</span> kuota misi dan <span class="slide-highlight">2x lipat</span> poin setiap misi!</p>
+                            <p>Upgrade VIP untuk mendapatkan <span class="slide-highlight">20x</span> kuota misi dan <span class="slide-highlight">2x lipat</span> poin!</p>
                             <span class="slide-badge">👑 Hanya 10.000 Poin</span>
                         </div>
                         <div class="slider-slide" data-index="3">
                             <div class="slide-icon"><i class="fas fa-wallet"></i></div>
                             <h3>Tukar Poin Jadi Uang</h3>
-                            <p>Kumpulkan poin dan tukarkan dengan <span class="slide-highlight">Pulsa</span> atau <span class="slide-highlight">Uang</span> tunai. Minimal WD 10.000 poin!</p>
+                            <p>Kumpulkan poin dan tukarkan dengan <span class="slide-highlight">Pulsa</span> atau <span class="slide-highlight">Uang</span> tunai.</p>
                             <span class="slide-badge">💳 Pulsa 10K • Uang 10K</span>
                         </div>
                         <div class="slider-slide" data-index="4">
@@ -1716,11 +398,10 @@
                         <div class="slider-slide" data-index="5">
                             <div class="slide-icon"><i class="fas fa-tasks"></i></div>
                             <h3>Misi Sosial Harian</h3>
-                            <p>Subscribe, Follow, dan Share setiap hari untuk poin tambahan! <span class="slide-highlight">+15, +10, +20</span> poin</p>
+                            <p>Subscribe, Follow, dan Share setiap hari! <span class="slide-highlight">+15, +10, +20</span> poin</p>
                             <span class="slide-badge">📅 1x Sehari</span>
                         </div>
                     </div>
-
                     <div class="slider-controls" id="sliderDots"></div>
                     <div class="slider-arrows">
                         <button class="slider-arrow" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
@@ -1728,7 +409,7 @@
                     </div>
                 </div>
 
-                <!-- Missions - YT, Iklan, Scroll -->
+                <!-- Missions -->
                 <div class="mission-grid" id="dashboardMissions">
                     <div class="mission-card">
                         <div class="m-icon yt"><i class="fab fa-youtube"></i></div>
@@ -1739,7 +420,6 @@
                         </div>
                         <button class="m-btn" data-mission="yt" id="ytBtn">Tonton</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon iklan"><i class="fas fa-ad"></i></div>
                         <div class="m-info">
@@ -1749,7 +429,6 @@
                         </div>
                         <button class="m-btn" data-mission="iklan" id="iklanBtn">Tonton</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon scroll"><i class="fas fa-arrows-alt-v"></i></div>
                         <div class="m-info">
@@ -1796,24 +475,9 @@
                         <button class="copy-btn" id="copyRefLink"><i class="fas fa-copy"></i></button>
                     </div>
                     <div class="ref-levels">
-                        <div class="ref-level">
-                            <div class="lvl">Level 1</div>
-                            <div class="count" id="refL1">0</div>
-                            <div class="bonus"><i class="fas fa-arrows-alt-h"></i> 2 arah</div>
-                            <div class="bonus-detail" id="bonusL1Display">+5 poin/referral</div>
-                        </div>
-                        <div class="ref-level">
-                            <div class="lvl">Level 2</div>
-                            <div class="count" id="refL2">0</div>
-                            <div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div>
-                            <div class="bonus-detail" id="bonusL2Display">+3 poin/referral</div>
-                        </div>
-                        <div class="ref-level">
-                            <div class="lvl">Level 3</div>
-                            <div class="count" id="refL3">0</div>
-                            <div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div>
-                            <div class="bonus-detail" id="bonusL3Display">+1 poin/referral</div>
-                        </div>
+                        <div class="ref-level"><div class="lvl">Level 1</div><div class="count" id="refL1">0</div><div class="bonus"><i class="fas fa-arrows-alt-h"></i> 2 arah</div><div class="bonus-detail" id="bonusL1Display">+5 poin</div></div>
+                        <div class="ref-level"><div class="lvl">Level 2</div><div class="count" id="refL2">0</div><div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div><div class="bonus-detail" id="bonusL2Display">+3 poin</div></div>
+                        <div class="ref-level"><div class="lvl">Level 3</div><div class="count" id="refL3">0</div><div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div><div class="bonus-detail" id="bonusL3Display">+1 poin</div></div>
                     </div>
                 </div>
             </div>
@@ -1822,14 +486,11 @@
             <div class="page" id="page-log">
                 <h3 style="margin-bottom:16px;"><i class="fas fa-history"></i> Riwayat</h3>
                 <div id="logContainer">
-                    <div class="log-item">
-                        <span>👋 Selamat datang!</span>
-                        <span class="time">Now</span>
-                    </div>
+                    <div class="log-item"><span>👋 Selamat datang!</span><span class="time">Now</span></div>
                 </div>
             </div>
 
-            <!-- MISI -->
+            <!-- MISI SOSIAL -->
             <div class="page" id="page-misi">
                 <h3 style="margin-bottom:16px;"><i class="fas fa-tasks"></i> Misi Sosial</h3>
                 <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">Klik tombol untuk membuka link, selesaikan misi, dapatkan poin!</p>
@@ -1843,7 +504,6 @@
                         </div>
                         <button class="m-btn social-btn" data-mission="sub">Subscribe</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon sosmed"><i class="fas fa-share-alt"></i></div>
                         <div class="m-info">
@@ -1853,7 +513,6 @@
                         </div>
                         <button class="m-btn social-btn" data-mission="sosmed">Ikuti</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon share"><i class="fas fa-share"></i></div>
                         <div class="m-info">
@@ -1871,33 +530,15 @@
                 <h3 style="margin-bottom:16px;"><i class="fas fa-wallet"></i> Penarikan</h3>
                 <div class="wd-card">
                     <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-phone-alt"></i>
-                            <div>
-                                <div class="wd-name">Pulsa 10K</div>
-                                <div class="wd-cost">10.000 poin</div>
-                            </div>
-                        </div>
+                        <div class="wd-info"><i class="fas fa-phone-alt"></i><div><div class="wd-name">Pulsa 10K</div><div class="wd-cost">10.000 poin</div></div></div>
                         <button class="wd-btn" data-redeem="pulsa">Tukar</button>
                     </div>
                     <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <div>
-                                <div class="wd-name">Uang 10K</div>
-                                <div class="wd-cost">10.000 poin</div>
-                            </div>
-                        </div>
+                        <div class="wd-info"><i class="fas fa-money-bill-wave"></i><div><div class="wd-name">Uang 10K</div><div class="wd-cost">10.000 poin</div></div></div>
                         <button class="wd-btn" data-redeem="uang">Tukar</button>
                     </div>
                     <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-phone-alt"></i>
-                            <div>
-                                <div class="wd-name">Pulsa 20K</div>
-                                <div class="wd-cost">20.000 poin</div>
-                            </div>
-                        </div>
+                        <div class="wd-info"><i class="fas fa-phone-alt"></i><div><div class="wd-name">Pulsa 20K</div><div class="wd-cost">20.000 poin</div></div></div>
                         <button class="wd-btn" data-redeem="pulsa20">Tukar</button>
                     </div>
                     <div style="margin-top:12px;padding:10px;background:rgba(251,191,36,0.05);border-radius:10px;text-align:center;font-size:12px;color:var(--text-secondary);">
@@ -1910,121 +551,19 @@
             <div class="page" id="page-akun">
                 <h3 style="margin-bottom:16px;"><i class="fas fa-user"></i> Akun</h3>
                 <div class="account-card">
-                    <div class="field">
-                        <span class="label"><i class="fas fa-envelope"></i> Email</span>
-                        <span class="value" id="userEmail">-</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-user"></i> Username</span>
-                        <span class="value" id="userUsername">-</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-check-circle"></i> Status</span>
-                        <span class="value verified" id="userStatus">⏳ Loading...</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-crown"></i> VIP</span>
-                        <span class="value" id="akunVip">Tidak Aktif</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-star"></i> Total Poin</span>
-                        <span class="value" id="akunPoin">0</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-link"></i> Kode Referral</span>
-                        <span class="value" id="akunRefCode">-</span>
-                    </div>
+                    <div class="field"><span class="label"><i class="fas fa-envelope"></i> Email</span><span class="value" id="userEmail">-</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-user"></i> Username</span><span class="value" id="userUsername">-</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-check-circle"></i> Status</span><span class="value verified" id="userStatus">⏳ Loading...</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-crown"></i> VIP</span><span class="value" id="akunVip">Tidak Aktif</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-star"></i> Total Poin</span><span class="value" id="akunPoin">0</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-link"></i> Kode Referral</span><span class="value" id="akunRefCode">-</span></div>
                 </div>
 
-                <!-- Admin Toggle Button - HANYA UNTUK ADMIN -->
-                <button class="admin-toggle-btn" id="toggleAdminMode">
-                    <i class="fas fa-shield-alt"></i> Aktifkan Mode Admin
-                </button>
-
-                <!-- SEMUA ADMIN PANEL - HANYA UNTUK ADMIN -->
-                <div class="admin-panel" id="adminVipPanel">
-                    <h4><i class="fas fa-crown"></i> Verifikasi & Approve VIP</h4>
-                    <div id="vipRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">Belum ada request VIP</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">Menunggu user request VIP</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-panel" id="adminRewardPanel">
-                    <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
-                    <label class="sub-label">YouTube (default: 10)</label>
-                    <input type="number" id="rewardYtInput" placeholder="Poin YouTube" value="10">
-                    <label class="sub-label">Iklan (default: 5)</label>
-                    <input type="number" id="rewardIklanInput" placeholder="Poin Iklan" value="5">
-                    <label class="sub-label">Scroll Website (default: 8)</label>
-                    <input type="number" id="rewardScrollInput" placeholder="Poin Scroll" value="8">
-                    <label class="sub-label">Subscribe YouTube (default: 15)</label>
-                    <input type="number" id="rewardSubInput" placeholder="Poin Subscribe" value="15">
-                    <label class="sub-label">Follow Sosmed (default: 10)</label>
-                    <input type="number" id="rewardSosmedInput" placeholder="Poin Follow" value="10">
-                    <label class="sub-label">Share (default: 20)</label>
-                    <input type="number" id="rewardShareInput" placeholder="Poin Share" value="20">
-                    <button class="btn-save warning" id="saveRewardBtn">
-                        <i class="fas fa-save"></i> Simpan Poin Misi
-                    </button>
-                </div>
-
-                <div class="admin-panel" id="adminSocialPanel">
-                    <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
-                    <div id="adminMissionList"></div>
-                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="newMissionName" placeholder="Nama misi" style="flex:1;">
-                            <input type="number" id="newMissionReward" placeholder="Poin" style="flex:0.6;">
-                        </div>
-                        <input type="text" id="newMissionLink" placeholder="Link (YouTube/Sosmed)" style="width:100%;">
-                        <button class="btn-save" id="addMissionBtn">
-                            <i class="fas fa-plus"></i> Tambah Misi
-                        </button>
-                    </div>
-                </div>
-
-                <div class="admin-panel" id="adminBonusPanel">
-                    <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
-                    <label class="sub-label">Level 1 (2 arah)</label>
-                    <input type="number" id="bonusL1Input" placeholder="Poin Level 1" value="5">
-                    <label class="sub-label">Level 2 (1 arah)</label>
-                    <input type="number" id="bonusL2Input" placeholder="Poin Level 2" value="3">
-                    <label class="sub-label">Level 3 (1 arah)</label>
-                    <input type="number" id="bonusL3Input" placeholder="Poin Level 3" value="1">
-                    <button class="btn-save success" id="saveBonusBtn">
-                        <i class="fas fa-save"></i> Simpan Bonus
-                    </button>
-                </div>
-
-                <div class="admin-panel" id="adminWdPanel">
-                    <h4><i class="fas fa-check-circle"></i> Approve WD</h4>
-                    <div id="wdRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">Belum ada request WD</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">Menunggu user request WD</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-panel" id="adminLinkPanel">
-                    <h4><i class="fas fa-link"></i> Link Settings</h4>
-                    <label class="sub-label">Link YouTube (untuk fullscreen)</label>
-                    <input type="text" id="adminYtLink" placeholder="Link YouTube" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                    <label class="sub-label">Link Website untuk Scroll</label>
-                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-poin.com/scroll">
-                    <label class="sub-label">Link Sosmed (untuk Follow)</label>
-                    <input type="text" id="adminSosmedLink" placeholder="Link Sosmed" value="https://instagram.com">
-                    <label class="sub-label">Link Share</label>
-                    <input type="text" id="adminShareLink" placeholder="Link Share" value="https://twitter.com">
-                    <button class="btn-save" id="saveAdminLinks">Simpan Link</button>
-                </div>
+                <!-- Link ke Admin Dashboard - HANYA UNTUK ADMIN -->
+                <a href="admin.html" class="admin-link-btn" id="adminLinkBtn">
+                    <i class="fas fa-shield-alt"></i> Dashboard Admin
+                    <i class="fas fa-arrow-right"></i>
+                </a>
 
                 <button class="btn-logout" id="btnLogout" style="margin-top:12px;">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -2033,27 +572,11 @@
 
             <!-- Bottom Navigation -->
             <div class="bottom-nav">
-                <button class="nav-item active" data-page="dashboard">
-                    <i class="fas fa-home"></i>
-                    <span>Beranda</span>
-                </button>
-                <button class="nav-item" data-page="log">
-                    <i class="fas fa-list"></i>
-                    <span>Log</span>
-                </button>
-                <button class="nav-item" data-page="misi">
-                    <i class="fas fa-tasks"></i>
-                    <span>Misi</span>
-                    <span class="badge-dot"></span>
-                </button>
-                <button class="nav-item" data-page="wd">
-                    <i class="fas fa-wallet"></i>
-                    <span>WD</span>
-                </button>
-                <button class="nav-item" data-page="akun">
-                    <i class="fas fa-user"></i>
-                    <span>Akun</span>
-                </button>
+                <button class="nav-item active" data-page="dashboard"><i class="fas fa-home"></i><span>Beranda</span></button>
+                <button class="nav-item" data-page="log"><i class="fas fa-list"></i><span>Log</span></button>
+                <button class="nav-item" data-page="misi"><i class="fas fa-tasks"></i><span>Misi</span><span class="badge-dot"></span></button>
+                <button class="nav-item" data-page="wd"><i class="fas fa-wallet"></i><span>WD</span></button>
+                <button class="nav-item" data-page="akun"><i class="fas fa-user"></i><span>Akun</span></button>
             </div>
         </div>
     </div>
@@ -2093,14 +616,7 @@
             isVerified: false,
             userIP: '127.0.0.1',
             scrollLink: 'https://misi-poin.com/scroll',
-            rewardPoints: {
-                yt: 10,
-                iklan: 5,
-                scroll: 8,
-                sub: 15,
-                sosmed: 10,
-                share: 20
-            },
+            rewardPoints: { yt: 10, iklan: 5, scroll: 8, sub: 15, sosmed: 10, share: 20 },
             missions: {
                 yt: { cooldown: false, lastDone: null, count: 0, max: 5 },
                 iklan: { cooldown: false, lastDone: null, count: 0, max: 5 },
@@ -2201,25 +717,10 @@
             resetSliderAuto();
         }
 
-        function nextSlide() {
-            goToSlide((state.sliderIndex + 1) % totalSlides);
-        }
-
-        function prevSlide() {
-            goToSlide((state.sliderIndex - 1 + totalSlides) % totalSlides);
-        }
-
-        function startSliderAuto() {
-            if (state.sliderInterval) clearInterval(state.sliderInterval);
-            state.sliderInterval = setInterval(nextSlide, 4000);
-        }
-
-        function resetSliderAuto() {
-            if (state.sliderInterval) {
-                clearInterval(state.sliderInterval);
-                startSliderAuto();
-            }
-        }
+        function nextSlide() { goToSlide((state.sliderIndex + 1) % totalSlides); }
+        function prevSlide() { goToSlide((state.sliderIndex - 1 + totalSlides) % totalSlides); }
+        function startSliderAuto() { if (state.sliderInterval) clearInterval(state.sliderInterval); state.sliderInterval = setInterval(nextSlide, 4000); }
+        function resetSliderAuto() { if (state.sliderInterval) { clearInterval(state.sliderInterval); startSliderAuto(); } }
 
         document.getElementById('sliderNext').addEventListener('click', nextSlide);
         document.getElementById('sliderPrev').addEventListener('click', prevSlide);
@@ -2236,41 +737,27 @@
         });
 
         // ========== AUTH FUNCTIONS ==========
-
         async function getUserIP() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
                 state.userIP = data.ip;
                 return data.ip;
-            } catch {
-                return '127.0.0.1';
-            }
+            } catch { return '127.0.0.1'; }
         }
 
         async function checkIPBlocked(ip) {
             try {
-                const { data } = await supabaseClient
-                    .from('ip_blocklist')
-                    .select('*')
-                    .eq('ip_address', ip)
-                    .single();
+                const { data } = await supabaseClient.from('ip_blocklist').select('*').eq('ip_address', ip).single();
                 return !!data;
             } catch { return false; }
         }
 
         async function loginUser(email, password) {
             try {
-                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
-                    email, password
-                });
-
+                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (authError) {
-                    if (authError.message === 'Invalid login credentials') {
-                        showToast('❌ Email atau password salah!', false);
-                    } else {
-                        showToast(`❌ ${authError.message}`, false);
-                    }
+                    showToast(`❌ ${authError.message}`, false);
                     return false;
                 }
 
@@ -2278,58 +765,29 @@
                 currentUserId = authData.user.id;
 
                 let { data: userData, error: userError } = await supabaseClient
-                    .from('users')
-                    .select('*')
-                    .eq('id', currentUserId)
-                    .single();
+                    .from('users').select('*').eq('id', currentUserId).single();
 
                 if (userError && userError.code === 'PGRST116') {
                     const { data: newUser, error: insertError } = await supabaseClient
-                        .from('users')
-                        .insert([{ 
-                            id: currentUserId, 
-                            email: email,
-                            username: email.split('@')[0],
-                            is_verified: false,
-                            is_vip: false,
-                            poin: 0
-                        }])
-                        .select()
-                        .single();
-
+                        .from('users').insert([{ id: currentUserId, email: email, username: email.split('@')[0], is_verified: false, is_vip: false, poin: 0 }])
+                        .select().single();
                     if (insertError) throw insertError;
                     userData = newUser;
-                } else if (userError) {
-                    throw userError;
-                }
+                } else if (userError) throw userError;
 
                 state.poin = userData.poin || 0;
                 state.vip = userData.is_vip || false;
                 state.isVerified = userData.is_verified || false;
-                
-                // ✅ CEK APAKAH ADMIN
-                const isAdminUser = userData.email === 'admin@misiononton.com' && 
-                                   userData.is_vip === true && 
-                                   userData.is_verified === true;
-                
-                // Set state admin
-                if (!isAdminUser) {
-                    state.isAdmin = false;
-                }
-                
+                state.isAdmin = userData.email === 'admin@misiononton.com' && userData.is_vip && userData.is_verified;
+
                 document.getElementById('userUsername').textContent = userData.username || '-';
                 document.getElementById('userEmail').textContent = userData.email;
                 document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
-                document.getElementById('refLinkText').textContent = 
-                    `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
+                document.getElementById('refLinkText').textContent = `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
 
                 const today = new Date().toISOString().split('T')[0];
                 const { data: dailyData } = await supabaseClient
-                    .from('daily_claims')
-                    .select('*')
-                    .eq('user_id', currentUserId)
-                    .eq('claim_date', today)
-                    .single();
+                    .from('daily_claims').select('*').eq('user_id', currentUserId).eq('claim_date', today).single();
                 state.dailyClaimed = dailyData?.claimed || false;
 
                 await loadMissions();
@@ -2346,7 +804,6 @@
                 loginPage.style.display = 'none';
                 appMain.classList.add('active');
                 initSlider();
-
                 return true;
             } catch (error) {
                 console.error('Login error:', error);
@@ -2359,57 +816,25 @@
             try {
                 const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email, password,
-                    options: {
-                        data: {
-                            username: username || email.split('@')[0]
-                        }
-                    }
+                    options: { data: { username: username || email.split('@')[0] } }
                 });
-
                 if (authError) throw authError;
 
                 if (authData.user) {
                     const { error: insertError } = await supabaseClient
-                        .from('users')
-                        .insert([{ 
-                            id: authData.user.id, 
-                            email: email,
-                            username: username || email.split('@')[0],
-                            is_verified: false,
-                            is_vip: false,
-                            poin: 0
-                        }]);
+                        .from('users').insert([{ id: authData.user.id, email: email, username: username || email.split('@')[0], is_verified: false, is_vip: false, poin: 0 }]);
 
                     if (insertError) {
-                        console.error('Insert error:', insertError);
                         if (insertError.message.includes('row-level security')) {
-                            const { error: rpcError } = await supabaseClient.rpc('create_user_profile', {
-                                user_id: authData.user.id,
-                                user_email: email,
-                                user_username: username || email.split('@')[0]
-                            });
-                            if (rpcError) throw rpcError;
-                        } else {
-                            throw insertError;
-                        }
+                            await supabaseClient.rpc('create_user_profile', { user_id: authData.user.id, user_email: email, user_username: username || email.split('@')[0] });
+                        } else throw insertError;
                     }
 
                     if (referralCode) {
                         const { data: referrer } = await supabaseClient
-                            .from('users')
-                            .select('id')
-                            .eq('referral_code', referralCode)
-                            .single();
-
+                            .from('users').select('id').eq('referral_code', referralCode).single();
                         if (referrer) {
-                            await supabaseClient
-                                .from('referrals')
-                                .insert([{
-                                    referrer_id: referrer.id,
-                                    referred_id: authData.user.id,
-                                    level: 1,
-                                    bonus_earned: state.ref.bonusL1
-                                }]);
+                            await supabaseClient.from('referrals').insert([{ referrer_id: referrer.id, referred_id: authData.user.id, level: 1, bonus_earned: state.ref.bonusL1 }]);
                         }
                     }
 
@@ -2428,90 +853,46 @@
             if (!currentUserId) return;
             const today = new Date().toISOString().split('T')[0];
             const { data, error } = await supabaseClient
-                .from('missions')
-                .select('*')
-                .eq('user_id', currentUserId)
-                .eq('completed_at', today);
+                .from('missions').select('*').eq('user_id', currentUserId).eq('completed_at', today);
             if (error) return;
 
             ['yt', 'iklan', 'scroll', 'sub', 'sosmed', 'share'].forEach(type => {
-                if (state.missions[type]) {
-                    state.missions[type].count = 0;
-                    state.missions[type].lastDone = null;
-                }
+                if (state.missions[type]) { state.missions[type].count = 0; state.missions[type].lastDone = null; }
             });
-
-            data.forEach(m => {
-                if (state.missions[m.type]) {
-                    state.missions[m.type].count = m.count_today || 0;
-                    state.missions[m.type].lastDone = m.last_done;
-                }
-            });
+            data.forEach(m => { if (state.missions[m.type]) { state.missions[m.type].count = m.count_today || 0; state.missions[m.type].lastDone = m.last_done; } });
             updateQuotaDisplay();
         }
 
         async function saveMission(type, reward) {
             if (!currentUserId) return false;
             const today = new Date().toISOString().split('T')[0];
-
             try {
                 const { data: existing } = await supabaseClient
-                    .from('missions')
-                    .select('id, count_today')
-                    .eq('user_id', currentUserId)
-                    .eq('type', type)
-                    .eq('completed_at', today)
-                    .single();
-
+                    .from('missions').select('id, count_today').eq('user_id', currentUserId).eq('type', type).eq('completed_at', today).single();
                 if (existing) {
-                    await supabaseClient
-                        .from('missions')
-                        .update({ count_today: existing.count_today + 1, last_done: new Date().toISOString() })
-                        .eq('id', existing.id);
+                    await supabaseClient.from('missions').update({ count_today: existing.count_today + 1, last_done: new Date().toISOString() }).eq('id', existing.id);
                 } else {
-                    await supabaseClient
-                        .from('missions')
-                        .insert([{ user_id: currentUserId, type, completed_at: today, count_today: 1, last_done: new Date().toISOString() }]);
+                    await supabaseClient.from('missions').insert([{ user_id: currentUserId, type, completed_at: today, count_today: 1, last_done: new Date().toISOString() }]);
                 }
-
                 await supabaseClient.from('users').update({ poin: state.poin }).eq('id', currentUserId);
                 return true;
-            } catch (error) {
-                console.error('Save mission error:', error);
-                return false;
-            }
+            } catch (error) { console.error('Save mission error:', error); return false; }
         }
 
         async function updateUserPoin() {
             if (!currentUserId) return;
-            try {
-                await supabaseClient.from('users').update({ poin: state.poin }).eq('id', currentUserId);
-            } catch (error) {
-                console.error('Update poin error:', error);
-            }
+            try { await supabaseClient.from('users').update({ poin: state.poin }).eq('id', currentUserId); } 
+            catch (error) { console.error('Update poin error:', error); }
         }
 
         async function claimDaily() {
             if (!currentUserId) return false;
             const today = new Date().toISOString().split('T')[0];
-
             try {
                 const { data: existing } = await supabaseClient
-                    .from('daily_claims')
-                    .select('id')
-                    .eq('user_id', currentUserId)
-                    .eq('claim_date', today)
-                    .single();
-
-                if (existing) {
-                    showToast('Sudah claim hari ini!', false);
-                    return false;
-                }
-
-                await supabaseClient
-                    .from('daily_claims')
-                    .insert([{ user_id: currentUserId, claim_date: today, claimed: true }]);
-
+                    .from('daily_claims').select('id').eq('user_id', currentUserId).eq('claim_date', today).single();
+                if (existing) { showToast('Sudah claim hari ini!', false); return false; }
+                await supabaseClient.from('daily_claims').insert([{ user_id: currentUserId, claim_date: today, claimed: true }]);
                 state.poin += 5;
                 await updateUserPoin();
                 state.dailyClaimed = true;
@@ -2519,129 +900,73 @@
                 addLog('✅ Claim daily +5 poin');
                 showToast('🎉 +5 poin daily claim!');
                 return true;
-            } catch (error) {
-                console.error('Daily claim error:', error);
-                return false;
-            }
+            } catch (error) { console.error('Daily claim error:', error); return false; }
         }
 
         async function loadReferrals() {
             if (!currentUserId) return;
             try {
-                const { data: l1 } = await supabaseClient
-                    .from('referrals')
-                    .select('*')
-                    .eq('referrer_id', currentUserId)
-                    .eq('level', 1);
+                const { data: l1 } = await supabaseClient.from('referrals').select('*').eq('referrer_id', currentUserId).eq('level', 1);
                 state.ref.l1 = l1?.length || 0;
-
-                const { data: l2 } = await supabaseClient
-                    .from('referrals')
-                    .select('*')
-                    .eq('referrer_id', currentUserId)
-                    .eq('level', 2);
+                const { data: l2 } = await supabaseClient.from('referrals').select('*').eq('referrer_id', currentUserId).eq('level', 2);
                 state.ref.l2 = l2?.length || 0;
-
-                const { data: l3 } = await supabaseClient
-                    .from('referrals')
-                    .select('*')
-                    .eq('referrer_id', currentUserId)
-                    .eq('level', 3);
+                const { data: l3 } = await supabaseClient.from('referrals').select('*').eq('referrer_id', currentUserId).eq('level', 3);
                 state.ref.l3 = l3?.length || 0;
-
                 updateUI();
-            } catch (error) {
-                console.error('Load referrals error:', error);
-            }
+            } catch (error) { console.error('Load referrals error:', error); }
         }
 
         async function loadMissionSettings() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('mission_settings')
-                    .select('*');
+                const { data, error } = await supabaseClient.from('mission_settings').select('*');
                 if (error) throw error;
-
                 data.forEach(setting => {
-                    if (state.rewardPoints[setting.mission_type] !== undefined) {
-                        state.rewardPoints[setting.mission_type] = setting.reward_points;
-                    }
-                    if (state.missions[setting.mission_type]) {
-                        state.missions[setting.mission_type].max = setting.max_daily || 5;
-                    }
+                    if (state.rewardPoints[setting.mission_type] !== undefined) state.rewardPoints[setting.mission_type] = setting.reward_points;
+                    if (state.missions[setting.mission_type]) state.missions[setting.mission_type].max = setting.max_daily || 5;
                 });
                 updateUI();
-            } catch (error) {
-                console.error('Load mission settings error:', error);
-            }
+            } catch (error) { console.error('Load mission settings error:', error); }
         }
 
         async function loadBonusSettings() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('bonus_settings')
-                    .select('*');
+                const { data, error } = await supabaseClient.from('bonus_settings').select('*');
                 if (error) throw error;
-
                 data.forEach(bonus => {
                     if (bonus.level === 1) state.ref.bonusL1 = bonus.bonus_points;
                     if (bonus.level === 2) state.ref.bonusL2 = bonus.bonus_points;
                     if (bonus.level === 3) state.ref.bonusL3 = bonus.bonus_points;
                 });
                 updateUI();
-            } catch (error) {
-                console.error('Load bonus settings error:', error);
-            }
+            } catch (error) { console.error('Load bonus settings error:', error); }
         }
 
         async function requestVIP() {
             if (!currentUserId) return false;
-            if (state.poin < 10000) {
-                showToast('Poin tidak cukup! Butuh 10.000 poin', false);
-                return false;
-            }
-
+            if (state.poin < 10000) { showToast('Poin tidak cukup! Butuh 10.000 poin', false); return false; }
             try {
-                await supabaseClient
-                    .from('vip_requests')
-                    .insert([{ user_id: currentUserId, status: 'pending' }]);
-
+                await supabaseClient.from('vip_requests').insert([{ user_id: currentUserId, status: 'pending' }]);
                 state.poin -= 10000;
                 await updateUserPoin();
                 updateUI();
                 addLog('💳 Request upgrade VIP - menunggu verifikasi admin');
                 showToast('✅ Request upgrade VIP terkirim! Menunggu verifikasi admin.');
                 return true;
-            } catch (error) {
-                console.error('VIP request error:', error);
-                showToast('❌ Gagal mengirim request VIP', false);
-                return false;
-            }
+            } catch (error) { console.error('VIP request error:', error); showToast('❌ Gagal mengirim request VIP', false); return false; }
         }
 
         async function requestWithdrawal(type, amount) {
             if (!currentUserId) return false;
-            if (state.poin < amount) {
-                showToast(`Butuh ${amount.toLocaleString()} poin!`, false);
-                return false;
-            }
-
+            if (state.poin < amount) { showToast(`Butuh ${amount.toLocaleString()} poin!`, false); return false; }
             try {
-                await supabaseClient
-                    .from('withdrawals')
-                    .insert([{ user_id: currentUserId, amount, type, status: 'pending' }]);
-
+                await supabaseClient.from('withdrawals').insert([{ user_id: currentUserId, amount, type, status: 'pending' }]);
                 state.poin -= amount;
                 await updateUserPoin();
                 updateUI();
                 addLog(`💳 Request WD ${type} -${amount.toLocaleString()} poin (pending approval)`);
                 showToast(`✅ Request WD terkirim! Menunggu approval admin.`);
                 return true;
-            } catch (error) {
-                console.error('WD request error:', error);
-                showToast('❌ Gagal mengirim request WD', false);
-                return false;
-            }
+            } catch (error) { console.error('WD request error:', error); showToast('❌ Gagal mengirim request WD', false); return false; }
         }
 
         async function logout() {
@@ -2653,9 +978,7 @@
                 appMain.classList.remove('active');
                 loginPage.style.display = 'flex';
                 showToast('🚪 Logout berhasil');
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
+            } catch (error) { console.error('Logout error:', error); }
         }
 
         // ========== UPDATE UI ==========
@@ -2671,36 +994,19 @@
             document.getElementById('refL2').textContent = state.ref.l2;
             document.getElementById('refL3').textContent = state.ref.l3;
 
-            // =============================================
-            // 🔐 ADMIN MODE - HANYA UNTUK ADMIN
-            // =============================================
-            
-            const adminToggle = document.getElementById('toggleAdminMode');
-            const adminPanels = document.querySelectorAll('.admin-panel');
-            
-            // Cek apakah user adalah admin
+            // ========== ADMIN LINK - HANYA UNTUK ADMIN ==========
+            const adminLink = document.getElementById('adminLinkBtn');
             const isAdminUser = currentUser?.email === 'admin@misiononton.com';
             
             if (isAdminUser) {
-                // Admin: Tampilkan tombol admin
-                adminToggle.style.display = 'flex';
-                adminToggle.classList.add('visible');
-                
-                // Tampilkan panel jika mode admin aktif
-                if (state.isAdmin) {
-                    adminPanels.forEach(p => p.classList.add('show'));
-                } else {
-                    adminPanels.forEach(p => p.classList.remove('show'));
-                }
+                adminLink.style.display = 'flex';
+                adminLink.classList.add('visible');
             } else {
-                // Non-Admin: Sembunyikan SEMUA
-                adminToggle.style.display = 'none';
-                adminToggle.classList.remove('visible');
-                adminPanels.forEach(p => p.classList.remove('show'));
-                state.isAdmin = false; // Reset admin mode
+                adminLink.style.display = 'none';
+                adminLink.classList.remove('visible');
+                state.isAdmin = false;
             }
 
-            // VIP Button
             const vipBtn = document.getElementById('btnUpgradeVIP');
             if (state.vip) {
                 vipBtn.textContent = '✅ VIP';
@@ -2714,7 +1020,6 @@
                 document.getElementById('vipDesc').textContent = 'Free: 5x/hari • VIP: 20x/hari';
             }
 
-            // Daily Claim
             const dailyStatus = document.getElementById('dailyStatus');
             const btnDaily = document.getElementById('btnDailyClaim');
             if (state.dailyClaimed) {
@@ -2735,17 +1040,11 @@
         }
 
         function updateQuotaDisplay() {
-            const ytMax = state.missions.yt.max;
-            const iklanMax = state.missions.iklan.max;
-            const scrollMax = state.missions.scroll.max;
-            const ytCount = state.missions.yt.count;
-            const iklanCount = state.missions.iklan.count;
-            const scrollCount = state.missions.scroll.count;
-
+            const ytMax = state.missions.yt.max, iklanMax = state.missions.iklan.max, scrollMax = state.missions.scroll.max;
+            const ytCount = state.missions.yt.count, iklanCount = state.missions.iklan.count, scrollCount = state.missions.scroll.count;
             document.getElementById('ytQuota').textContent = `${ytCount}/${ytMax}`;
             document.getElementById('iklanQuota').textContent = `${iklanCount}/${iklanMax}`;
             document.getElementById('scrollQuota').textContent = `${scrollCount}/${scrollMax}`;
-
             document.getElementById('ytBtn').disabled = ytCount >= ytMax || state.fsActive;
             document.getElementById('iklanBtn').disabled = iklanCount >= iklanMax || state.fsActive;
             document.getElementById('scrollBtn').disabled = scrollCount >= scrollMax || state.scrollActive;
@@ -2757,12 +1056,7 @@
             if (state.logs.length > 50) state.logs.pop();
             const container = document.getElementById('logContainer');
             if (container) {
-                container.innerHTML = state.logs.map(log => `
-                    <div class="log-item">
-                        <span>${log.msg}</span>
-                        <span class="time">${log.time}</span>
-                    </div>
-                `).join('');
+                container.innerHTML = state.logs.map(log => `<div class="log-item"><span>${log.msg}</span><span class="time">${log.time}</span></div>`).join('');
             }
         }
 
@@ -2770,33 +1064,25 @@
         function renderSocialMissions() {
             const container = document.getElementById('socialMissions');
             if (!container) return;
-            
             const iconMap = { sub: 'sub', sosmed: 'sosmed', share: 'share' };
             const iconFa = { sub: 'fa-users', sosmed: 'fa-share-alt', share: 'fa-share' };
             const btnText = { sub: 'Subscribe', sosmed: 'Ikuti', share: 'Share' };
             
             container.innerHTML = state.socialMissions.map(m => {
                 const reward = state.rewardPoints[m.id] || m.reward;
-                return `
-                <div class="mission-card" data-mission-id="${m.id}">
+                return `<div class="mission-card" data-mission-id="${m.id}">
                     <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                    <div class="m-info">
-                        <div class="m-title">${m.name}</div>
-                        <div class="m-desc">1x sehari</div>
-                        <div class="m-reward">+${reward} poin</div>
-                    </div>
+                    <div class="m-info"><div class="m-title">${m.name}</div><div class="m-desc">1x sehari</div><div class="m-reward">+${reward} poin</div></div>
                     <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
-                </div>
-            `}).join('');
+                </div>`;
+            }).join('');
 
             container.querySelectorAll('[data-mission]').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const type = this.dataset.mission;
                     const mission = state.socialMissions.find(m => m.id === type);
                     if (mission) {
-                        if (mission.link && mission.link !== '') {
-                            window.open(mission.link, '_blank');
-                        }
+                        if (mission.link && mission.link !== '') window.open(mission.link, '_blank');
                         const reward = state.rewardPoints[type] || mission.reward;
                         doMission(type, reward, 8, mission.name);
                     }
@@ -2817,10 +1103,7 @@
 
             if (['sub', 'sosmed', 'share'].includes(type)) {
                 const today = new Date().toDateString();
-                if (mission.lastDone === today) {
-                    showToast('⏳ Misi ini hanya 1x sehari!', false);
-                    return;
-                }
+                if (mission.lastDone === today) { showToast('⏳ Misi ini hanya 1x sehari!', false); return; }
                 const bonus = state.vip ? 2 : 1;
                 const finalReward = reward * bonus;
                 state.poin += finalReward;
@@ -2841,17 +1124,10 @@
 
         // ========== FULLSCREEN VIDEO ==========
         function startFullscreenVideo(duration, reward, type, missionType) {
-            if (state.fsActive) {
-                showToast('⏳ Video sedang diputar!');
-                return;
-            }
-
+            if (state.fsActive) { showToast('⏳ Video sedang diputar!'); return; }
             const key = missionType;
             const maxCount = state.missions[key].max;
-            if (state.missions[key].count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
+            if (state.missions[key].count >= maxCount) { showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`); return; }
 
             state.fsActive = true;
             state.fsRemaining = duration;
@@ -2866,7 +1142,7 @@
             fsWarning.classList.remove('show');
             fsOverlay.classList.add('active');
 
-            const videoUrl = document.getElementById('adminYtLink').value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+            const videoUrl = document.getElementById('adminYtLink')?.value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
             fsVideoFrame.src = videoUrl + '?autoplay=1&rel=0&controls=0';
 
             let elapsed = 0;
@@ -2876,43 +1152,31 @@
                 state.fsRemaining = remaining;
                 fsTimer.textContent = `${remaining}s`;
                 fsProgress.style.width = `${(elapsed / duration) * 100}%`;
-
                 if (elapsed >= duration) {
                     clearInterval(state.fsInterval);
                     state.fsInterval = null;
                     finishFullscreenVideo(reward, missionType);
                 }
             }, 1000);
-
             document.addEventListener('visibilitychange', handleFsVisibilityChange);
         }
 
         function handleFsVisibilityChange() {
             if (document.hidden && state.fsActive) {
-                if (state.fsInterval) {
-                    clearInterval(state.fsInterval);
-                    state.fsInterval = null;
-                    fsWarning.classList.add('show');
-                }
+                if (state.fsInterval) { clearInterval(state.fsInterval); state.fsInterval = null; fsWarning.classList.add('show'); }
             } else if (!document.hidden && state.fsActive) {
                 if (!state.fsInterval && state.fsRemaining > 0) {
                     fsWarning.classList.remove('show');
-                    const remaining = state.fsRemaining;
-                    const total = state.fsTotal;
-                    
+                    const remaining = state.fsRemaining, total = state.fsTotal;
                     state.fsInterval = setInterval(() => {
                         const newRemaining = state.fsRemaining - 1;
                         state.fsRemaining = newRemaining;
                         fsTimer.textContent = `${newRemaining}s`;
                         fsProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
-
                         if (newRemaining <= 0) {
                             clearInterval(state.fsInterval);
                             state.fsInterval = null;
-                            finishFullscreenVideo(
-                                state.fsType === 'YouTube' ? state.rewardPoints.yt : state.rewardPoints.iklan,
-                                state.fsCallback
-                            );
+                            finishFullscreenVideo(state.fsType === 'YouTube' ? state.rewardPoints.yt : state.rewardPoints.iklan, state.fsCallback);
                         }
                     }, 1000);
                 }
@@ -2922,24 +1186,13 @@
         function finishFullscreenVideo(reward, missionType) {
             state.fsActive = false;
             document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-            
-            if (state.fsInterval) {
-                clearInterval(state.fsInterval);
-                state.fsInterval = null;
-            }
-
+            if (state.fsInterval) { clearInterval(state.fsInterval); state.fsInterval = null; }
             const bonus = state.vip ? 2 : 1;
             const finalReward = reward * bonus;
             state.poin += finalReward;
-
-            if (missionType) {
-                state.missions[missionType].count++;
-                saveMission(missionType, reward);
-            }
-
+            if (missionType) { state.missions[missionType].count++; saveMission(missionType, reward); }
             fsOverlay.classList.remove('active');
             fsVideoFrame.src = 'about:blank';
-
             updateUI();
             const labelName = missionType === 'yt' ? 'YouTube' : missionType === 'iklan' ? 'Iklan' : '';
             addLog(`✅ +${finalReward} poin dari ${labelName}${bonus > 1 ? ' (VIP x2)' : ''}`);
@@ -2951,10 +1204,7 @@
                 if (confirm('Batalkan misi? Poin tidak akan didapatkan.')) {
                     state.fsActive = false;
                     document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-                    if (state.fsInterval) {
-                        clearInterval(state.fsInterval);
-                        state.fsInterval = null;
-                    }
+                    if (state.fsInterval) { clearInterval(state.fsInterval); state.fsInterval = null; }
                     fsOverlay.classList.remove('active');
                     fsVideoFrame.src = 'about:blank';
                     showToast('⏹️ Misi dibatalkan');
@@ -2964,25 +1214,15 @@
 
         // ========== SCROLL MISSION ==========
         function startScrollMission() {
-            if (state.scrollActive) {
-                showToast('⏳ Misi scroll sedang berjalan!');
-                return;
-            }
-
+            if (state.scrollActive) { showToast('⏳ Misi scroll sedang berjalan!'); return; }
             const maxCount = state.missions.scroll.max;
-            if (state.missions.scroll.count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
+            if (state.missions.scroll.count >= maxCount) { showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`); return; }
 
-            const scrollLink = document.getElementById('adminScrollLink').value || 'https://misi-poin.com/scroll';
-            if (scrollLink) {
-                window.open(scrollLink, '_blank');
-            }
+            const scrollLink = document.getElementById('adminScrollLink')?.value || 'https://misi-poin.com/scroll';
+            if (scrollLink) window.open(scrollLink, '_blank');
 
             state.scrollActive = true;
             state.scrollRemaining = state.scrollTotal;
-            
             scrollTimer.textContent = `${state.scrollRemaining}s`;
             scrollProgress.style.width = '0%';
             scrollReward.textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
@@ -2996,36 +1236,27 @@
                 state.scrollRemaining = remaining;
                 scrollTimer.textContent = `${remaining}s`;
                 scrollProgress.style.width = `${(elapsed / state.scrollTotal) * 100}%`;
-
                 if (elapsed >= state.scrollTotal) {
                     clearInterval(state.scrollInterval);
                     state.scrollInterval = null;
                     finishScrollMission();
                 }
             }, 1000);
-
             document.addEventListener('visibilitychange', handleScrollVisibilityChange);
         }
 
         function handleScrollVisibilityChange() {
             if (document.hidden && state.scrollActive) {
-                if (state.scrollInterval) {
-                    clearInterval(state.scrollInterval);
-                    state.scrollInterval = null;
-                    scrollWarning.classList.add('show');
-                }
+                if (state.scrollInterval) { clearInterval(state.scrollInterval); state.scrollInterval = null; scrollWarning.classList.add('show'); }
             } else if (!document.hidden && state.scrollActive) {
                 if (!state.scrollInterval && state.scrollRemaining > 0) {
                     scrollWarning.classList.remove('show');
-                    const remaining = state.scrollRemaining;
-                    const total = state.scrollTotal;
-                    
+                    const remaining = state.scrollRemaining, total = state.scrollTotal;
                     state.scrollInterval = setInterval(() => {
                         const newRemaining = state.scrollRemaining - 1;
                         state.scrollRemaining = newRemaining;
                         scrollTimer.textContent = `${newRemaining}s`;
                         scrollProgress.style.width = `${((total - newRemaining) / total) * 100}%`;
-
                         if (newRemaining <= 0) {
                             clearInterval(state.scrollInterval);
                             state.scrollInterval = null;
@@ -3039,96 +1270,47 @@
         function finishScrollMission() {
             state.scrollActive = false;
             document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-            
-            if (state.scrollInterval) {
-                clearInterval(state.scrollInterval);
-                state.scrollInterval = null;
-            }
-
+            if (state.scrollInterval) { clearInterval(state.scrollInterval); state.scrollInterval = null; }
             const bonus = state.vip ? 2 : 1;
             const finalReward = state.rewardPoints.scroll * bonus;
             state.poin += finalReward;
             state.missions.scroll.count++;
             saveMission('scroll', state.rewardPoints.scroll);
-
             scrollOverlay.classList.remove('active');
-            
             updateUI();
             addLog(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
             showToast(`+${finalReward} poin dari Scroll!`);
         }
 
         // ========== EVENT LISTENERS ==========
-
-        // === LOGIN ===
         btnLogin.addEventListener('click', async function() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                showToast('Isi email dan password!', false);
-                return;
-            }
-
-            this.disabled = true;
-            this.innerHTML = '<span class="spinner"></span> Loading...';
-
+            if (!email || !password) { showToast('Isi email dan password!', false); return; }
+            this.disabled = true; this.innerHTML = '<span class="spinner"></span> Loading...';
             const ip = await getUserIP();
             const blocked = await checkIPBlocked(ip);
-            if (blocked) {
-                showToast('⛔ IP Anda terblokir!', false);
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
-                return;
-            }
-
+            if (blocked) { showToast('⛔ IP Anda terblokir!', false); this.disabled = false; this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk'; return; }
             await loginUser(email, password);
-            
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
+            this.disabled = false; this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
         });
 
-        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
-        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnLogin.click();
-        });
+        document.getElementById('loginPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') btnLogin.click(); });
+        document.getElementById('loginEmail').addEventListener('keydown', (e) => { if (e.key === 'Enter') btnLogin.click(); });
 
-        // === REGISTER ===
         btnRegister.addEventListener('click', async function() {
             const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value;
             const username = document.getElementById('registerUsername').value.trim();
             const referral = document.getElementById('registerReferral').value.trim();
-
-            if (!email || !password) {
-                showToast('Isi email dan password!', false);
-                return;
-            }
-
-            if (password.length < 6) {
-                showToast('Password minimal 6 karakter!', false);
-                return;
-            }
-
-            this.disabled = true;
-            this.innerHTML = '<span class="spinner"></span> Loading...';
-
+            if (!email || !password) { showToast('Isi email dan password!', false); return; }
+            if (password.length < 6) { showToast('Password minimal 6 karakter!', false); return; }
+            this.disabled = true; this.innerHTML = '<span class="spinner"></span> Loading...';
             const ip = await getUserIP();
             const blocked = await checkIPBlocked(ip);
-            if (blocked) {
-                showToast('⛔ IP Anda terblokir!', false);
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
-                return;
-            }
-
+            if (blocked) { showToast('⛔ IP Anda terblokir!', false); this.disabled = false; this.innerHTML = '<i class="fas fa-user-plus"></i> Daftar'; return; }
             const success = await registerUser(email, password, username, referral);
-            
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
-
+            this.disabled = false; this.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
             if (success) {
                 document.querySelector('.login-tabs button[data-tab="login"]').click();
                 document.getElementById('loginEmail').value = email;
@@ -3137,43 +1319,26 @@
             }
         });
 
-        document.getElementById('registerPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') btnRegister.click();
-        });
+        document.getElementById('registerPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') btnRegister.click(); });
 
-        // === DAILY CLAIM ===
         document.getElementById('btnDailyClaim').addEventListener('click', async function() {
-            if (state.dailyClaimed) {
-                showToast('Sudah claim hari ini!', false);
-                return;
-            }
+            if (state.dailyClaimed) { showToast('Sudah claim hari ini!', false); return; }
             await claimDaily();
         });
 
-        // === VIP UPGRADE ===
         document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
-            if (state.vip) {
-                showToast('👑 Anda sudah VIP!');
-                return;
-            }
+            if (state.vip) { showToast('👑 Anda sudah VIP!'); return; }
             qrisModal.classList.add('active');
         });
 
-        document.getElementById('closeModal').addEventListener('click', function() {
-            qrisModal.classList.remove('active');
-        });
+        document.getElementById('closeModal').addEventListener('click', function() { qrisModal.classList.remove('active'); });
 
         document.getElementById('confirmUpgrade').addEventListener('click', async function() {
-            if (state.poin < 10000) {
-                showToast('Poin tidak cukup! Butuh 10.000 poin', false);
-                qrisModal.classList.remove('active');
-                return;
-            }
+            if (state.poin < 10000) { showToast('Poin tidak cukup! Butuh 10.000 poin', false); qrisModal.classList.remove('active'); return; }
             await requestVIP();
             qrisModal.classList.remove('active');
         });
 
-        // === WITHDRAWAL ===
         document.querySelectorAll('[data-redeem]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const type = this.dataset.redeem;
@@ -3182,17 +1347,12 @@
             });
         });
 
-        // === COPY REFERRAL ===
         document.getElementById('copyRefLink').addEventListener('click', function() {
             const text = document.getElementById('refLinkText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 Link referral dicopy!');
-            }).catch(() => {
-                showToast('Salin manual: ' + text);
-            });
+            navigator.clipboard.writeText(text).then(() => showToast('📋 Link referral dicopy!'))
+                .catch(() => showToast('Salin manual: ' + text));
         });
 
-        // === NAVIGATION ===
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -3204,7 +1364,6 @@
             });
         });
 
-        // === DASHBOARD MISSIONS ===
         document.querySelectorAll('#dashboardMissions [data-mission]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const type = this.dataset.mission;
@@ -3218,402 +1377,7 @@
             });
         });
 
-        // === LOGOUT ===
         document.getElementById('btnLogout').addEventListener('click', logout);
-
-        // === TOGGLE ADMIN MODE ===
-        document.getElementById('toggleAdminMode').addEventListener('click', function() {
-            // ✅ CEK APAKAH USER ADMIN
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin yang bisa mengakses ini!', false);
-                return;
-            }
-            
-            state.isAdmin = !state.isAdmin;
-            const adminPanels = document.querySelectorAll('.admin-panel');
-            adminPanels.forEach(p => p.classList.toggle('show', state.isAdmin));
-            this.classList.toggle('active', state.isAdmin);
-            this.innerHTML = state.isAdmin ? 
-                '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' : 
-                '<i class="fas fa-shield-alt"></i> Aktifkan Mode Admin';
-            showToast(state.isAdmin ? '🔓 Admin Mode Aktif' : '🔒 Admin Mode Nonaktif');
-            if (state.isAdmin) {
-                renderAdminMissions();
-                loadAdminData();
-            }
-        });
-
-        // ========== ADMIN FUNCTIONS ==========
-        async function loadAdminData() {
-            try {
-                const { data: vipData } = await supabaseClient
-                    .from('vip_requests')
-                    .select('*, users(email)')
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: false });
-
-                const vipContainer = document.getElementById('vipRequests');
-                if (vipData && vipData.length > 0) {
-                    vipContainer.innerHTML = vipData.map(req => `
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">${req.users?.email || 'Unknown'} - Request VIP</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">10.000 poin • menunggu verifikasi</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-edit" onclick="approveVIP('${req.id}')"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-delete" onclick="rejectVIP('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-
-                const { data: wdData } = await supabaseClient
-                    .from('withdrawals')
-                    .select('*, users(email)')
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: false });
-
-                const wdContainer = document.getElementById('wdRequests');
-                if (wdData && wdData.length > 0) {
-                    wdContainer.innerHTML = wdData.map(req => `
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">${req.users?.email || 'Unknown'} - ${req.type}</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">${req.amount.toLocaleString()} poin • pending</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-edit" onclick="approveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-delete" onclick="rejectWD('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error('Load admin data error:', error);
-            }
-
-            document.getElementById('rewardYtInput').value = state.rewardPoints.yt;
-            document.getElementById('rewardIklanInput').value = state.rewardPoints.iklan;
-            document.getElementById('rewardScrollInput').value = state.rewardPoints.scroll;
-            document.getElementById('rewardSubInput').value = state.rewardPoints.sub;
-            document.getElementById('rewardSosmedInput').value = state.rewardPoints.sosmed;
-            document.getElementById('rewardShareInput').value = state.rewardPoints.share;
-            document.getElementById('bonusL1Input').value = state.ref.bonusL1;
-            document.getElementById('bonusL2Input').value = state.ref.bonusL2;
-            document.getElementById('bonusL3Input').value = state.ref.bonusL3;
-            
-            renderAdminMissions();
-        }
-
-        // ✅ ADMIN FUNCTIONS - SEMUA DENGAN CEK ADMIN
-        window.approveVIP = async function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            try {
-                await supabaseClient
-                    .from('vip_requests')
-                    .update({ status: 'approved', approved_at: new Date().toISOString() })
-                    .eq('id', id);
-
-                const { data: req } = await supabaseClient
-                    .from('vip_requests')
-                    .select('user_id')
-                    .eq('id', id)
-                    .single();
-
-                if (req) {
-                    await supabaseClient
-                        .from('users')
-                        .update({ is_vip: true })
-                        .eq('id', req.user_id);
-                }
-
-                showToast('✅ VIP berhasil diaktifkan!');
-                addLog('👑 Admin approve VIP');
-                loadAdminData();
-            } catch (error) {
-                showToast('❌ Gagal approve VIP', false);
-            }
-        };
-
-        window.rejectVIP = async function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            try {
-                await supabaseClient
-                    .from('vip_requests')
-                    .update({ status: 'rejected' })
-                    .eq('id', id);
-                showToast('❌ Request VIP ditolak');
-                addLog('❌ Admin reject VIP');
-                loadAdminData();
-            } catch (error) {
-                showToast('❌ Gagal reject VIP', false);
-            }
-        };
-
-        window.approveWD = async function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            try {
-                await supabaseClient
-                    .from('withdrawals')
-                    .update({ status: 'approved' })
-                    .eq('id', id);
-                showToast('✅ WD disetujui!');
-                addLog('✅ Admin approve WD');
-                loadAdminData();
-            } catch (error) {
-                showToast('❌ Gagal approve WD', false);
-            }
-        };
-
-        window.rejectWD = async function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            try {
-                await supabaseClient
-                    .from('withdrawals')
-                    .update({ status: 'rejected' })
-                    .eq('id', id);
-                showToast('❌ WD ditolak');
-                addLog('❌ Admin reject WD');
-                loadAdminData();
-            } catch (error) {
-                showToast('❌ Gagal reject WD', false);
-            }
-        };
-
-        document.getElementById('saveRewardBtn').addEventListener('click', async function() {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            
-            const yt = parseInt(document.getElementById('rewardYtInput').value);
-            const iklan = parseInt(document.getElementById('rewardIklanInput').value);
-            const scroll = parseInt(document.getElementById('rewardScrollInput').value);
-            const sub = parseInt(document.getElementById('rewardSubInput').value);
-            const sosmed = parseInt(document.getElementById('rewardSosmedInput').value);
-            const share = parseInt(document.getElementById('rewardShareInput').value);
-            
-            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share) || 
-                yt < 0 || iklan < 0 || scroll < 0 || sub < 0 || sosmed < 0 || share < 0) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
-            }
-
-            try {
-                const updates = [
-                    { mission_type: 'yt', reward_points: yt },
-                    { mission_type: 'iklan', reward_points: iklan },
-                    { mission_type: 'scroll', reward_points: scroll },
-                    { mission_type: 'sub', reward_points: sub },
-                    { mission_type: 'sosmed', reward_points: sosmed },
-                    { mission_type: 'share', reward_points: share }
-                ];
-
-                for (const update of updates) {
-                    await supabaseClient
-                        .from('mission_settings')
-                        .upsert(update, { onConflict: 'mission_type' });
-                }
-
-                state.rewardPoints.yt = yt;
-                state.rewardPoints.iklan = iklan;
-                state.rewardPoints.scroll = scroll;
-                state.rewardPoints.sub = sub;
-                state.rewardPoints.sosmed = sosmed;
-                state.rewardPoints.share = share;
-
-                document.getElementById('ytRewardDisplay').textContent = yt;
-                document.getElementById('iklanRewardDisplay').textContent = iklan;
-                document.getElementById('scrollRewardDisplay').textContent = scroll;
-                document.getElementById('subRewardDisplay').textContent = sub;
-                document.getElementById('sosmedRewardDisplay').textContent = sosmed;
-                document.getElementById('shareRewardDisplay').textContent = share;
-
-                renderSocialMissions();
-                addLog(`⚙️ Admin update poin misi`);
-                showToast(`✅ Poin misi berhasil diupdate!`);
-            } catch (error) {
-                showToast('❌ Gagal update poin', false);
-            }
-        });
-
-        document.getElementById('saveBonusBtn').addEventListener('click', async function() {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            
-            const l1 = parseInt(document.getElementById('bonusL1Input').value);
-            const l2 = parseInt(document.getElementById('bonusL2Input').value);
-            const l3 = parseInt(document.getElementById('bonusL3Input').value);
-            
-            if (isNaN(l1) || isNaN(l2) || isNaN(l3) || l1 < 0 || l2 < 0 || l3 < 0) {
-                showToast('Masukkan angka yang valid!', false);
-                return;
-            }
-
-            try {
-                const updates = [
-                    { level: 1, bonus_points: l1 },
-                    { level: 2, bonus_points: l2 },
-                    { level: 3, bonus_points: l3 }
-                ];
-
-                for (const update of updates) {
-                    await supabaseClient
-                        .from('bonus_settings')
-                        .upsert(update, { onConflict: 'level' });
-                }
-
-                state.ref.bonusL1 = l1;
-                state.ref.bonusL2 = l2;
-                state.ref.bonusL3 = l3;
-
-                document.getElementById('bonusL1Display').textContent = `+${l1} poin/referral`;
-                document.getElementById('bonusL2Display').textContent = `+${l2} poin/referral`;
-                document.getElementById('bonusL3Display').textContent = `+${l3} poin/referral`;
-
-                addLog(`⚙️ Admin update bonus referral`);
-                showToast(`✅ Bonus referral diupdate!`);
-            } catch (error) {
-                showToast('❌ Gagal update bonus', false);
-            }
-        });
-
-        document.getElementById('saveAdminLinks').addEventListener('click', function() {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            
-            const ytLink = document.getElementById('adminYtLink').value;
-            const scrollLink = document.getElementById('adminScrollLink').value;
-            const sosmedLink = document.getElementById('adminSosmedLink').value;
-            const shareLink = document.getElementById('adminShareLink').value;
-
-            state.scrollLink = scrollLink;
-
-            const subMission = state.socialMissions.find(m => m.id === 'sub');
-            const sosmedMission = state.socialMissions.find(m => m.id === 'sosmed');
-            const shareMission = state.socialMissions.find(m => m.id === 'share');
-            
-            if (subMission) subMission.link = ytLink;
-            if (sosmedMission) sosmedMission.link = sosmedLink;
-            if (shareMission) shareMission.link = shareLink;
-            
-            renderSocialMissions();
-            showToast('✅ Semua link berhasil diupdate!');
-            addLog('🔧 Admin update semua link');
-        });
-
-        function renderAdminMissions() {
-            const container = document.getElementById('adminMissionList');
-            if (!container) return;
-
-            container.innerHTML = state.socialMissions.map(m => {
-                const reward = state.rewardPoints[m.id] || m.reward;
-                return `
-                <div class="admin-mission-item">
-                    <div class="am-info">
-                        <div class="am-title">${m.name}</div>
-                        <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                        <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
-                    </div>
-                    <div class="am-actions">
-                        <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        window.editMission = function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            const mission = state.socialMissions.find(m => m.id === id);
-            if (!mission) return;
-            const newName = prompt('Edit nama misi:', mission.name);
-            if (newName !== null && newName !== '') mission.name = newName;
-            const newReward = prompt('Edit poin reward:', state.rewardPoints[id] || mission.reward);
-            if (newReward !== null && !isNaN(newReward)) {
-                state.rewardPoints[id] = parseInt(newReward);
-                const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay', share: 'shareRewardDisplay' };
-                if (displayMap[id]) {
-                    document.getElementById(displayMap[id]).textContent = state.rewardPoints[id];
-                }
-            }
-            const newLink = prompt('Edit link misi:', mission.link || '');
-            if (newLink !== null) mission.link = newLink;
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`✏️ Admin edit misi: ${mission.name}`);
-            showToast('✅ Misi berhasil diupdate!');
-        };
-
-        window.deleteMission = function(id) {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            if (!confirm('Hapus misi ini?')) return;
-            state.socialMissions = state.socialMissions.filter(m => m.id !== id);
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`🗑️ Admin hapus misi`);
-            showToast('✅ Misi dihapus!');
-        };
-
-        document.getElementById('addMissionBtn').addEventListener('click', function() {
-            if (currentUser?.email !== 'admin@misiononton.com') {
-                showToast('❌ Hanya admin!', false);
-                return;
-            }
-            const nameInput = document.getElementById('newMissionName');
-            const rewardInput = document.getElementById('newMissionReward');
-            const linkInput = document.getElementById('newMissionLink');
-            const name = nameInput.value.trim();
-            const reward = parseInt(rewardInput.value);
-            const link = linkInput.value.trim();
-            
-            if (!name || !reward) {
-                showToast('Isi nama dan poin reward!', false);
-                return;
-            }
-
-            const id = 'custom_' + Date.now();
-            state.socialMissions.push({
-                id: id,
-                name: name,
-                reward: reward,
-                icon: 'share',
-                link: link || ''
-            });
-            state.missions[id] = { cooldown: false, lastDone: null };
-            state.rewardPoints[id] = reward;
-            
-            nameInput.value = '';
-            rewardInput.value = '';
-            linkInput.value = '';
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`➕ Admin tambah misi: ${name} (+${reward} poin)`);
-            showToast(`✅ Misi "${name}" ditambahkan!`);
-        });
 
         // ========== CHECK SESSION ==========
         async function checkSession() {
@@ -3621,39 +1385,21 @@
             if (session) {
                 currentUser = session.user;
                 currentUserId = session.user.id;
-                
-                const { data: userData } = await supabaseClient
-                    .from('users')
-                    .select('*')
-                    .eq('id', currentUserId)
-                    .single();
-
+                const { data: userData } = await supabaseClient.from('users').select('*').eq('id', currentUserId).single();
                 if (userData) {
                     state.poin = userData.poin || 0;
                     state.vip = userData.is_vip || false;
                     state.isVerified = userData.is_verified || false;
-                    
-                    // ✅ CEK ADMIN
-                    if (userData.email === 'admin@misiononton.com' && 
-                        userData.is_vip === true && 
-                        userData.is_verified === true) {
-                        // Admin
-                    } else {
-                        state.isAdmin = false;
-                    }
-                    
+                    state.isAdmin = userData.email === 'admin@misiononton.com' && userData.is_vip && userData.is_verified;
                     document.getElementById('userUsername').textContent = userData.username || '-';
                     document.getElementById('userEmail').textContent = userData.email;
                     document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
-                    document.getElementById('refLinkText').textContent = 
-                        `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
+                    document.getElementById('refLinkText').textContent = `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
                 }
-
                 loginPage.style.display = 'none';
                 appMain.classList.add('active');
                 document.getElementById('avatarUser').innerHTML = (userData?.email?.charAt(0) || 'U').toUpperCase() + 
                     '<span class="verify-badge"><i class="fas fa-check"></i></span>';
-
                 await loadMissions();
                 await loadReferrals();
                 await loadMissionSettings();
@@ -3672,7 +1418,7 @@
         console.log('🚀 MisiPoin Pro connected to Supabase!');
         console.log('📊 Database: ' + supabaseUrl);
         console.log('👑 Admin: admin@misiononton.com');
-        console.log('💡 Mode Admin hanya terlihat untuk admin!');
+        console.log('📁 Admin Dashboard: admin.html');
     </script>
 </body>
 </html>
