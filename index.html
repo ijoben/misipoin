@@ -1569,11 +1569,11 @@
             <div id="loginForm">
                 <div class="input-group">
                     <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="loginEmail" placeholder="masukkan email anda" value="user@demo.com">
+                    <input type="email" id="loginEmail" placeholder="masukkan email anda" value="">
                 </div>
                 <div class="input-group">
                     <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" value="password123">
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="">
                 </div>
                 <button class="btn-login" id="btnLogin">
                     <i class="fas fa-arrow-right"></i> Masuk
@@ -2254,47 +2254,84 @@
             } catch { return false; }
         }
 
+        // === CREATE TABLES IF NOT EXISTS ===
+        async function createTablesIfNotExists() {
+            try {
+                // Check if users table exists
+                const { error: checkError } = await supabaseClient
+                    .from('users')
+                    .select('id')
+                    .limit(1);
+                
+                if (checkError && checkError.code === 'PGRST116') {
+                    // Table doesn't exist, create it via SQL
+                    console.log('Creating tables...');
+                    // You need to run SQL manually in Supabase SQL Editor
+                    showToast('⚠️ Silakan jalankan SQL di Supabase SQL Editor terlebih dahulu!', false);
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Check tables error:', error);
+                return false;
+            }
+        }
+
         async function loginUser(email, password) {
             try {
                 const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
                     email, password
                 });
 
-                if (authError) throw authError;
+                if (authError) {
+                    if (authError.message === 'Invalid login credentials') {
+                        showToast('❌ Email atau password salah!', false);
+                    } else {
+                        showToast(`❌ ${authError.message}`, false);
+                    }
+                    return false;
+                }
 
                 currentUser = authData.user;
                 currentUserId = authData.user.id;
 
-                const { data: userData, error: userError } = await supabaseClient
+                // Try to get or create user profile
+                let { data: userData, error: userError } = await supabaseClient
                     .from('users')
                     .select('*')
                     .eq('id', currentUserId)
                     .single();
 
-                if (userError) {
-                    const { error: insertError } = await supabaseClient
+                if (userError && userError.code === 'PGRST116') {
+                    // User doesn't exist in users table, create it
+                    const { data: newUser, error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             id: currentUserId, 
                             email: email,
                             username: email.split('@')[0],
-                            is_verified: authData.user.email_confirmed_at ? true : false
-                        }]);
+                            is_verified: authData.user.email_confirmed_at || false
+                        }])
+                        .select()
+                        .single();
+
                     if (insertError) throw insertError;
-                    state.poin = 0;
-                    state.vip = false;
-                    state.isVerified = authData.user.email_confirmed_at ? true : false;
-                } else {
-                    state.poin = userData.poin || 0;
-                    state.vip = userData.is_vip || false;
-                    state.isVerified = userData.is_verified || false;
-                    document.getElementById('userUsername').textContent = userData.username || '-';
-                    document.getElementById('userEmail').textContent = userData.email;
-                    document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
-                    document.getElementById('refLinkText').textContent = 
-                        `https://misi-nonton.com/ref/${userData.referral_code || 'ABC123'}`;
+                    userData = newUser;
+                } else if (userError) {
+                    throw userError;
                 }
 
+                state.poin = userData.poin || 0;
+                state.vip = userData.is_vip || false;
+                state.isVerified = userData.is_verified || false;
+                
+                document.getElementById('userUsername').textContent = userData.username || '-';
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
+                document.getElementById('refLinkText').textContent = 
+                    `https://misi-nonton.com/ref/${userData.referral_code || 'ABC123'}`;
+
+                // Check daily claim
                 const today = new Date().toISOString().split('T')[0];
                 const { data: dailyData } = await supabaseClient
                     .from('daily_claims')
@@ -2315,6 +2352,10 @@
                 document.getElementById('avatarUser').innerHTML = email.charAt(0).toUpperCase() + 
                     '<span class="verify-badge"><i class="fas fa-check"></i></span>';
 
+                loginPage.style.display = 'none';
+                appMain.classList.add('active');
+                initSlider();
+
                 return true;
             } catch (error) {
                 console.error('Login error:', error);
@@ -2332,6 +2373,7 @@
                 if (authError) throw authError;
 
                 if (authData.user) {
+                    // Create user profile
                     const { error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
@@ -2343,6 +2385,7 @@
 
                     if (insertError) throw insertError;
 
+                    // Handle referral if provided
                     if (referralCode) {
                         const { data: referrer } = await supabaseClient
                             .from('users')
@@ -2365,6 +2408,7 @@
                     showToast('✅ Pendaftaran berhasil! Silakan verifikasi email.');
                     return true;
                 }
+                return false;
             } catch (error) {
                 console.error('Register error:', error);
                 showToast(`❌ ${error.message}`, false);
@@ -2998,12 +3042,7 @@
                 return;
             }
 
-            const success = await loginUser(email, password);
-            if (success) {
-                loginPage.style.display = 'none';
-                appMain.classList.add('active');
-                initSlider();
-            }
+            await loginUser(email, password);
             
             this.disabled = false;
             this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
@@ -3159,48 +3198,52 @@
 
         // ========== ADMIN FUNCTIONS ==========
         async function loadAdminData() {
-            const { data: vipData } = await supabaseClient
-                .from('vip_requests')
-                .select('*, users(email)')
-                .eq('status', 'pending')
-                .order('created_at', { ascending: false });
+            try {
+                const { data: vipData } = await supabaseClient
+                    .from('vip_requests')
+                    .select('*, users(email)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
 
-            const vipContainer = document.getElementById('vipRequests');
-            if (vipData && vipData.length > 0) {
-                vipContainer.innerHTML = vipData.map(req => `
-                    <div class="admin-mission-item">
-                        <div class="am-info">
-                            <div class="am-title">${req.users?.email || 'Unknown'} - Request VIP</div>
-                            <div style="font-size:11px;color:var(--text-secondary);">10.000 poin • menunggu verifikasi</div>
+                const vipContainer = document.getElementById('vipRequests');
+                if (vipData && vipData.length > 0) {
+                    vipContainer.innerHTML = vipData.map(req => `
+                        <div class="admin-mission-item">
+                            <div class="am-info">
+                                <div class="am-title">${req.users?.email || 'Unknown'} - Request VIP</div>
+                                <div style="font-size:11px;color:var(--text-secondary);">10.000 poin • menunggu verifikasi</div>
+                            </div>
+                            <div class="am-actions">
+                                <button class="am-edit" onclick="approveVIP('${req.id}')"><i class="fas fa-check"></i> Approve</button>
+                                <button class="am-delete" onclick="rejectVIP('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
+                            </div>
                         </div>
-                        <div class="am-actions">
-                            <button class="am-edit" onclick="approveVIP('${req.id}')"><i class="fas fa-check"></i> Approve</button>
-                            <button class="am-delete" onclick="rejectVIP('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
+                    `).join('');
+                }
 
-            const { data: wdData } = await supabaseClient
-                .from('withdrawals')
-                .select('*, users(email)')
-                .eq('status', 'pending')
-                .order('created_at', { ascending: false });
+                const { data: wdData } = await supabaseClient
+                    .from('withdrawals')
+                    .select('*, users(email)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
 
-            const wdContainer = document.getElementById('wdRequests');
-            if (wdData && wdData.length > 0) {
-                wdContainer.innerHTML = wdData.map(req => `
-                    <div class="admin-mission-item">
-                        <div class="am-info">
-                            <div class="am-title">${req.users?.email || 'Unknown'} - ${req.type}</div>
-                            <div style="font-size:11px;color:var(--text-secondary);">${req.amount.toLocaleString()} poin • pending</div>
+                const wdContainer = document.getElementById('wdRequests');
+                if (wdData && wdData.length > 0) {
+                    wdContainer.innerHTML = wdData.map(req => `
+                        <div class="admin-mission-item">
+                            <div class="am-info">
+                                <div class="am-title">${req.users?.email || 'Unknown'} - ${req.type}</div>
+                                <div style="font-size:11px;color:var(--text-secondary);">${req.amount.toLocaleString()} poin • pending</div>
+                            </div>
+                            <div class="am-actions">
+                                <button class="am-edit" onclick="approveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
+                                <button class="am-delete" onclick="rejectWD('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
+                            </div>
                         </div>
-                        <div class="am-actions">
-                            <button class="am-edit" onclick="approveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
-                            <button class="am-delete" onclick="rejectWD('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Load admin data error:', error);
             }
 
             document.getElementById('rewardYtInput').value = state.rewardPoints.yt;
@@ -3541,6 +3584,7 @@
 
         console.log('🚀 MisiNonton Pro connected to Supabase!');
         console.log('📊 Database: ' + supabaseUrl);
+        console.log('💡 Jika login error, pastikan tabel sudah dibuat di Supabase SQL Editor');
     </script>
 </body>
 </html>
