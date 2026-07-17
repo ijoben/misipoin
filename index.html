@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MisiNonton Pro • Premium</title>
+    <title>MisiPoin • Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -1237,14 +1237,44 @@
             transform: scale(0.97);
         }
 
-        /* Admin Panel */
+        /* Admin Panel - HANYA TERLIHAT UNTUK ADMIN */
+        .admin-toggle-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none; /* Hidden by default, only visible for admin */
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .admin-toggle-btn.visible {
+            display: flex;
+        }
+
+        .admin-toggle-btn:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .admin-toggle-btn.active {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
         .admin-panel {
             background: var(--bg-card);
             border-radius: 16px;
             padding: 16px;
             border: 1px solid var(--border-color);
             margin-top: 12px;
-            display: none;
+            display: none; /* Hidden by default */
         }
 
         .admin-panel.show {
@@ -1358,33 +1388,6 @@
 
         .admin-mission-item .am-actions .am-delete {
             color: #EF4444;
-        }
-
-        /* Admin Toggle Button */
-        .admin-toggle-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px 16px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-            font-size: 13px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .admin-toggle-btn:hover {
-            background: rgba(255,255,255,0.08);
-        }
-
-        .admin-toggle-btn.active {
-            border-color: var(--secondary);
-            color: var(--secondary);
         }
 
         /* QRIS Modal */
@@ -1556,7 +1559,7 @@
         <div class="login-box">
             <div class="logo-large">
                 <div><i class="fas fa-play-circle"></i></div>
-                <h1>MisiNonton</h1>
+                <h1>MisiPoin</h1>
                 <p>Kumpulkan poin • Tukar hadiah</p>
             </div>
 
@@ -1569,11 +1572,11 @@
             <div id="loginForm">
                 <div class="input-group">
                     <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="loginEmail" placeholder="masukkan email anda" value="">
+                    <input type="email" id="loginEmail" placeholder="masukkan email anda">
                 </div>
                 <div class="input-group">
                     <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" value="">
+                    <input type="password" id="loginPassword" placeholder="••••••••">
                 </div>
                 <button class="btn-login" id="btnLogin">
                     <i class="fas fa-arrow-right"></i> Masuk
@@ -1648,7 +1651,7 @@
         <div class="container">
             <!-- Header -->
             <div class="header">
-                <div class="logo"><i class="fas fa-play-circle"></i> MisiNonton</div>
+                <div class="logo"><i class="fas fa-play-circle"></i> MisiPoin</div>
                 <div class="user-avatar" id="avatarUser">
                     U
                     <span class="verify-badge"><i class="fas fa-check"></i></span>
@@ -1789,7 +1792,7 @@
                         <span style="font-size:12px;color:var(--text-secondary);">3 Level</span>
                     </div>
                     <div class="ref-link-box">
-                        <span class="link-text" id="refLinkText">https://misi-nonton.com/ref/ABC123</span>
+                        <span class="link-text" id="refLinkText">https://misi-poin.com/ref/ABC123</span>
                         <button class="copy-btn" id="copyRefLink"><i class="fas fa-copy"></i></button>
                     </div>
                     <div class="ref-levels">
@@ -1933,10 +1936,12 @@
                     </div>
                 </div>
 
+                <!-- Admin Toggle Button - HANYA UNTUK ADMIN -->
                 <button class="admin-toggle-btn" id="toggleAdminMode">
                     <i class="fas fa-shield-alt"></i> Aktifkan Mode Admin
                 </button>
 
+                <!-- SEMUA ADMIN PANEL - HANYA UNTUK ADMIN -->
                 <div class="admin-panel" id="adminVipPanel">
                     <h4><i class="fas fa-crown"></i> Verifikasi & Approve VIP</h4>
                     <div id="vipRequests">
@@ -2013,7 +2018,7 @@
                     <label class="sub-label">Link YouTube (untuk fullscreen)</label>
                     <input type="text" id="adminYtLink" placeholder="Link YouTube" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
                     <label class="sub-label">Link Website untuk Scroll</label>
-                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-nonton.com/scroll">
+                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-poin.com/scroll">
                     <label class="sub-label">Link Sosmed (untuk Follow)</label>
                     <input type="text" id="adminSosmedLink" placeholder="Link Sosmed" value="https://instagram.com">
                     <label class="sub-label">Link Share</label>
@@ -2087,7 +2092,7 @@
             isAdmin: false,
             isVerified: false,
             userIP: '127.0.0.1',
-            scrollLink: 'https://misi-nonton.com/scroll',
+            scrollLink: 'https://misi-poin.com/scroll',
             rewardPoints: {
                 yt: 10,
                 iklan: 5,
@@ -2254,29 +2259,6 @@
             } catch { return false; }
         }
 
-        // === CREATE TABLES IF NOT EXISTS ===
-        async function createTablesIfNotExists() {
-            try {
-                // Check if users table exists
-                const { error: checkError } = await supabaseClient
-                    .from('users')
-                    .select('id')
-                    .limit(1);
-                
-                if (checkError && checkError.code === 'PGRST116') {
-                    // Table doesn't exist, create it via SQL
-                    console.log('Creating tables...');
-                    // You need to run SQL manually in Supabase SQL Editor
-                    showToast('⚠️ Silakan jalankan SQL di Supabase SQL Editor terlebih dahulu!', false);
-                    return false;
-                }
-                return true;
-            } catch (error) {
-                console.error('Check tables error:', error);
-                return false;
-            }
-        }
-
         async function loginUser(email, password) {
             try {
                 const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
@@ -2295,7 +2277,6 @@
                 currentUser = authData.user;
                 currentUserId = authData.user.id;
 
-                // Try to get or create user profile
                 let { data: userData, error: userError } = await supabaseClient
                     .from('users')
                     .select('*')
@@ -2303,14 +2284,15 @@
                     .single();
 
                 if (userError && userError.code === 'PGRST116') {
-                    // User doesn't exist in users table, create it
                     const { data: newUser, error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             id: currentUserId, 
                             email: email,
                             username: email.split('@')[0],
-                            is_verified: authData.user.email_confirmed_at || false
+                            is_verified: false,
+                            is_vip: false,
+                            poin: 0
                         }])
                         .select()
                         .single();
@@ -2325,13 +2307,22 @@
                 state.vip = userData.is_vip || false;
                 state.isVerified = userData.is_verified || false;
                 
+                // ✅ CEK APAKAH ADMIN
+                const isAdminUser = userData.email === 'admin@misiononton.com' && 
+                                   userData.is_vip === true && 
+                                   userData.is_verified === true;
+                
+                // Set state admin
+                if (!isAdminUser) {
+                    state.isAdmin = false;
+                }
+                
                 document.getElementById('userUsername').textContent = userData.username || '-';
                 document.getElementById('userEmail').textContent = userData.email;
                 document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
                 document.getElementById('refLinkText').textContent = 
-                    `https://misi-nonton.com/ref/${userData.referral_code || 'ABC123'}`;
+                    `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
 
-                // Check daily claim
                 const today = new Date().toISOString().split('T')[0];
                 const { data: dailyData } = await supabaseClient
                     .from('daily_claims')
@@ -2367,25 +2358,42 @@
         async function registerUser(email, password, username, referralCode) {
             try {
                 const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                    email, password
+                    email, password,
+                    options: {
+                        data: {
+                            username: username || email.split('@')[0]
+                        }
+                    }
                 });
 
                 if (authError) throw authError;
 
                 if (authData.user) {
-                    // Create user profile
                     const { error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             id: authData.user.id, 
                             email: email,
                             username: username || email.split('@')[0],
-                            is_verified: false
+                            is_verified: false,
+                            is_vip: false,
+                            poin: 0
                         }]);
 
-                    if (insertError) throw insertError;
+                    if (insertError) {
+                        console.error('Insert error:', insertError);
+                        if (insertError.message.includes('row-level security')) {
+                            const { error: rpcError } = await supabaseClient.rpc('create_user_profile', {
+                                user_id: authData.user.id,
+                                user_email: email,
+                                user_username: username || email.split('@')[0]
+                            });
+                            if (rpcError) throw rpcError;
+                        } else {
+                            throw insertError;
+                        }
+                    }
 
-                    // Handle referral if provided
                     if (referralCode) {
                         const { data: referrer } = await supabaseClient
                             .from('users')
@@ -2405,7 +2413,7 @@
                         }
                     }
 
-                    showToast('✅ Pendaftaran berhasil! Silakan verifikasi email.');
+                    showToast('✅ Pendaftaran berhasil! Silakan login.');
                     return true;
                 }
                 return false;
@@ -2641,6 +2649,7 @@
                 await supabaseClient.auth.signOut();
                 currentUser = null;
                 currentUserId = null;
+                state.isAdmin = false;
                 appMain.classList.remove('active');
                 loginPage.style.display = 'flex';
                 showToast('🚪 Logout berhasil');
@@ -2662,6 +2671,36 @@
             document.getElementById('refL2').textContent = state.ref.l2;
             document.getElementById('refL3').textContent = state.ref.l3;
 
+            // =============================================
+            // 🔐 ADMIN MODE - HANYA UNTUK ADMIN
+            // =============================================
+            
+            const adminToggle = document.getElementById('toggleAdminMode');
+            const adminPanels = document.querySelectorAll('.admin-panel');
+            
+            // Cek apakah user adalah admin
+            const isAdminUser = currentUser?.email === 'admin@misiononton.com';
+            
+            if (isAdminUser) {
+                // Admin: Tampilkan tombol admin
+                adminToggle.style.display = 'flex';
+                adminToggle.classList.add('visible');
+                
+                // Tampilkan panel jika mode admin aktif
+                if (state.isAdmin) {
+                    adminPanels.forEach(p => p.classList.add('show'));
+                } else {
+                    adminPanels.forEach(p => p.classList.remove('show'));
+                }
+            } else {
+                // Non-Admin: Sembunyikan SEMUA
+                adminToggle.style.display = 'none';
+                adminToggle.classList.remove('visible');
+                adminPanels.forEach(p => p.classList.remove('show'));
+                state.isAdmin = false; // Reset admin mode
+            }
+
+            // VIP Button
             const vipBtn = document.getElementById('btnUpgradeVIP');
             if (state.vip) {
                 vipBtn.textContent = '✅ VIP';
@@ -2675,6 +2714,7 @@
                 document.getElementById('vipDesc').textContent = 'Free: 5x/hari • VIP: 20x/hari';
             }
 
+            // Daily Claim
             const dailyStatus = document.getElementById('dailyStatus');
             const btnDaily = document.getElementById('btnDailyClaim');
             if (state.dailyClaimed) {
@@ -2935,7 +2975,7 @@
                 return;
             }
 
-            const scrollLink = document.getElementById('adminScrollLink').value || 'https://misi-nonton.com/scroll';
+            const scrollLink = document.getElementById('adminScrollLink').value || 'https://misi-poin.com/scroll';
             if (scrollLink) {
                 window.open(scrollLink, '_blank');
             }
@@ -3183,8 +3223,15 @@
 
         // === TOGGLE ADMIN MODE ===
         document.getElementById('toggleAdminMode').addEventListener('click', function() {
+            // ✅ CEK APAKAH USER ADMIN
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin yang bisa mengakses ini!', false);
+                return;
+            }
+            
             state.isAdmin = !state.isAdmin;
-            document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('show', state.isAdmin));
+            const adminPanels = document.querySelectorAll('.admin-panel');
+            adminPanels.forEach(p => p.classList.toggle('show', state.isAdmin));
             this.classList.toggle('active', state.isAdmin);
             this.innerHTML = state.isAdmin ? 
                 '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' : 
@@ -3259,8 +3306,12 @@
             renderAdminMissions();
         }
 
+        // ✅ ADMIN FUNCTIONS - SEMUA DENGAN CEK ADMIN
         window.approveVIP = async function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             try {
                 await supabaseClient
                     .from('vip_requests')
@@ -3289,7 +3340,10 @@
         };
 
         window.rejectVIP = async function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             try {
                 await supabaseClient
                     .from('vip_requests')
@@ -3304,7 +3358,10 @@
         };
 
         window.approveWD = async function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             try {
                 await supabaseClient
                     .from('withdrawals')
@@ -3319,7 +3376,10 @@
         };
 
         window.rejectWD = async function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             try {
                 await supabaseClient
                     .from('withdrawals')
@@ -3334,7 +3394,10 @@
         };
 
         document.getElementById('saveRewardBtn').addEventListener('click', async function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             
             const yt = parseInt(document.getElementById('rewardYtInput').value);
             const iklan = parseInt(document.getElementById('rewardIklanInput').value);
@@ -3388,7 +3451,10 @@
         });
 
         document.getElementById('saveBonusBtn').addEventListener('click', async function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             
             const l1 = parseInt(document.getElementById('bonusL1Input').value);
             const l2 = parseInt(document.getElementById('bonusL2Input').value);
@@ -3428,7 +3494,10 @@
         });
 
         document.getElementById('saveAdminLinks').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             
             const ytLink = document.getElementById('adminYtLink').value;
             const scrollLink = document.getElementById('adminScrollLink').value;
@@ -3472,7 +3541,10 @@
         }
 
         window.editMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             const mission = state.socialMissions.find(m => m.id === id);
             if (!mission) return;
             const newName = prompt('Edit nama misi:', mission.name);
@@ -3494,7 +3566,10 @@
         };
 
         window.deleteMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             if (!confirm('Hapus misi ini?')) return;
             state.socialMissions = state.socialMissions.filter(m => m.id !== id);
             renderSocialMissions();
@@ -3504,7 +3579,10 @@
         };
 
         document.getElementById('addMissionBtn').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
+            if (currentUser?.email !== 'admin@misiononton.com') {
+                showToast('❌ Hanya admin!', false);
+                return;
+            }
             const nameInput = document.getElementById('newMissionName');
             const rewardInput = document.getElementById('newMissionReward');
             const linkInput = document.getElementById('newMissionLink');
@@ -3555,11 +3633,20 @@
                     state.vip = userData.is_vip || false;
                     state.isVerified = userData.is_verified || false;
                     
+                    // ✅ CEK ADMIN
+                    if (userData.email === 'admin@misiononton.com' && 
+                        userData.is_vip === true && 
+                        userData.is_verified === true) {
+                        // Admin
+                    } else {
+                        state.isAdmin = false;
+                    }
+                    
                     document.getElementById('userUsername').textContent = userData.username || '-';
                     document.getElementById('userEmail').textContent = userData.email;
                     document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
                     document.getElementById('refLinkText').textContent = 
-                        `https://misi-nonton.com/ref/${userData.referral_code || 'ABC123'}`;
+                        `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
                 }
 
                 loginPage.style.display = 'none';
@@ -3579,12 +3666,13 @@
 
         // ========== INIT ==========
         checkSession();
-        addLog('👋 Selamat datang di MisiNonton!');
+        addLog('👋 Selamat datang di MisiPoin!');
         updateUI();
 
-        console.log('🚀 MisiNonton Pro connected to Supabase!');
+        console.log('🚀 MisiPoin Pro connected to Supabase!');
         console.log('📊 Database: ' + supabaseUrl);
-        console.log('💡 Jika login error, pastikan tabel sudah dibuat di Supabase SQL Editor');
+        console.log('👑 Admin: admin@misiononton.com');
+        console.log('💡 Mode Admin hanya terlihat untuk admin!');
     </script>
 </body>
 </html>
