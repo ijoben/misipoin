@@ -3,2312 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MisiNonton • Admin Panel</title>
+    <title>Admin Dashboard • MisiPoin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        :root {
-            --primary: #6C3CE1;
-            --primary-dark: #5A2FC7;
-            --secondary: #FBBF24;
-            --bg-dark: #0A0A0F;
-            --bg-card: rgba(255, 255, 255, 0.04);
-            --text-primary: #F1F5F9;
-            --text-secondary: #94A3B8;
-            --border-color: rgba(255, 255, 255, 0.06);
-            --shadow-glow: 0 8px 32px rgba(108, 60, 225, 0.3);
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .glow-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .glow-orb-1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(108, 60, 225, 0.25);
-            top: -100px;
-            right: -100px;
-        }
-        .glow-orb-2 {
-            width: 200px;
-            height: 200px;
-            background: rgba(251, 191, 36, 0.15);
-            bottom: 100px;
-            left: -50px;
-        }
-
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px 90px 16px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(10, 10, 15, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-overlay .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--secondary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        .loading-overlay p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .login-page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            position: relative;
-            z-index: 1;
-            background: var(--bg-dark);
-        }
-
-        .login-page .login-box {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            padding: 40px 28px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .login-page .logo-large {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .login-page .logo-large i {
-            font-size: 48px;
-            color: var(--secondary);
-            background: rgba(251, 191, 36, 0.15);
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-        }
-
-        .login-page .logo-large h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--secondary), #F59E0B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .login-page .logo-large p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .login-page .input-group {
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .login-page .input-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .login-page .input-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        .login-page .input-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 60, 225, 0.2);
-        }
-
-        .login-page .input-group input::placeholder {
-            color: #475569;
-        }
-
-        .login-page .btn-login {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 8px;
-            box-shadow: 0 4px 20px rgba(108, 60, 225, 0.3);
-        }
-
-        .login-page .btn-login:active {
-            transform: scale(0.97);
-        }
-
-        .login-page .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .login-page .login-footer a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .demo-accounts {
-            margin-top: 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .demo-accounts .demo-title {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .demo-accounts .demo-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 12px;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .demo-accounts .demo-row:last-child {
-            border-bottom: none;
-        }
-
-        .demo-accounts .demo-row .role {
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        .demo-accounts .demo-row .email {
-            font-family: monospace;
-            font-size: 11px;
-        }
-
-        .demo-accounts .demo-row .pass {
-            font-family: monospace;
-            font-size: 11px;
-            color: #34D399;
-        }
-
-        .demo-accounts .demo-click {
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 6px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .demo-accounts .demo-click:hover {
-            color: var(--secondary);
-        }
-
-        .app-main {
-            display: none;
-        }
-
-        .app-main.active {
-            display: block;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            margin-bottom: 8px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--secondary), #F59E0B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo i {
-            -webkit-text-fill-color: var(--secondary);
-            margin-right: 8px;
-        }
-
-        .user-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #8B5CF6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .user-avatar .verify-badge {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            background: #34D399;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            font-size: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--bg-dark);
-        }
-
-        .user-avatar:active {
-            transform: scale(0.95);
-        }
-
-        .admin-badge {
-            background: var(--secondary);
-            color: #0A0A0F;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 12px;
-            margin-left: 8px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border-radius: 14px;
-            padding: 14px 12px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-card .stat-icon {
-            font-size: 20px;
-            color: var(--secondary);
-            margin-bottom: 4px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .stat-card .stat-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-
-        .slider-wrapper {
-            background: linear-gradient(145deg, rgba(108, 60, 225, 0.08), rgba(251, 191, 36, 0.04));
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            position: relative;
-            min-height: 180px;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 180px;
-        }
-
-        .slider-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 24px 20px;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 180px;
-        }
-
-        .slider-slide.active {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: auto;
-        }
-
-        .slider-slide.exit {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-
-        .slider-slide .slide-icon {
-            font-size: 36px;
-            color: var(--secondary);
-            margin-bottom: 8px;
-        }
-
-        .slider-slide h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-
-        .slider-slide p {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 90%;
-        }
-
-        .slider-slide .slide-badge {
-            display: inline-block;
-            background: rgba(251, 191, 36, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            border-radius: 20px;
-            padding: 3px 14px;
-            font-size: 11px;
-            color: var(--secondary);
-            margin-top: 6px;
-            align-self: flex-start;
-        }
-
-        .slider-slide .slide-highlight {
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        .slider-controls {
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            display: flex;
-            gap: 6px;
-            z-index: 5;
-        }
-
-        .slider-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 0;
-        }
-
-        .slider-dot.active {
-            background: var(--secondary);
-            width: 24px;
-            border-radius: 4px;
-        }
-
-        .slider-dot:active {
-            transform: scale(0.8);
-        }
-
-        .slider-arrows {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 8px;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .slider-arrow {
-            pointer-events: auto;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-
-        .slider-arrow:active {
-            transform: scale(0.9);
-            background: rgba(251, 191, 36, 0.2);
-        }
-
-        .slider-arrow:hover {
-            border-color: var(--secondary);
-        }
-
-        .fullscreen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000000;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .fullscreen-overlay.active {
-            display: flex;
-        }
-
-        .fullscreen-overlay .fs-header {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        .fullscreen-overlay .fs-header .fs-timer {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .fullscreen-overlay .fs-header .fs-close {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #EF4444;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .fullscreen-overlay .fs-header .fs-close:hover {
-            background: rgba(239, 68, 68, 0.15);
-        }
-
-        .fullscreen-overlay .fs-video-wrapper {
-            width: 100%;
-            max-width: 480px;
-            aspect-ratio: 16/9;
-            background: #0A0A0F;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .fullscreen-overlay .fs-video-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .fullscreen-overlay .fs-progress {
-            width: 100%;
-            max-width: 480px;
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 3px;
-            margin-top: 16px;
-            overflow: hidden;
-        }
-
-        .fullscreen-overlay .fs-progress .fs-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), #F59E0B);
-            border-radius: 3px;
-            transition: width 0.3s;
-            width: 0%;
-        }
-
-        .fullscreen-overlay .fs-label {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 12px;
-        }
-
-        .fullscreen-overlay .fs-reward {
-            color: var(--secondary);
-            font-weight: 700;
-            font-size: 16px;
-            margin-top: 4px;
-        }
-
-        .fullscreen-overlay .fs-warning {
-            color: #EF4444;
-            font-size: 12px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .fullscreen-overlay .fs-warning.show {
-            display: block;
-        }
-
-        .scroll-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #0A0A0F;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .scroll-overlay.active {
-            display: flex;
-        }
-
-        .scroll-overlay .scroll-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0 12px 0;
-            flex-shrink: 0;
-        }
-
-        .scroll-overlay .scroll-header .scroll-timer {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .scroll-overlay .scroll-header .scroll-close {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #EF4444;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .scroll-overlay .scroll-header .scroll-close:hover {
-            background: rgba(239, 68, 68, 0.15);
-        }
-
-        .scroll-overlay .scroll-iframe-wrapper {
-            flex: 1;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            position: relative;
-            min-height: 0;
-        }
-
-        .scroll-overlay .scroll-iframe-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper {
-            flex-shrink: 0;
-            padding: 12px 0 8px 0;
-            width: 100%;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-progress-bar .scroll-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary), #F59E0B);
-            border-radius: 3px;
-            transition: width 0.3s;
-            width: 0%;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-reward {
-            color: #34D399;
-            font-weight: 600;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-warning {
-            color: #EF4444;
-            font-size: 12px;
-            display: none;
-        }
-
-        .scroll-overlay .scroll-progress-wrapper .scroll-info .scroll-warning.show {
-            display: inline;
-        }
-
-        .admin-section-title {
-            color: var(--secondary);
-            font-size: 18px;
-            margin: 20px 0 12px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(251, 191, 36, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .admin-section-title i {
-            font-size: 20px;
-        }
-
-        .admin-panel {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .admin-panel h4 {
-            margin-bottom: 12px;
-            color: var(--secondary);
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .admin-panel .sub-label {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .admin-panel input,
-        .admin-panel select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .admin-panel input::placeholder {
-            color: #475569;
-        }
-
-        .admin-panel .btn-save {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 4px;
-            transition: 0.3s;
-        }
-
-        .admin-panel .btn-save:active {
-            transform: scale(0.97);
-        }
-
-        .admin-panel .btn-save.success {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.warning {
-            background: #F59E0B;
-            color: #0A0A0F;
-        }
-
-        .admin-panel .btn-save.danger {
-            background: #EF4444;
-            color: white;
-        }
-
-        .admin-mission-item {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .admin-mission-item .am-info {
-            font-size: 13px;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .admin-mission-item .am-info .am-title {
-            font-weight: 600;
-        }
-
-        .admin-mission-item .am-info .am-link {
-            font-size: 11px;
-            color: var(--text-secondary);
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-
-        .admin-mission-item .am-actions button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px 6px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .admin-mission-item .am-actions button:hover {
-            color: white;
-        }
-
-        .admin-mission-item .am-actions .am-edit {
-            color: #3B82F6;
-        }
-
-        .admin-mission-item .am-actions .am-delete {
-            color: #EF4444;
-        }
-
-        .admin-mission-item .am-actions .am-approve {
-            color: #34D399;
-        }
-
-        .admin-mission-item .am-actions .am-reject {
-            color: #EF4444;
-        }
-
-        .mission-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .mission-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 100%;
-        }
-
-        .mission-card:active {
-            transform: scale(0.98);
-        }
-
-        .mission-card .m-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .mission-card .m-icon.yt { background: rgba(255, 0, 0, 0.15); color: #FF0000; }
-        .mission-card .m-icon.iklan { background: rgba(251, 191, 36, 0.15); color: var(--secondary); }
-        .mission-card .m-icon.scroll { background: rgba(52, 211, 153, 0.15); color: #34D399; }
-        .mission-card .m-icon.sub { background: rgba(52, 211, 153, 0.15); color: #34D399; }
-        .mission-card .m-icon.sosmed { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
-        .mission-card .m-icon.share { background: rgba(236, 72, 153, 0.15); color: #EC4899; }
-
-        .mission-card .m-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .mission-card .m-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .mission-card .m-desc {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .mission-card .m-reward {
-            font-size: 13px;
-            color: var(--secondary);
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .mission-card .m-btn {
-            padding: 8px 20px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .mission-card .m-btn:active {
-            transform: scale(0.95);
-        }
-
-        .mission-card .m-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .mission-card .m-btn.social-btn {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .mission-card .m-btn.scroll-btn {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .quota-badge {
-            background: rgba(251, 191, 36, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: 20px;
-            padding: 2px 12px;
-            font-size: 10px;
-            color: var(--secondary);
-            font-weight: 600;
-            margin-left: 6px;
-            white-space: nowrap;
-        }
-
-        .vip-card {
-            background: linear-gradient(135deg, rgba(108, 60, 225, 0.2), rgba(139, 92, 246, 0.1));
-            border-radius: 16px;
-            padding: 16px 20px;
-            border: 1px solid rgba(108, 60, 225, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-        }
-
-        .vip-card .vip-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .vip-card .vip-left i {
-            font-size: 28px;
-            color: var(--secondary);
-        }
-
-        .vip-card .vip-left .vip-text h4 {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .vip-card .vip-left .vip-text p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .vip-card .vip-btn {
-            background: var(--secondary);
-            color: #0A0A0F;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            flex-shrink: 0;
-        }
-
-        .vip-card .vip-btn:active {
-            transform: scale(0.95);
-        }
-
-        .vip-card .vip-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .vip-card .vip-btn.vip-active {
-            background: #34D399;
-            color: #0A0A0F;
-        }
-
-        .daily-card {
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            padding: 16px 20px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-        }
-
-        .daily-card .daily-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .daily-card .daily-left i {
-            font-size: 28px;
-            color: #3B82F6;
-        }
-
-        .daily-card .daily-left .daily-text h4 {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .daily-card .daily-left .daily-text p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .daily-card .daily-btn {
-            background: #3B82F6;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            flex-shrink: 0;
-        }
-
-        .daily-card .daily-btn:active {
-            transform: scale(0.95);
-        }
-
-        .daily-card .daily-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .ref-section {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .ref-section .ref-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .ref-section .ref-header h4 {
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .ref-section .ref-header h4 i {
-            color: var(--secondary);
-        }
-
-        .ref-link-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .ref-link-box .link-text {
-            font-size: 12px;
-            color: var(--text-secondary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-        }
-
-        .ref-link-box .copy-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 4px 10px;
-            font-size: 16px;
-        }
-
-        .ref-levels {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-        }
-
-        .ref-level {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .ref-level .lvl {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        .ref-level .count {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--secondary);
-        }
-        .ref-level .bonus {
-            font-size: 10px;
-            color: #34D399;
-        }
-        .ref-level .bonus-detail {
-            font-size: 9px;
-            color: #FBBF24;
-            margin-top: 2px;
-        }
-
-        .downline-section {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .downline-section .downline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .downline-section .downline-header h4 {
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .downline-section .downline-header h4 i {
-            color: #3B82F6;
-        }
-
-        .downline-section .downline-header .total-downline {
-            font-size: 13px;
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        .downline-item {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.3s;
-        }
-
-        .downline-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .downline-item .dl-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .downline-item .dl-info .dl-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #8B5CF6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .downline-item .dl-info .dl-name {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .downline-item .dl-info .dl-email {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .downline-item .dl-level {
-            font-size: 11px;
-            color: var(--secondary);
-            font-weight: 600;
-            padding: 2px 10px;
-            background: rgba(251, 191, 36, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(251, 191, 36, 0.1);
-        }
-
-        .downline-empty {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .downline-empty i {
-            font-size: 40px;
-            color: var(--text-secondary);
-            opacity: 0.3;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .page {
-            display: none;
-            animation: fadeUp 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 460px;
-            background: rgba(15, 15, 26, 0.92);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 6px 8px;
-            z-index: 100;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 14px;
-            transition: 0.3s;
-            border: none;
-            background: none;
-            color: #475569;
-            font-size: 10px;
-            min-width: 48px;
-            position: relative;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            transition: 0.3s;
-        }
-
-        .nav-item span {
-            font-size: 9px;
-            font-weight: 500;
-        }
-
-        .nav-item.active {
-            color: var(--secondary);
-            background: rgba(251, 191, 36, 0.08);
-        }
-
-        .nav-item.active i {
-            transform: translateY(-2px);
-        }
-
-        .nav-item:active {
-            transform: scale(0.9);
-        }
-
-        .nav-item .badge-dot {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 6px;
-            height: 6px;
-            background: #EF4444;
-            border-radius: 50%;
-        }
-
-        .log-item {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 3px solid var(--secondary);
-            font-size: 13px;
-        }
-
-        .log-item .time {
-            color: var(--text-secondary);
-            font-size: 11px;
-        }
-
-        .wd-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .wd-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .wd-item:last-child {
-            border-bottom: none;
-        }
-
-        .wd-item .wd-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .wd-item .wd-info i {
-            font-size: 20px;
-            color: var(--secondary);
-            width: 32px;
-        }
-
-        .wd-item .wd-info .wd-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .wd-item .wd-info .wd-cost {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .wd-item .wd-btn {
-            background: #34D399;
-            color: #0A0A0F;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .wd-item .wd-btn:active {
-            transform: scale(0.95);
-        }
-
-        .wd-item .wd-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .account-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-        }
-
-        .account-card .field {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .account-card .field:last-child {
-            border-bottom: none;
-        }
-
-        .account-card .field .label {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .account-card .field .value {
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        .account-card .field .value.verified {
-            color: #34D399;
-        }
-
-        .account-card .field .value.unverified {
-            color: #F59E0B;
-        }
-
-        .btn-logout {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            background: rgba(239, 68, 68, 0.15);
-            color: #EF4444;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .btn-logout:active {
-            transform: scale(0.97);
-        }
-
-        .go-user-link {
-            display: block;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px dashed var(--border-color);
-            transition: 0.3s;
-            text-decoration: none;
-        }
-
-        .go-user-link:hover {
-            border-color: var(--secondary);
-            color: var(--secondary);
-        }
-
-        .go-user-link i {
-            margin-right: 6px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-box {
-            background: #1a1a2e;
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .modal-box .modal-icon {
-            font-size: 64px;
-            color: var(--secondary);
-            margin-bottom: 16px;
-        }
-
-        .modal-box h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .modal-box p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .modal-box .qris-placeholder {
-            background: white;
-            border-radius: 16px;
-            padding: 40px 20px;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-box .qris-placeholder i {
-            font-size: 48px;
-            color: #0A0A0F;
-        }
-
-        .modal-box .qris-placeholder span {
-            color: #0A0A0F;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .modal-box .qris-placeholder .sub {
-            font-size: 12px;
-            font-weight: 400;
-            color: #64748b;
-        }
-
-        .modal-box .modal-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .modal-box .modal-btn.confirm {
-            background: var(--secondary);
-            color: #0A0A0F;
-        }
-
-        .modal-box .modal-btn.cancel {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-
-        .modal-box .modal-btn:active {
-            transform: scale(0.95);
-        }
-
-        @media (max-width: 420px) {
-            .stats-grid { gap: 6px; }
-            .stat-card { padding: 10px 8px; }
-            .stat-card .stat-value { font-size: 16px; }
-            .mission-card { padding: 12px 14px; }
-            .login-page .login-box { padding: 28px 20px; }
-            .vip-card { padding: 14px 16px; }
-            .daily-card { padding: 14px 16px; }
-            .slider-slide p { max-width: 100%; }
-            .downline-item { flex-wrap: wrap; gap: 6px; }
-            .admin-mission-item { flex-direction: column; align-items: stretch; }
-            .admin-mission-item .am-actions { display: flex; justify-content: flex-end; gap: 4px; }
-        }
-
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .toast {
-            background: rgba(15, 15, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px 20px;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-            animation: slideDown 0.3s ease;
-            margin-bottom: 8px;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        :root { --primary: #6C3CE1; --primary-dark: #5A2FC7; --secondary: #FBBF24; --bg-dark: #0A0A0F; --bg-card: rgba(255,255,255,0.04); --text-primary: #F1F5F9; --text-secondary: #94A3B8; --border-color: rgba(255,255,255,0.06); --shadow-glow: 0 8px 32px rgba(108,60,225,0.3); }
+        body { background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+        .glow-orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+        .glow-orb-1 { width: 300px; height: 300px; background: rgba(108,60,225,0.25); top: -100px; right: -100px; }
+        .glow-orb-2 { width: 200px; height: 200px; background: rgba(251,191,36,0.15); bottom: 100px; left: -50px; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 16px 16px 90px 16px; position: relative; z-index: 1; }
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--secondary), #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo i { -webkit-text-fill-color: var(--secondary); margin-right: 8px; }
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .header-actions a { color: var(--text-secondary); text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border-color); transition: 0.3s; }
+        .header-actions a:hover { background: rgba(255,255,255,0.05); border-color: var(--secondary); }
+
+        /* Stats Admin */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-card); border-radius: 14px; padding: 16px; text-align: center; border: 1px solid var(--border-color); }
+        .stat-card .stat-icon { font-size: 24px; color: var(--secondary); margin-bottom: 4px; }
+        .stat-card .stat-value { font-size: 24px; font-weight: 700; color: white; }
+        .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Tabs */
+        .admin-tabs { display: flex; gap: 6px; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 4px; overflow-x: auto; }
+        .admin-tabs button { flex: 1; min-width: 80px; padding: 10px 14px; border: none; border-radius: 10px; background: transparent; color: var(--text-secondary); font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 12px; white-space: nowrap; }
+        .admin-tabs button.active { background: var(--primary); color: white; }
+        .admin-tabs button:active { transform: scale(0.95); }
+
+        /* Tab Content */
+        .tab-content { display: none; animation: fadeUp 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards */
+        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-color); margin-bottom: 16px; }
+        .card h4 { margin-bottom: 12px; color: var(--secondary); font-size: 16px; display: flex; align-items: center; gap: 8px; }
+
+        .admin-item { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .admin-item .item-info { font-size: 13px; flex: 1; min-width: 120px; }
+        .admin-item .item-info .item-title { font-weight: 600; }
+        .admin-item .item-info .item-sub { font-size: 11px; color: var(--text-secondary); }
+        .admin-item .item-actions { display: flex; gap: 6px; }
+        .admin-item .item-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 6px 12px; border-radius: 8px; font-size: 12px; transition: 0.3s; font-weight: 500; }
+        .admin-item .item-actions .approve { background: rgba(52,211,153,0.15); color: #34D399; }
+        .admin-item .item-actions .approve:hover { background: rgba(52,211,153,0.25); }
+        .admin-item .item-actions .reject { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .admin-item .item-actions .reject:hover { background: rgba(239,68,68,0.25); }
+        .admin-item .item-actions .edit { background: rgba(59,130,246,0.15); color: #3B82F6; }
+        .admin-item .item-actions .edit:hover { background: rgba(59,130,246,0.25); }
+        .admin-item .item-actions .delete { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .admin-item .item-actions .delete:hover { background: rgba(239,68,68,0.25); }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: white; font-size: 14px; }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .btn-save { width: 100%; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 8px; }
+        .btn-save:active { transform: scale(0.97); }
+        .btn-save.success { background: #34D399; color: #0A0A0F; }
+        .btn-save.warning { background: #F59E0B; color: #0A0A0F; }
+        .btn-save.danger { background: #EF4444; color: white; }
+
+        .btn-logout { width: 100%; padding: 14px; border-radius: 14px; border: none; background: rgba(239,68,68,0.15); color: #EF4444; font-weight: 600; cursor: pointer; transition: 0.3s; border: 1px solid rgba(239,68,68,0.2); margin-top: 12px; }
+        .btn-logout:active { transform: scale(0.97); }
+
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; width: 90%; max-width: 400px; }
+        .toast { background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 20px; color: white; font-size: 14px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.5); animation: slideDown 0.3s ease; margin-bottom: 8px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+        .badge-success { background: rgba(52,211,153,0.15); color: #34D399; }
+        .badge-warning { background: rgba(251,191,36,0.15); color: #FBBF24; }
+        .badge-danger { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .badge-info { background: rgba(59,130,246,0.15); color: #3B82F6; }
+
+        .empty-state { text-align: center; padding: 30px 20px; color: var(--text-secondary); }
+        .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.3; }
+        .empty-state p { font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <!-- ========== LOADING OVERLAY ========== -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loader"></div>
-        <p>Memuat data...</p>
-    </div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
 
-    <!-- ========== LOGIN PAGE ========== -->
-    <div class="login-page" id="loginPage">
-        <div class="login-box">
-            <div class="logo-large">
-                <div><i class="fas fa-play-circle"></i></div>
-                <h1>MisiNonton</h1>
-                <p style="color:var(--secondary);">🔑 Admin Panel</p>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
+            <div class="header-actions">
+                <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
             </div>
+        </div>
 
-            <div class="input-group">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <input type="email" id="loginEmail" placeholder="masukkan email admin">
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Total User</div>
             </div>
-
-            <div class="input-group">
-                <label><i class="fas fa-lock"></i> Password</label>
-                <input type="password" id="loginPassword" placeholder="••••••••">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-crown"></i></div>
+                <div class="stat-value" id="totalVip">0</div>
+                <div class="stat-label">User VIP</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-value" id="totalPoin">0</div>
+                <div class="stat-label">Total Poin</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-value" id="pendingRequests">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
 
-            <button class="btn-login" id="btnLogin">
-                <i class="fas fa-arrow-right"></i> Masuk sebagai Admin
-            </button>
+        <!-- Tabs -->
+        <div class="admin-tabs" id="adminTabs">
+            <button class="active" data-tab="statistik"><i class="fas fa-chart-bar"></i> Statistik</button>
+            <button data-tab="deposit"><i class="fas fa-crown"></i> VIP</button>
+            <button data-tab="wd"><i class="fas fa-wallet"></i> WD</button>
+            <button data-tab="setting"><i class="fas fa-cog"></i> Setting</button>
+        </div>
 
-            <!-- Demo Account Info -->
-            <div class="demo-accounts">
-                <div class="demo-title">🔑 AKUN ADMIN</div>
-                <div class="demo-row">
-                    <span class="role">👑 Admin</span>
-                    <span class="email">admin@misi-nonton.com</span>
-                    <span class="pass">admin123</span>
+        <!-- Tab: Statistik -->
+        <div class="tab-content active" id="tab-statistik">
+            <div class="card">
+                <h4><i class="fas fa-chart-line"></i> Statistik User</h4>
+                <div id="userStats">
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">Total User Terdaftar</div>
+                            <div class="item-sub" id="statTotalUsers">0</div>
+                        </div>
+                    </div>
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">User VIP Aktif</div>
+                            <div class="item-sub" id="statVipUsers">0</div>
+                        </div>
+                    </div>
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">Total Poin Dikumpulkan</div>
+                            <div class="item-sub" id="statTotalPoin">0</div>
+                        </div>
+                    </div>
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">Pending Request</div>
+                            <div class="item-sub" id="statPending">0</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="demo-click" onclick="fillDemo('admin@misi-nonton.com','admin123')" style="color:var(--secondary);">
-                    ⚡ Klik untuk isi otomatis akun admin
-                </div>
             </div>
 
-            <div class="login-footer">
-                <p style="margin-bottom:4px;">Kembali ke <a href="index.html">Halaman User</a></p>
-                <div class="demo-badge" id="statusConnection">
-                    <i class="fas fa-circle" style="color:#EF4444;"></i> Mengecek koneksi...
+            <div class="card">
+                <h4><i class="fas fa-list"></i> Daftar User</h4>
+                <div id="userList">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>Loading data...</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ========== FULLSCREEN VIDEO OVERLAY ========== -->
-    <div class="fullscreen-overlay" id="fullscreenOverlay">
-        <div class="fs-header">
-            <span class="fs-timer" id="fsTimer">15s</span>
-            <button class="fs-close" id="fsCloseBtn"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="fs-video-wrapper">
-            <iframe id="fsVideoFrame" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&rel=0" allowfullscreen></iframe>
-        </div>
-        <div class="fs-progress">
-            <div class="fs-fill" id="fsProgressFill"></div>
-        </div>
-        <div class="fs-label" id="fsLabel">Menonton YouTube</div>
-        <div class="fs-reward" id="fsReward">+10 poin</div>
-        <div class="fs-warning" id="fsWarning">⚠️ Jangan tutup layar! Timer akan berhenti</div>
-    </div>
-
-    <!-- ========== SCROLL MISSION OVERLAY ========== -->
-    <div class="scroll-overlay" id="scrollOverlay">
-        <div class="scroll-header">
-            <div class="scroll-timer" id="scrollTimer">10s</div>
-            <button class="scroll-close" id="scrollCloseBtn"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="scroll-iframe-wrapper">
-            <iframe id="scrollIframe" src="https://misi-nonton.com" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
-        </div>
-        <div class="scroll-progress-wrapper">
-            <div class="scroll-progress-bar">
-                <div class="scroll-fill" id="scrollProgressFill"></div>
-            </div>
-            <div class="scroll-info">
-                <span class="scroll-reward" id="scrollReward">+8 poin</span>
-                <span class="scroll-warning" id="scrollWarning">⚠️ Jangan tutup layar! Timer berhenti</span>
+        <!-- Tab: Deposit / VIP -->
+        <div class="tab-content" id="tab-deposit">
+            <div class="card">
+                <h4><i class="fas fa-crown"></i> Request Upgrade VIP</h4>
+                <div id="vipRequests">
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Tidak ada request VIP</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- ========== MAIN APP ========== -->
-    <div class="app-main" id="appMain">
-        <div class="container">
-            <!-- Header -->
-            <div class="header">
-                <div class="logo"><i class="fas fa-play-circle"></i> MisiNonton</div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span class="admin-badge">ADMIN</span>
-                    <div class="user-avatar" id="avatarUser">
-                        A
-                        <span class="verify-badge"><i class="fas fa-check"></i></span>
+        <!-- Tab: WD -->
+        <div class="tab-content" id="tab-wd">
+            <div class="card">
+                <h4><i class="fas fa-wallet"></i> Request Penarikan (WD)</h4>
+                <div id="wdRequests">
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Tidak ada request WD</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-star"></i></div>
-                    <div class="stat-value" id="statPoin">0</div>
-                    <div class="stat-label">Poin</div>
+        <!-- Tab: Setting -->
+        <div class="tab-content" id="tab-setting">
+            <div class="card">
+                <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
+                <div class="form-group">
+                    <label>YouTube (default: 10)</label>
+                    <input type="number" id="rewardYtInput" value="10">
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
-                    <div class="stat-value" id="statMisi">0</div>
-                    <div class="stat-label">Misi Hari Ini</div>
+                <div class="form-group">
+                    <label>Iklan (default: 5)</label>
+                    <input type="number" id="rewardIklanInput" value="5">
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-crown"></i></div>
-                    <div class="stat-value" id="statVip">✕</div>
-                    <div class="stat-label">VIP</div>
+                <div class="form-group">
+                    <label>Scroll Website (default: 8)</label>
+                    <input type="number" id="rewardScrollInput" value="8">
                 </div>
-            </div>
-
-            <!-- PAGES -->
-            <!-- DASHBOARD -->
-            <div class="page active" id="page-dashboard">
-                <div class="slider-wrapper">
-                    <div class="slider-container" id="sliderContainer">
-                        <div class="slider-slide active" data-index="0">
-                            <div class="slide-icon"><i class="fas fa-play-circle"></i></div>
-                            <h3>Nonton Dapat Poin</h3>
-                            <p>Tonton YouTube & Iklan 15 detik, dapatkan poin langsung! <span class="slide-highlight">Free 5x/hari • VIP 20x/hari</span></p>
-                            <span class="slide-badge">🎯 +10 / +5 Poin</span>
-                        </div>
-                        <div class="slider-slide" data-index="1">
-                            <div class="slide-icon"><i class="fas fa-arrows-alt-v"></i></div>
-                            <h3>Scroll Dapat Poin</h3>
-                            <p>Scroll website selama 10 detik, dapatkan poin! <span class="slide-highlight">Free 5x/hari • VIP 20x/hari</span></p>
-                            <span class="slide-badge">📱 +8 Poin</span>
-                        </div>
-                        <div class="slider-slide" data-index="2">
-                            <div class="slide-icon"><i class="fas fa-crown"></i></div>
-                            <h3>VIP Premium</h3>
-                            <p>Upgrade VIP untuk mendapatkan <span class="slide-highlight">20x</span> kuota misi dan <span class="slide-highlight">2x lipat</span> poin setiap misi!</p>
-                            <span class="slide-badge">👑 Bayar via QRIS</span>
-                        </div>
-                        <div class="slider-slide" data-index="3">
-                            <div class="slide-icon"><i class="fas fa-wallet"></i></div>
-                            <h3>Tukar Poin Jadi Uang</h3>
-                            <p>Kumpulkan poin dan tukarkan dengan <span class="slide-highlight">Pulsa</span> atau <span class="slide-highlight">Uang</span> tunai. Minimal WD 10.000 poin!</p>
-                            <span class="slide-badge">💳 Pulsa 10K • Uang 10K</span>
-                        </div>
-                        <div class="slider-slide" data-index="4">
-                            <div class="slide-icon"><i class="fas fa-users"></i></div>
-                            <h3>Referral 3 Level</h3>
-                            <p>Dapatkan bonus dari referral! <span class="slide-highlight">Level 1: 5 poin • Level 2: 3 poin • Level 3: 1 poin</span></p>
-                            <span class="slide-badge">🔗 Bagikan linkmu!</span>
-                        </div>
-                        <div class="slider-slide" data-index="5">
-                            <div class="slide-icon"><i class="fas fa-tasks"></i></div>
-                            <h3>Misi Sosial Harian</h3>
-                            <p>Subscribe, Follow, dan Share setiap hari untuk poin tambahan! <span class="slide-highlight">+15, +10, +20</span> poin</p>
-                            <span class="slide-badge">📅 1x Sehari</span>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Subscribe (default: 15)</label>
+                        <input type="number" id="rewardSubInput" value="15">
                     </div>
-                    <div class="slider-controls" id="sliderDots"></div>
-                    <div class="slider-arrows">
-                        <button class="slider-arrow" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
-                        <button class="slider-arrow" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
+                    <div class="form-group">
+                        <label>Follow Sosmed (default: 10)</label>
+                        <input type="number" id="rewardSosmedInput" value="10">
                     </div>
                 </div>
-
-                <div class="mission-grid" id="dashboardMissions">
-                    <div class="mission-card">
-                        <div class="m-icon yt"><i class="fab fa-youtube"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Nonton YouTube</div>
-                            <div class="m-desc">15 detik • Autoplay</div>
-                            <div class="m-reward">+<span id="ytRewardDisplay">10</span> poin <span class="quota-badge" id="ytQuota">0/5</span></div>
-                        </div>
-                        <button class="m-btn" data-mission="yt" id="ytBtn">Tonton</button>
-                    </div>
-                    <div class="mission-card">
-                        <div class="m-icon iklan"><i class="fas fa-ad"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Tonton Iklan</div>
-                            <div class="m-desc">15 detik • Autoplay</div>
-                            <div class="m-reward">+<span id="iklanRewardDisplay">5</span> poin <span class="quota-badge" id="iklanQuota">0/5</span></div>
-                        </div>
-                        <button class="m-btn" data-mission="iklan" id="iklanBtn">Tonton</button>
-                    </div>
-                    <div class="mission-card">
-                        <div class="m-icon scroll"><i class="fas fa-arrows-alt-v"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Scroll Website</div>
-                            <div class="m-desc">10 detik • Buka di layar</div>
-                            <div class="m-reward">+<span id="scrollRewardDisplay">8</span> poin <span class="quota-badge" id="scrollQuota">0/5</span></div>
-                        </div>
-                        <button class="m-btn scroll-btn" data-mission="scroll" id="scrollBtn">Mulai Scroll</button>
-                    </div>
+                <div class="form-group">
+                    <label>Share (default: 20)</label>
+                    <input type="number" id="rewardShareInput" value="20">
                 </div>
-
-                <div class="vip-card" id="vipCard">
-                    <div class="vip-left">
-                        <i class="fas fa-crown"></i>
-                        <div class="vip-text">
-                            <h4>VIP <span id="vipStatusText">Tidak Aktif</span></h4>
-                            <p id="vipDesc">Free: 5x/hari • VIP: 20x/hari • 2x lipat poin</p>
-                        </div>
-                    </div>
-                    <button class="vip-btn" id="btnUpgradeVIP">Upgrade via QRIS</button>
-                </div>
-
-                <div class="daily-card">
-                    <div class="daily-left">
-                        <i class="fas fa-calendar-check"></i>
-                        <div class="daily-text">
-                            <h4>Daily Claim</h4>
-                            <p id="dailyStatus">Belum claim • +5 poin</p>
-                        </div>
-                    </div>
-                    <button class="daily-btn" id="btnDailyClaim">Claim</button>
-                </div>
-
-                <div class="ref-section">
-                    <div class="ref-header">
-                        <h4><i class="fas fa-link"></i> Referral</h4>
-                        <span style="font-size:12px;color:var(--text-secondary);">3 Level</span>
-                    </div>
-                    <div class="ref-link-box">
-                        <span class="link-text" id="refLinkText">https://misi-nonton.com/ref/ABC123</span>
-                        <button class="copy-btn" id="copyRefLink"><i class="fas fa-copy"></i></button>
-                    </div>
-                    <div class="ref-levels">
-                        <div class="ref-level">
-                            <div class="lvl">Level 1</div>
-                            <div class="count" id="refL1">0</div>
-                            <div class="bonus"><i class="fas fa-arrows-alt-h"></i> 2 arah</div>
-                            <div class="bonus-detail" id="bonusL1Display">+5 poin/referral</div>
-                        </div>
-                        <div class="ref-level">
-                            <div class="lvl">Level 2</div>
-                            <div class="count" id="refL2">0</div>
-                            <div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div>
-                            <div class="bonus-detail" id="bonusL2Display">+3 poin/referral</div>
-                        </div>
-                        <div class="ref-level">
-                            <div class="lvl">Level 3</div>
-                            <div class="count" id="refL3">0</div>
-                            <div class="bonus"><i class="fas fa-arrow-right"></i> 1 arah</div>
-                            <div class="bonus-detail" id="bonusL3Display">+1 poin/referral</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- LOG -->
-            <div class="page" id="page-log">
-                <h3 style="margin-bottom:16px;"><i class="fas fa-history"></i> Riwayat</h3>
-                <div id="logContainer">
-                    <div class="log-item">
-                        <span>👋 Selamat datang Admin!</span>
-                        <span class="time">Now</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MISI -->
-            <div class="page" id="page-misi">
-                <h3 style="margin-bottom:16px;"><i class="fas fa-tasks"></i> Misi Sosial</h3>
-                <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px;">Klik tombol untuk membuka link, selesaikan misi, dapatkan poin!</p>
-                <div class="mission-grid" id="socialMissions">
-                    <div class="mission-card">
-                        <div class="m-icon sub"><i class="fas fa-users"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Subscribe YouTube</div>
-                            <div class="m-desc">1x sehari</div>
-                            <div class="m-reward">+<span id="subRewardDisplay">15</span> poin</div>
-                        </div>
-                        <button class="m-btn social-btn" data-mission="sub">Subscribe</button>
-                    </div>
-                    <div class="mission-card">
-                        <div class="m-icon sosmed"><i class="fas fa-share-alt"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Follow Sosmed</div>
-                            <div class="m-desc">1x sehari</div>
-                            <div class="m-reward">+<span id="sosmedRewardDisplay">10</span> poin</div>
-                        </div>
-                        <button class="m-btn social-btn" data-mission="sosmed">Ikuti</button>
-                    </div>
-                    <div class="mission-card">
-                        <div class="m-icon share"><i class="fas fa-share"></i></div>
-                        <div class="m-info">
-                            <div class="m-title">Share</div>
-                            <div class="m-desc">1x sehari</div>
-                            <div class="m-reward">+<span id="shareRewardDisplay">20</span> poin</div>
-                        </div>
-                        <button class="m-btn social-btn" data-mission="share">Share</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WD -->
-            <div class="page" id="page-wd">
-                <h3 style="margin-bottom:16px;"><i class="fas fa-wallet"></i> Penarikan</h3>
-                <div class="wd-card">
-                    <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-phone-alt"></i>
-                            <div>
-                                <div class="wd-name">Pulsa 10K</div>
-                                <div class="wd-cost">10.000 poin</div>
-                            </div>
-                        </div>
-                        <button class="wd-btn" data-redeem="pulsa">Tukar</button>
-                    </div>
-                    <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <div>
-                                <div class="wd-name">Uang 10K</div>
-                                <div class="wd-cost">10.000 poin</div>
-                            </div>
-                        </div>
-                        <button class="wd-btn" data-redeem="uang">Tukar</button>
-                    </div>
-                    <div class="wd-item">
-                        <div class="wd-info">
-                            <i class="fas fa-phone-alt"></i>
-                            <div>
-                                <div class="wd-name">Pulsa 20K</div>
-                                <div class="wd-cost">20.000 poin</div>
-                            </div>
-                        </div>
-                        <button class="wd-btn" data-redeem="pulsa20">Tukar</button>
-                    </div>
-                    <div style="margin-top:12px;padding:10px;background:rgba(251,191,36,0.05);border-radius:10px;text-align:center;font-size:12px;color:var(--text-secondary);">
-                        <i class="fas fa-info-circle"></i> Minimal WD 10.000 poin
-                    </div>
-                </div>
-            </div>
-
-            <!-- AKUN & ADMIN PANEL -->
-            <div class="page" id="page-akun">
-                <h3 style="margin-bottom:16px;"><i class="fas fa-user"></i> Akun Admin</h3>
-                <div class="account-card">
-                    <div class="field">
-                        <span class="label"><i class="fas fa-envelope"></i> Email</span>
-                        <span class="value" id="userEmail">-</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-check-circle"></i> Status</span>
-                        <span class="value verified" id="userStatus">✅ Terverifikasi</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-shield-alt"></i> IP Address</span>
-                        <span class="value" id="userIP">-</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-crown"></i> VIP</span>
-                        <span class="value" id="akunVip">Tidak Aktif</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-star"></i> Total Poin</span>
-                        <span class="value" id="akunPoin">0</span>
-                    </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-link"></i> Referral</span>
-                        <span class="value" id="akunRefCode">-</span>
-                    </div>
-                </div>
-
-                <!-- Downline Section -->
-                <div class="downline-section">
-                    <div class="downline-header">
-                        <h4><i class="fas fa-users"></i> Downline Saya</h4>
-                        <span class="total-downline" id="totalDownline">Total: 0</span>
-                    </div>
-                    <div id="downlineList">
-                        <div class="downline-empty">
-                            <i class="fas fa-user-plus"></i>
-                            <p>Belum ada downline</p>
-                            <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ========== ADMIN PANELS ========== -->
-
-                <div class="admin-section-title">
-                    <i class="fas fa-shield-alt"></i> Panel Manajemen Admin
-                </div>
-
-                <!-- 1. Verifikasi & Approve VIP -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-crown"></i> Verifikasi & Approve VIP</h4>
-                    <div id="vipRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">Belum ada request</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">Menunggu user upgrade</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Setting Poin Misi -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
-                    <label class="sub-label">YouTube (default: 10)</label>
-                    <input type="number" id="rewardYtInput" placeholder="Poin YouTube" value="10">
-                    <label class="sub-label">Iklan (default: 5)</label>
-                    <input type="number" id="rewardIklanInput" placeholder="Poin Iklan" value="5">
-                    <label class="sub-label">Scroll Website (default: 8)</label>
-                    <input type="number" id="rewardScrollInput" placeholder="Poin Scroll" value="8">
-                    <label class="sub-label">Subscribe YouTube (default: 15)</label>
-                    <input type="number" id="rewardSubInput" placeholder="Poin Subscribe" value="15">
-                    <label class="sub-label">Follow Sosmed (default: 10)</label>
-                    <input type="number" id="rewardSosmedInput" placeholder="Poin Follow" value="10">
-                    <label class="sub-label">Share (default: 20)</label>
-                    <input type="number" id="rewardShareInput" placeholder="Poin Share" value="20">
-                    <button class="btn-save warning" id="saveRewardBtn">
-                        <i class="fas fa-save"></i> Simpan Poin Misi
-                    </button>
-                </div>
-
-                <!-- 3. Kelola Misi Sosial -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
-                    <div id="adminMissionList"></div>
-                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-                        <div style="display:flex;gap:8px;">
-                            <input type="text" id="newMissionName" placeholder="Nama misi" style="flex:1;">
-                            <input type="number" id="newMissionReward" placeholder="Poin" style="flex:0.6;">
-                        </div>
-                        <input type="text" id="newMissionLink" placeholder="Link (YouTube/Sosmed)" style="width:100%;">
-                        <button class="btn-save" id="addMissionBtn">
-                            <i class="fas fa-plus"></i> Tambah Misi
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 4. Setting Bonus Referral -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
-                    <label class="sub-label">Level 1 (2 arah)</label>
-                    <input type="number" id="bonusL1Input" placeholder="Poin Level 1" value="5">
-                    <label class="sub-label">Level 2 (1 arah)</label>
-                    <input type="number" id="bonusL2Input" placeholder="Poin Level 2" value="3">
-                    <label class="sub-label">Level 3 (1 arah)</label>
-                    <input type="number" id="bonusL3Input" placeholder="Poin Level 3" value="1">
-                    <button class="btn-save success" id="saveBonusBtn">
-                        <i class="fas fa-save"></i> Simpan Bonus
-                    </button>
-                </div>
-
-                <!-- 5. Approve WD -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-check-circle"></i> Approve WD</h4>
-                    <div id="wdRequests">
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">Belum ada request</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">Menunggu user WD</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. Link Settings -->
-                <div class="admin-panel">
-                    <h4><i class="fas fa-link"></i> Link Settings</h4>
-                    <label class="sub-label">Link YouTube (untuk fullscreen)</label>
-                    <input type="text" id="adminYtLink" placeholder="Link YouTube" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                    <label class="sub-label">Link Website untuk Scroll (iframe)</label>
-                    <input type="text" id="adminScrollLink" placeholder="Link Website Scroll" value="https://misi-nonton.com">
-                    <label class="sub-label">Link Sosmed (untuk Follow)</label>
-                    <input type="text" id="adminSosmedLink" placeholder="Link Sosmed" value="https://instagram.com">
-                    <label class="sub-label">Link Share</label>
-                    <input type="text" id="adminShareLink" placeholder="Link Share" value="https://twitter.com">
-                    <button class="btn-save" id="saveAdminLinks">Simpan Link</button>
-                </div>
-
-                <button class="btn-logout" id="btnLogout" style="margin-top:12px;">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                <button class="btn-save warning" id="saveRewardBtn">
+                    <i class="fas fa-save"></i> Simpan Poin Misi
                 </button>
-
-                <a href="index.html" class="go-user-link">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Halaman User
-                </a>
             </div>
 
-            <!-- Bottom Navigation -->
-            <div class="bottom-nav">
-                <button class="nav-item active" data-page="dashboard">
-                    <i class="fas fa-home"></i>
-                    <span>Beranda</span>
+            <div class="card">
+                <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Level 1 (2 arah)</label>
+                        <input type="number" id="bonusL1Input" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Level 2 (1 arah)</label>
+                        <input type="number" id="bonusL2Input" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Level 3 (1 arah)</label>
+                        <input type="number" id="bonusL3Input" value="1">
+                    </div>
+                </div>
+                <button class="btn-save success" id="saveBonusBtn">
+                    <i class="fas fa-save"></i> Simpan Bonus
                 </button>
-                <button class="nav-item" data-page="log">
-                    <i class="fas fa-list"></i>
-                    <span>Log</span>
+            </div>
+
+            <div class="card">
+                <h4><i class="fas fa-link"></i> Link Settings</h4>
+                <div class="form-group">
+                    <label>Link YouTube (Fullscreen)</label>
+                    <input type="text" id="adminYtLink" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                </div>
+                <div class="form-group">
+                    <label>Link Website Scroll</label>
+                    <input type="text" id="adminScrollLink" value="https://misi-poin.com/scroll">
+                </div>
+                <div class="form-group">
+                    <label>Link Sosmed (Follow)</label>
+                    <input type="text" id="adminSosmedLink" value="https://instagram.com">
+                </div>
+                <div class="form-group">
+                    <label>Link Share</label>
+                    <input type="text" id="adminShareLink" value="https://twitter.com">
+                </div>
+                <button class="btn-save" id="saveAdminLinks">
+                    <i class="fas fa-save"></i> Simpan Link
                 </button>
-                <button class="nav-item" data-page="misi">
-                    <i class="fas fa-tasks"></i>
-                    <span>Misi</span>
-                    <span class="badge-dot"></span>
-                </button>
-                <button class="nav-item" data-page="wd">
-                    <i class="fas fa-wallet"></i>
-                    <span>WD</span>
-                </button>
-                <button class="nav-item" data-page="akun">
-                    <i class="fas fa-user"></i>
-                    <span>Akun</span>
+            </div>
+
+            <div class="card">
+                <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
+                <div id="adminMissionList"></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nama Misi</label>
+                        <input type="text" id="newMissionName" placeholder="Nama misi">
+                    </div>
+                    <div class="form-group">
+                        <label>Poin</label>
+                        <input type="number" id="newMissionReward" placeholder="Poin">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Link</label>
+                    <input type="text" id="newMissionLink" placeholder="Link misi">
+                </div>
+                <button class="btn-save success" id="addMissionBtn">
+                    <i class="fas fa-plus"></i> Tambah Misi
                 </button>
             </div>
         </div>
-    </div>
 
-    <!-- QRIS Modal -->
-    <div class="modal-overlay" id="qrisModal">
-        <div class="modal-box">
-            <div class="modal-icon"><i class="fas fa-qrcode"></i></div>
-            <h3>Upgrade VIP</h3>
-            <p>Bayar Rp 10.000 via QRIS untuk mendapatkan akses VIP</p>
-            <div class="qris-placeholder">
-                <i class="fas fa-qrcode" style="font-size:80px;color:#0A0A0F;"></i>
-                <span>QRIS Midtrans</span>
-                <span class="sub">Scan untuk pembayaran</span>
-                <span class="sub" style="margin-top:4px;font-weight:700;color:#0A0A0F;">Rp 10.000</span>
-            </div>
-            <button class="modal-btn confirm" id="confirmUpgrade">Saya Sudah Bayar</button>
-            <button class="modal-btn cancel" id="closeModal">Batal</button>
-        </div>
+        <!-- Logout -->
+        <button class="btn-logout" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ============================================================
-        //  🔑 CREDENTIAL SUPABASE
-        // ============================================================
-        const SUPABASE_URL = 'https://vpslolhtabvharyiaytb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwc2xvbGh0YWJ2aGFyeWlheXRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyODgwMzAsImV4cCI6MjA5OTg2NDAzMH0.M8lByQdBkwZzYCtF-faPzeLXCkCo1TjD-gNRxXFCZPE';
-        // ============================================================
+        // ========== SUPABASE CONFIG ==========
+        const supabaseUrl = 'https://vpslolhtabvharyiaytb.supabase.co';
+        const supabaseKey = 'sb_publishable_sQoiv8Ggs4NRMpKRC0vr1A_KZ5xij1g';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let currentUser = null;
+        let currentUserId = null;
+        let isAdmin = false;
 
-        // ============================================================
-        //  STATE
-        // ============================================================
-        const state = {
-            poin: 0,
-            vip: false,
-            dailyClaimed: false,
-            userId: null,
-            isAdmin: false,
-            scrollLink: 'https://misi-nonton.com',
-            rewardPoints: {
-                yt: 10,
-                iklan: 5,
-                scroll: 8,
-                sub: 15,
-                sosmed: 10,
-                share: 20
-            },
-            missions: {
-                yt: { cooldown: false, lastDone: 0, count: 0, max: 5 },
-                iklan: { cooldown: false, lastDone: 0, count: 0, max: 5 },
-                scroll: { cooldown: false, lastDone: 0, count: 0, max: 5 },
-                sub: { cooldown: false, lastDone: 0 },
-                sosmed: { cooldown: false, lastDone: 0 },
-                share: { cooldown: false, lastDone: 0 }
-            },
-            socialMissions: [
-                { id: 'sub', name: 'Subscribe YouTube', reward: 15, icon: 'sub', link: 'https://youtube.com/channel/xxx' },
-                { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
-                { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
-            ],
-            ref: { l1: 0, l2: 0, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
-            downline: [],
-            logs: [],
-            isLoggedIn: false,
-            vipRequests: [],
-            wdRequests: []
-        };
-
-        // ============================================================
-        //  FUNGSI UTILITY
-        // ============================================================
-
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('active', show);
-        }
+        const rewardPoints = { yt: 10, iklan: 5, scroll: 8, sub: 15, sosmed: 10, share: 20 };
+        const socialMissions = [
+            { id: 'sub', name: 'Subscribe YouTube', reward: 15, icon: 'sub', link: 'https://youtube.com/channel/xxx' },
+            { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
+            { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
+        ];
+        let refBonus = { l1: 5, l2: 3, l3: 1 };
 
         function showToast(msg, isSuccess = true) {
             const container = document.getElementById('toastContainer');
@@ -2324,493 +355,338 @@
             }, 3000);
         }
 
-        function fillDemo(email, password) {
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = password;
-            showToast('✅ Akun ' + email + ' siap login!');
+        // ========== TABS ==========
+        document.querySelectorAll('.admin-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.admin-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.getElementById(`tab-${tab}`).classList.add('active');
+            });
+        });
+
+        // ========== CHECK AUTH ==========
+        async function checkAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            currentUser = session.user;
+            currentUserId = session.user.id;
+
+            const { data: userData, error } = await supabaseClient
+                .from('users').select('*').eq('id', currentUserId).single();
+
+            if (error || userData.email !== 'admin@misiononton.com' || !userData.is_vip || !userData.is_verified) {
+                showToast('❌ Akses ditolak! Hanya admin.', false);
+                setTimeout(() => window.location.href = 'index.html', 1500);
+                return;
+            }
+
+            isAdmin = true;
+            await loadAllData();
         }
 
-        // ============================================================
-        //  CEK KONEKSI SUPABASE
-        // ============================================================
-        async function checkConnection() {
+        // ========== LOAD DATA ==========
+        async function loadAllData() {
+            await Promise.all([
+                loadStats(),
+                loadUsers(),
+                loadVIPRequests(),
+                loadWDRequests(),
+                loadMissionSettings(),
+                loadBonusSettings(),
+                loadSocialMissions()
+            ]);
+        }
+
+        async function loadStats() {
             try {
-                const { error } = await supabase.from('users').select('count', { count: 'exact', head: true });
-                if (error) throw error;
-                document.getElementById('statusConnection').innerHTML =
-                    '<i class="fas fa-circle" style="color:#34D399;"></i> Terhubung ke Supabase ✅';
-                console.log('✅ Koneksi Supabase berhasil!');
-                return true;
+                const { data: users } = await supabaseClient.from('users').select('*');
+                const total = users?.length || 0;
+                const vip = users?.filter(u => u.is_vip).length || 0;
+                const poin = users?.reduce((sum, u) => sum + (u.poin || 0), 0) || 0;
+
+                const { data: vipReqs } = await supabaseClient.from('vip_requests').select('*').eq('status', 'pending');
+                const { data: wdReqs } = await supabaseClient.from('withdrawals').select('*').eq('status', 'pending');
+                const pending = (vipReqs?.length || 0) + (wdReqs?.length || 0);
+
+                document.getElementById('totalUsers').textContent = total;
+                document.getElementById('totalVip').textContent = vip;
+                document.getElementById('totalPoin').textContent = poin.toLocaleString();
+                document.getElementById('pendingRequests').textContent = pending;
+
+                document.getElementById('statTotalUsers').textContent = total;
+                document.getElementById('statVipUsers').textContent = vip;
+                document.getElementById('statTotalPoin').textContent = poin.toLocaleString();
+                document.getElementById('statPending').textContent = pending;
             } catch (error) {
-                console.error('❌ Koneksi Supabase gagal:', error.message);
-                document.getElementById('statusConnection').innerHTML =
-                    '<i class="fas fa-circle" style="color:#EF4444;"></i> Gagal koneksi: ' + error.message;
-                return false;
+                console.error('Load stats error:', error);
             }
         }
 
-        // ============================================================
-        //  LOGIN ADMIN
-        // ============================================================
-        async function loginAdmin(email, password) {
+        async function loadUsers() {
             try {
-                showLoading(true);
-
-                const hashedPassword = btoa(password);
-
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('users')
                     .select('*')
-                    .eq('email', email)
-                    .eq('password', hashedPassword)
-                    .single();
+                    .order('created_at', { ascending: false });
 
                 if (error) throw error;
-                if (!data) throw new Error('Email atau password salah');
 
-                // Cek apakah admin
-                if (!data.is_admin) {
-                    throw new Error('Anda tidak memiliki akses admin!');
-                }
-
-                state.isLoggedIn = true;
-                state.userId = data.id;
-                state.isAdmin = true;
-                state.poin = data.poin || 0;
-                state.vip = data.vip || false;
-
-                // Update IP
-                const ip = '192.168.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255);
-                await supabase
-                    .from('users')
-                    .update({ ip_address: ip })
-                    .eq('id', data.id);
-
-                showLoading(false);
-                return { success: true, user: data };
-            } catch (error) {
-                console.error('Login admin error:', error);
-                showLoading(false);
-                showToast('❌ ' + error.message, false);
-                return { success: false, error: error.message };
-            }
-        }
-
-        // ============================================================
-        //  LOAD USER DATA
-        // ============================================================
-        async function loadUserData(userId) {
-            try {
-                showLoading(true);
-
-                const { data: user } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
-
-                if (!user) {
-                    showLoading(false);
+                const container = document.getElementById('userList');
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>Belum ada user terdaftar</p></div>`;
                     return;
                 }
 
-                state.poin = user.poin || 0;
-                state.vip = user.vip || false;
-
-                // Get missions
-                const { data: missions } = await supabase
-                    .from('missions')
-                    .select('*')
-                    .eq('user_id', userId);
-
-                if (missions) {
-                    missions.forEach(m => {
-                        if (state.missions[m.type]) {
-                            state.missions[m.type].count = m.count || 0;
-                            state.missions[m.type].max = m.max_count || 5;
-                            state.missions[m.type].lastDone = m.last_done || 0;
-                        }
-                    });
-                }
-
-                // Get rewards
-                const { data: rewards } = await supabase
-                    .from('missions_rewards')
-                    .select('*');
-
-                if (rewards) {
-                    rewards.forEach(r => {
-                        if (state.rewardPoints[r.mission_type] !== undefined) {
-                            state.rewardPoints[r.mission_type] = r.reward_points;
-                        }
-                    });
-                }
-
-                // Get referral bonus
-                const { data: bonuses } = await supabase
-                    .from('referral_bonus')
-                    .select('*')
-                    .order('level');
-
-                if (bonuses) {
-                    bonuses.forEach(b => {
-                        if (b.level === 1) state.ref.bonusL1 = b.bonus_points;
-                        if (b.level === 2) state.ref.bonusL2 = b.bonus_points;
-                        if (b.level === 3) state.ref.bonusL3 = b.bonus_points;
-                    });
-                }
-
-                // Get downline
-                const { data: downline } = await supabase
-                    .from('users')
-                    .select('id, email, referral_code, created_at')
-                    .eq('referrer_id', userId);
-
-                state.downline = (downline || []).map(d => ({
-                    name: d.email?.split('@')[0] || 'User',
-                    email: d.email || '-',
-                    level: 1
-                }));
-
-                // Get VIP requests
-                const { data: vipReqs } = await supabase
-                    .from('vip_requests')
-                    .select('*, users(email)')
-                    .eq('status', 'pending');
-
-                state.vipRequests = (vipReqs || []).map(req => ({
-                    id: req.id,
-                    user_id: req.user_id,
-                    user_email: req.users?.email || 'User',
-                    status: req.status
-                }));
-
-                // Get WD requests
-                const { data: wdReqs } = await supabase
-                    .from('withdraw_requests')
-                    .select('*, users(email)')
-                    .eq('status', 'pending');
-
-                state.wdRequests = (wdReqs || []).map(req => ({
-                    id: req.id,
-                    user_id: req.user_id,
-                    user_email: req.users?.email || 'User',
-                    item: req.item,
-                    points: req.points,
-                    status: req.status
-                }));
-
-                // Get logs
-                const { data: logs } = await supabase
-                    .from('logs')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .order('created_at', { ascending: false })
-                    .limit(50);
-
-                state.logs = (logs || []).map(log => ({
-                    msg: log.message || 'Activity',
-                    time: new Date(log.created_at).toLocaleTimeString()
-                }));
-
-                // Check daily claim
-                const today = new Date().toISOString().split('T')[0];
-                const todayLog = state.logs.find(log =>
-                    log.msg === '✅ Claim daily +5 poin' &&
-                    new Date(log.time).toISOString().split('T')[0] === today
-                );
-                state.dailyClaimed = !!todayLog;
-
-                // Update UI
-                document.getElementById('userEmail').textContent = user.email || '-';
-                document.getElementById('akunRefCode').textContent = user.referral_code || '-';
-                document.getElementById('refLinkText').textContent =
-                    `https://misi-nonton.com/ref/${user.referral_code || 'ABC123'}`;
-                document.getElementById('userIP').textContent = user.ip_address || '-';
-                document.getElementById('avatarUser').innerHTML = user.email.charAt(0).toUpperCase() +
-                    '<span class="verify-badge"><i class="fas fa-check"></i></span>';
-
-                // Render admin panels
-                renderVIPRequests();
-                renderWDRequests();
-                renderAdminMissions();
-
-                updateUI();
-                showLoading(false);
+                container.innerHTML = data.map(u => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">${u.email}</div>
+                            <div class="item-sub">
+                                ${u.username || '-'} • Poin: ${u.poin || 0}
+                                <span class="badge ${u.is_vip ? 'badge-success' : 'badge-warning'}">
+                                    ${u.is_vip ? '👑 VIP' : 'Free'}
+                                </span>
+                                <span class="badge ${u.is_verified ? 'badge-success' : 'badge-danger'}">
+                                    ${u.is_verified ? '✅ Verified' : '⏳ Unverified'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </div>
+                `).join('');
             } catch (error) {
-                console.error('Load user data error:', error);
-                showLoading(false);
+                console.error('Load users error:', error);
             }
         }
 
-        // ============================================================
-        //  UI FUNCTIONS
-        // ============================================================
-        function updateUI() {
-            document.getElementById('statPoin').textContent = state.poin;
-            const todayMisi = Object.values(state.missions).filter(m => m.lastDone === new Date().toDateString()).length;
-            document.getElementById('statMisi').textContent = todayMisi;
-            document.getElementById('statVip').textContent = state.vip ? '✓' : '✕';
-            document.getElementById('vipStatusText').textContent = state.vip ? 'Aktif' : 'Tidak Aktif';
-            document.getElementById('akunVip').textContent = state.vip ? 'Aktif' : 'Tidak Aktif';
-            document.getElementById('akunPoin').textContent = state.poin;
-            document.getElementById('refL1').textContent = state.ref.l1;
-            document.getElementById('refL2').textContent = state.ref.l2;
-            document.getElementById('refL3').textContent = state.ref.l3;
-
-            const vipBtn = document.getElementById('btnUpgradeVIP');
-            if (state.vip) {
-                vipBtn.textContent = '✅ VIP';
-                vipBtn.className = 'vip-btn vip-active';
-                vipBtn.disabled = true;
-                document.getElementById('vipDesc').textContent = 'VIP Aktif • 20x/hari • 2x lipat poin';
-            } else {
-                vipBtn.textContent = 'Upgrade via QRIS';
-                vipBtn.className = 'vip-btn';
-                vipBtn.disabled = false;
-                document.getElementById('vipDesc').textContent = 'Free: 5x/hari • VIP: 20x/hari • 2x lipat poin';
-            }
-
-            const dailyStatus = document.getElementById('dailyStatus');
-            const btnDaily = document.getElementById('btnDailyClaim');
-            if (state.dailyClaimed) {
-                dailyStatus.textContent = 'Sudah claim hari ini';
-                btnDaily.disabled = true;
-                btnDaily.textContent = '✅';
-            } else {
-                dailyStatus.textContent = 'Belum claim • +5 poin';
-                btnDaily.disabled = false;
-                btnDaily.textContent = 'Claim';
-            }
-
-            updateQuotaDisplay();
-            renderSocialMissions();
-            renderDownline();
-            renderLogs();
-        }
-
-        function updateQuotaDisplay() {
-            const ytMax = state.missions.yt.max;
-            const iklanMax = state.missions.iklan.max;
-            const scrollMax = state.missions.scroll.max;
-            const ytCount = state.missions.yt.count;
-            const iklanCount = state.missions.iklan.count;
-            const scrollCount = state.missions.scroll.count;
-
-            document.getElementById('ytQuota').textContent = `${ytCount}/${ytMax}`;
-            document.getElementById('iklanQuota').textContent = `${iklanCount}/${iklanMax}`;
-            document.getElementById('scrollQuota').textContent = `${scrollCount}/${scrollMax}`;
-        }
-
-        function renderLogs() {
-            const container = document.getElementById('logContainer');
-            if (!container) return;
-            container.innerHTML = state.logs.map(log => `
-                        <div class="log-item">
-                            <span>${log.msg}</span>
-                            <span class="time">${log.time}</span>
-                        </div>
-                    `).join('');
-        }
-
-        function renderDownline() {
-            const container = document.getElementById('downlineList');
-            const totalElement = document.getElementById('totalDownline');
-            if (!container) return;
-
-            const total = state.downline.length;
-            totalElement.textContent = `Total: ${total}`;
-
-            if (total === 0) {
-                container.innerHTML = `
-                            <div class="downline-empty">
-                                <i class="fas fa-user-plus"></i>
-                                <p>Belum ada downline</p>
-                                <span style="font-size:12px;">Bagikan link referral untuk mengajak teman!</span>
-                            </div>
-                        `;
-                return;
-            }
-
-            container.innerHTML = state.downline.map(dl => `
-                        <div class="downline-item">
-                            <div class="dl-info">
-                                <div class="dl-avatar">${dl.name.charAt(0).toUpperCase()}</div>
-                                <div>
-                                    <div class="dl-name">${dl.name}</div>
-                                    <div class="dl-email">${dl.email}</div>
-                                </div>
-                            </div>
-                            <div class="dl-level">Level 1</div>
-                        </div>
-                    `).join('');
-        }
-
-        // ============================================================
-        //  ADMIN FUNCTIONS
-        // ============================================================
-
-        // --- VIP REQUESTS ---
-        function renderVIPRequests() {
-            const container = document.getElementById('vipRequests');
-            if (!container) return;
-
-            if (state.vipRequests.length === 0) {
-                container.innerHTML = `
-                            <div class="admin-mission-item">
-                                <div class="am-info">
-                                    <div class="am-title">Belum ada request</div>
-                                    <div style="font-size:11px;color:var(--text-secondary);">Menunggu user upgrade</div>
-                                </div>
-                            </div>
-                        `;
-                return;
-            }
-
-            container.innerHTML = state.vipRequests.map(req => `
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">${req.user_email} - Request VIP</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">via QRIS • menunggu verifikasi</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-approve" onclick="handleApproveVIP('${req.user_id}')"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-reject" onclick="handleRejectVIP('${req.user_id}')"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    `).join('');
-        }
-
-        async function handleApproveVIP(userId) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            showLoading(true);
-
+        async function loadVIPRequests() {
             try {
-                await supabase
-                    .from('users')
-                    .update({ vip: true })
-                    .eq('id', userId);
-
-                await supabase
+                const { data, error } = await supabaseClient
                     .from('vip_requests')
-                    .update({ status: 'approved' })
-                    .eq('user_id', userId)
-                    .eq('status', 'pending');
+                    .select('*, users(email, username)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
 
-                await supabase
-                    .from('missions')
-                    .update({ max_count: 20 })
-                    .eq('user_id', userId)
-                    .in('type', ['yt', 'iklan', 'scroll']);
+                if (error) throw error;
 
-                await addLog(userId, '👑 VIP approved by admin');
+                const container = document.getElementById('vipRequests');
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>Tidak ada request VIP</p></div>`;
+                    return;
+                }
 
-                showLoading(false);
+                container.innerHTML = data.map(req => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">${req.users?.email || 'Unknown'}</div>
+                            <div class="item-sub">Request VIP • ${req.users?.username || '-'} • <span class="badge badge-warning">Pending</span></div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="approve" onclick="approveVIP('${req.id}')"><i class="fas fa-check"></i> Approve</button>
+                            <button class="reject" onclick="rejectVIP('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load VIP requests error:', error);
+            }
+        }
+
+        async function loadWDRequests() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('withdrawals')
+                    .select('*, users(email, username)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const container = document.getElementById('wdRequests');
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>Tidak ada request WD</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = data.map(req => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <div class="item-title">${req.users?.email || 'Unknown'}</div>
+                            <div class="item-sub">
+                                ${req.type} • ${req.amount.toLocaleString()} poin
+                                <span class="badge badge-warning">Pending</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="approve" onclick="approveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
+                            <button class="reject" onclick="rejectWD('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load WD requests error:', error);
+            }
+        }
+
+        async function loadMissionSettings() {
+            try {
+                const { data, error } = await supabaseClient.from('mission_settings').select('*');
+                if (error) throw error;
+
+                data.forEach(setting => {
+                    if (rewardPoints[setting.mission_type] !== undefined) {
+                        rewardPoints[setting.mission_type] = setting.reward_points;
+                    }
+                });
+
+                document.getElementById('rewardYtInput').value = rewardPoints.yt;
+                document.getElementById('rewardIklanInput').value = rewardPoints.iklan;
+                document.getElementById('rewardScrollInput').value = rewardPoints.scroll;
+                document.getElementById('rewardSubInput').value = rewardPoints.sub;
+                document.getElementById('rewardSosmedInput').value = rewardPoints.sosmed;
+                document.getElementById('rewardShareInput').value = rewardPoints.share;
+            } catch (error) {
+                console.error('Load mission settings error:', error);
+            }
+        }
+
+        async function loadBonusSettings() {
+            try {
+                const { data, error } = await supabaseClient.from('bonus_settings').select('*');
+                if (error) throw error;
+
+                data.forEach(bonus => {
+                    if (bonus.level === 1) refBonus.l1 = bonus.bonus_points;
+                    if (bonus.level === 2) refBonus.l2 = bonus.bonus_points;
+                    if (bonus.level === 3) refBonus.l3 = bonus.bonus_points;
+                });
+
+                document.getElementById('bonusL1Input').value = refBonus.l1;
+                document.getElementById('bonusL2Input').value = refBonus.l2;
+                document.getElementById('bonusL3Input').value = refBonus.l3;
+            } catch (error) {
+                console.error('Load bonus settings error:', error);
+            }
+        }
+
+        function loadSocialMissions() {
+            const container = document.getElementById('adminMissionList');
+            if (!container) return;
+
+            container.innerHTML = socialMissions.map(m => `
+                <div class="admin-item">
+                    <div class="item-info">
+                        <div class="item-title">${m.name}</div>
+                        <div class="item-sub">+${rewardPoints[m.id] || m.reward} poin • 1x sehari</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== ADMIN ACTIONS ==========
+        window.approveVIP = async function(id) {
+            try {
+                const { data: req } = await supabaseClient
+                    .from('vip_requests').update({ status: 'approved', approved_at: new Date().toISOString() })
+                    .eq('id', id).select('user_id').single();
+
+                if (req) {
+                    await supabaseClient.from('users').update({ is_vip: true }).eq('id', req.user_id);
+                }
+
                 showToast('✅ VIP berhasil diaktifkan!');
-                await loadUserData(state.userId);
+                await loadAllData();
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal approve VIP!', false);
+                showToast('❌ Gagal approve VIP', false);
             }
-        }
+        };
 
-        async function handleRejectVIP(userId) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            showLoading(true);
-
+        window.rejectVIP = async function(id) {
             try {
-                await supabase
-                    .from('vip_requests')
-                    .update({ status: 'rejected' })
-                    .eq('user_id', userId)
-                    .eq('status', 'pending');
-
-                await addLog(userId, '❌ VIP request rejected by admin');
-
-                showLoading(false);
+                await supabaseClient.from('vip_requests').update({ status: 'rejected' }).eq('id', id);
                 showToast('❌ Request VIP ditolak');
-                await loadUserData(state.userId);
+                await loadAllData();
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal reject VIP!', false);
+                showToast('❌ Gagal reject VIP', false);
             }
-        }
+        };
 
-        // --- WD REQUESTS ---
-        function renderWDRequests() {
-            const container = document.getElementById('wdRequests');
-            if (!container) return;
-
-            if (state.wdRequests.length === 0) {
-                container.innerHTML = `
-                            <div class="admin-mission-item">
-                                <div class="am-info">
-                                    <div class="am-title">Belum ada request</div>
-                                    <div style="font-size:11px;color:var(--text-secondary);">Menunggu user WD</div>
-                                </div>
-                            </div>
-                        `;
-                return;
-            }
-
-            container.innerHTML = state.wdRequests.map(req => `
-                        <div class="admin-mission-item">
-                            <div class="am-info">
-                                <div class="am-title">${req.user_email} - ${req.item}</div>
-                                <div style="font-size:11px;color:var(--text-secondary);">${req.points} poin • pending</div>
-                            </div>
-                            <div class="am-actions">
-                                <button class="am-approve" onclick="handleApproveWD('${req.id}')"><i class="fas fa-check"></i> Approve</button>
-                                <button class="am-reject" onclick="handleRejectWD('${req.id}')"><i class="fas fa-times"></i> Tolak</button>
-                            </div>
-                        </div>
-                    `).join('');
-        }
-
-        async function handleApproveWD(requestId) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            showLoading(true);
-
+        window.approveWD = async function(id) {
             try {
-                await supabase
-                    .from('withdraw_requests')
-                    .update({ status: 'approved' })
-                    .eq('id', requestId)
-                    .eq('status', 'pending');
-
-                showLoading(false);
+                await supabaseClient.from('withdrawals').update({ status: 'approved' }).eq('id', id);
                 showToast('✅ WD disetujui!');
-                await loadUserData(state.userId);
+                await loadAllData();
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal approve WD!', false);
+                showToast('❌ Gagal approve WD', false);
             }
-        }
+        };
 
-        async function handleRejectWD(requestId) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            showLoading(true);
-
+        window.rejectWD = async function(id) {
             try {
-                await supabase
-                    .from('withdraw_requests')
-                    .update({ status: 'rejected' })
-                    .eq('id', requestId)
-                    .eq('status', 'pending');
-
-                showLoading(false);
+                await supabaseClient.from('withdrawals').update({ status: 'rejected' }).eq('id', id);
                 showToast('❌ WD ditolak');
-                await loadUserData(state.userId);
+                await loadAllData();
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal reject WD!', false);
+                showToast('❌ Gagal reject WD', false);
             }
-        }
+        };
 
-        // --- SAVE REWARDS ---
+        window.editUser = async function(id) {
+            const newPoin = prompt('Masukkan poin baru:');
+            if (newPoin !== null && !isNaN(newPoin)) {
+                try {
+                    await supabaseClient.from('users').update({ poin: parseInt(newPoin) }).eq('id', id);
+                    showToast('✅ Poin user diupdate!');
+                    await loadAllData();
+                } catch (error) {
+                    showToast('❌ Gagal update poin', false);
+                }
+            }
+        };
+
+        window.editMission = function(id) {
+            const mission = socialMissions.find(m => m.id === id);
+            if (!mission) return;
+
+            const newName = prompt('Edit nama misi:', mission.name);
+            if (newName !== null && newName !== '') mission.name = newName;
+
+            const newReward = prompt('Edit poin reward:', rewardPoints[id] || mission.reward);
+            if (newReward !== null && !isNaN(newReward)) {
+                rewardPoints[id] = parseInt(newReward);
+            }
+
+            const newLink = prompt('Edit link misi:', mission.link || '');
+            if (newLink !== null) mission.link = newLink;
+
+            loadSocialMissions();
+            showToast('✅ Misi diupdate!');
+        };
+
+        window.deleteMission = function(id) {
+            if (!confirm('Hapus misi ini?')) return;
+            const index = socialMissions.findIndex(m => m.id === id);
+            if (index !== -1) {
+                socialMissions.splice(index, 1);
+                loadSocialMissions();
+                showToast('✅ Misi dihapus!');
+            }
+        };
+
+        // ========== SAVE SETTINGS ==========
         document.getElementById('saveRewardBtn').addEventListener('click', async function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
             const yt = parseInt(document.getElementById('rewardYtInput').value);
             const iklan = parseInt(document.getElementById('rewardIklanInput').value);
             const scroll = parseInt(document.getElementById('rewardScrollInput').value);
@@ -2818,904 +694,123 @@
             const sosmed = parseInt(document.getElementById('rewardSosmedInput').value);
             const share = parseInt(document.getElementById('rewardShareInput').value);
 
-            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share) ||
-                yt < 0 || iklan < 0 || scroll < 0 || sub < 0 || sosmed < 0 || share < 0) {
+            if (isNaN(yt) || isNaN(iklan) || isNaN(scroll) || isNaN(sub) || isNaN(sosmed) || isNaN(share)) {
                 showToast('Masukkan angka yang valid!', false);
                 return;
             }
 
-            showLoading(true);
             try {
-                await supabase
-                    .from('missions_rewards')
-                    .upsert([
-                        { mission_type: 'yt', reward_points: yt },
-                        { mission_type: 'iklan', reward_points: iklan },
-                        { mission_type: 'scroll', reward_points: scroll },
-                        { mission_type: 'sub', reward_points: sub },
-                        { mission_type: 'sosmed', reward_points: sosmed },
-                        { mission_type: 'share', reward_points: share }
-                    ], { onConflict: 'mission_type' });
+                const updates = [
+                    { mission_type: 'yt', reward_points: yt },
+                    { mission_type: 'iklan', reward_points: iklan },
+                    { mission_type: 'scroll', reward_points: scroll },
+                    { mission_type: 'sub', reward_points: sub },
+                    { mission_type: 'sosmed', reward_points: sosmed },
+                    { mission_type: 'share', reward_points: share }
+                ];
 
-                state.rewardPoints.yt = yt;
-                state.rewardPoints.iklan = iklan;
-                state.rewardPoints.scroll = scroll;
-                state.rewardPoints.sub = sub;
-                state.rewardPoints.sosmed = sosmed;
-                state.rewardPoints.share = share;
+                for (const update of updates) {
+                    await supabaseClient.from('mission_settings').upsert(update, { onConflict: 'mission_type' });
+                }
 
-                state.socialMissions.find(m => m.id === 'sub').reward = sub;
-                state.socialMissions.find(m => m.id === 'sosmed').reward = sosmed;
-                state.socialMissions.find(m => m.id === 'share').reward = share;
+                rewardPoints.yt = yt;
+                rewardPoints.iklan = iklan;
+                rewardPoints.scroll = scroll;
+                rewardPoints.sub = sub;
+                rewardPoints.sosmed = sosmed;
+                rewardPoints.share = share;
 
-                document.getElementById('ytRewardDisplay').textContent = yt;
-                document.getElementById('iklanRewardDisplay').textContent = iklan;
-                document.getElementById('scrollRewardDisplay').textContent = scroll;
-                document.getElementById('subRewardDisplay').textContent = sub;
-                document.getElementById('sosmedRewardDisplay').textContent = sosmed;
-                document.getElementById('shareRewardDisplay').textContent = share;
-
-                document.querySelector('.slider-slide[data-index="0"] .slide-badge').textContent =
-                    `🎯 +${yt} / +${iklan} Poin`;
-                document.querySelector('.slider-slide[data-index="1"] .slide-badge').textContent = `📱 +${scroll} Poin`;
-                document.querySelector('.slider-slide[data-index="5"] .slide-badge').textContent =
-                    `📅 +${sub}, +${sosmed}, +${share} Poin`;
-
-                renderSocialMissions();
-                await addLog(state.userId,
-                    `⚙️ Admin update poin misi: YT=${yt}, Iklan=${iklan}, Scroll=${scroll}, Sub=${sub}, Sosmed=${sosmed}, Share=${share}`
-                    );
-                showLoading(false);
-                showToast(`✅ Poin misi berhasil diupdate!`);
+                showToast('✅ Poin misi diupdate!');
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal update poin!', false);
+                showToast('❌ Gagal update poin', false);
             }
         });
 
-        // --- SAVE BONUS ---
         document.getElementById('saveBonusBtn').addEventListener('click', async function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
             const l1 = parseInt(document.getElementById('bonusL1Input').value);
             const l2 = parseInt(document.getElementById('bonusL2Input').value);
             const l3 = parseInt(document.getElementById('bonusL3Input').value);
 
-            if (isNaN(l1) || isNaN(l2) || isNaN(l3) || l1 < 0 || l2 < 0 || l3 < 0) {
+            if (isNaN(l1) || isNaN(l2) || isNaN(l3)) {
                 showToast('Masukkan angka yang valid!', false);
                 return;
             }
 
-            showLoading(true);
             try {
-                await supabase
-                    .from('referral_bonus')
-                    .upsert([
-                        { level: 1, bonus_points: l1, direction: '2 arah' },
-                        { level: 2, bonus_points: l2, direction: '1 arah' },
-                        { level: 3, bonus_points: l3, direction: '1 arah' }
-                    ], { onConflict: 'level' });
+                const updates = [
+                    { level: 1, bonus_points: l1 },
+                    { level: 2, bonus_points: l2 },
+                    { level: 3, bonus_points: l3 }
+                ];
 
-                state.ref.bonusL1 = l1;
-                state.ref.bonusL2 = l2;
-                state.ref.bonusL3 = l3;
+                for (const update of updates) {
+                    await supabaseClient.from('bonus_settings').upsert(update, { onConflict: 'level' });
+                }
 
-                document.getElementById('bonusL1Display').textContent = `+${l1} poin/referral`;
-                document.getElementById('bonusL2Display').textContent = `+${l2} poin/referral`;
-                document.getElementById('bonusL3Display').textContent = `+${l3} poin/referral`;
+                refBonus.l1 = l1;
+                refBonus.l2 = l2;
+                refBonus.l3 = l3;
 
-                document.querySelector('.slider-slide[data-index="4"] p').innerHTML =
-                    `Dapatkan bonus dari referral! <span class="slide-highlight">Level 1: ${l1} poin • Level 2: ${l2} poin • Level 3: ${l3} poin</span>`;
-
-                await addLog(state.userId, `⚙️ Admin update bonus referral: L1=${l1}, L2=${l2}, L3=${l3}`);
-                showLoading(false);
-                showToast(`✅ Bonus referral diupdate! L1: ${l1}, L2: ${l2}, L3: ${l3}`);
+                showToast('✅ Bonus referral diupdate!');
             } catch (error) {
-                showLoading(false);
-                showToast('Gagal update bonus!', false);
+                showToast('❌ Gagal update bonus', false);
             }
         });
 
-        // --- SAVE LINKS ---
-        document.getElementById('saveAdminLinks').addEventListener('click', async function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-
+        document.getElementById('saveAdminLinks').addEventListener('click', function() {
             const ytLink = document.getElementById('adminYtLink').value;
             const scrollLink = document.getElementById('adminScrollLink').value;
             const sosmedLink = document.getElementById('adminSosmedLink').value;
             const shareLink = document.getElementById('adminShareLink').value;
 
-            showLoading(true);
-            try {
-                await supabase
-                    .from('admin_settings')
-                    .upsert([
-                        { key: 'yt_link', value: ytLink },
-                        { key: 'scroll_link', value: scrollLink },
-                        { key: 'sosmed_link', value: sosmedLink },
-                        { key: 'share_link', value: shareLink }
-                    ], { onConflict: 'key' });
+            const sub = socialMissions.find(m => m.id === 'sub');
+            const sosmed = socialMissions.find(m => m.id === 'sosmed');
+            const share = socialMissions.find(m => m.id === 'share');
 
-                state.scrollLink = scrollLink;
+            if (sub) sub.link = ytLink;
+            if (sosmed) sosmed.link = sosmedLink;
+            if (share) share.link = shareLink;
 
-                const subMission = state.socialMissions.find(m => m.id === 'sub');
-                const sosmedMission = state.socialMissions.find(m => m.id === 'sosmed');
-                const shareMission = state.socialMissions.find(m => m.id === 'share');
-
-                if (subMission) subMission.link = ytLink;
-                if (sosmedMission) sosmedMission.link = sosmedLink;
-                if (shareMission) shareMission.link = shareLink;
-
-                renderSocialMissions();
-                await addLog(state.userId, '🔧 Admin update semua link');
-                showLoading(false);
-                showToast('✅ Semua link berhasil diupdate!');
-            } catch (error) {
-                showLoading(false);
-                showToast('Gagal update link!', false);
-            }
+            loadSocialMissions();
+            showToast('✅ Link diupdate!');
         });
 
-        // --- MANAGE SOCIAL MISSIONS ---
-        function renderAdminMissions() {
-            const container = document.getElementById('adminMissionList');
-            if (!container) return;
-
-            container.innerHTML = state.socialMissions.map(m => {
-                const reward = state.rewardPoints[m.id] || m.reward;
-                return `
-                            <div class="admin-mission-item">
-                                <div class="am-info">
-                                    <div class="am-title">${m.name}</div>
-                                    <div style="font-size:11px;color:var(--text-secondary);">+${reward} poin • 1x sehari</div>
-                                    <div class="am-link"><i class="fas fa-link"></i> ${m.link || 'Tidak ada link'}</div>
-                                </div>
-                                <div class="am-actions">
-                                    <button class="am-edit" onclick="editMission('${m.id}')"><i class="fas fa-edit"></i></button>
-                                    <button class="am-delete" onclick="deleteMission('${m.id}')"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        `;
-            }).join('');
-        }
-
-        window.editMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const mission = state.socialMissions.find(m => m.id === id);
-            if (!mission) return;
-            const newName = prompt('Edit nama misi:', mission.name);
-            if (newName !== null && newName !== '') mission.name = newName;
-            const newReward = prompt('Edit poin reward:', state.rewardPoints[id] || mission.reward);
-            if (newReward !== null && !isNaN(newReward)) {
-                state.rewardPoints[id] = parseInt(newReward);
-                const displayMap = { sub: 'subRewardDisplay', sosmed: 'sosmedRewardDisplay',
-                    share: 'shareRewardDisplay' };
-                if (displayMap[id]) {
-                    document.getElementById(displayMap[id]).textContent = state.rewardPoints[id];
-                }
-            }
-            const newLink = prompt('Edit link misi:', mission.link || '');
-            if (newLink !== null) mission.link = newLink;
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`✏️ Admin edit misi: ${mission.name}`);
-            showToast('✅ Misi berhasil diupdate!');
-        };
-
-        window.deleteMission = function(id) {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            if (!confirm('Hapus misi ini?')) return;
-            state.socialMissions = state.socialMissions.filter(m => m.id !== id);
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`🗑️ Admin hapus misi`);
-            showToast('✅ Misi dihapus!');
-        };
-
         document.getElementById('addMissionBtn').addEventListener('click', function() {
-            if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            const nameInput = document.getElementById('newMissionName');
-            const rewardInput = document.getElementById('newMissionReward');
-            const linkInput = document.getElementById('newMissionLink');
-            const name = nameInput.value.trim();
-            const reward = parseInt(rewardInput.value);
-            const link = linkInput.value.trim();
+            const name = document.getElementById('newMissionName').value.trim();
+            const reward = parseInt(document.getElementById('newMissionReward').value);
+            const link = document.getElementById('newMissionLink').value.trim();
 
             if (!name || !reward) {
-                showToast('Isi nama dan poin reward!', false);
+                showToast('Isi nama dan poin!', false);
                 return;
             }
 
-            const id = 'custom_' + Date.now();
-            state.socialMissions.push({
-                id: id,
+            socialMissions.push({
+                id: 'custom_' + Date.now(),
                 name: name,
                 reward: reward,
                 icon: 'share',
                 link: link || ''
             });
-            state.missions[id] = { cooldown: false, lastDone: 0 };
-            state.rewardPoints[id] = reward;
+            rewardPoints[socialMissions[socialMissions.length - 1].id] = reward;
 
-            nameInput.value = '';
-            rewardInput.value = '';
-            linkInput.value = '';
-            renderSocialMissions();
-            renderAdminMissions();
-            addLog(`➕ Admin tambah misi: ${name} (+${reward} poin)`);
+            document.getElementById('newMissionName').value = '';
+            document.getElementById('newMissionReward').value = '';
+            document.getElementById('newMissionLink').value = '';
+
+            loadSocialMissions();
             showToast(`✅ Misi "${name}" ditambahkan!`);
         });
 
-        // --- ADD LOG ---
-        async function addLog(userId, message) {
-            try {
-                await supabase
-                    .from('logs')
-                    .insert({
-                        user_id: userId,
-                        message: message
-                    });
-            } catch (error) {
-                console.error('Add log error:', error);
-            }
-        }
-
-        function addLogLocal(msg) {
-            const time = new Date().toLocaleTimeString();
-            state.logs.unshift({ msg, time });
-            if (state.logs.length > 50) state.logs.pop();
-            renderLogs();
-        }
-
-        // ============================================================
-        //  SOCIAL MISSIONS
-        // ============================================================
-        function renderSocialMissions() {
-            const container = document.getElementById('socialMissions');
-            if (!container) return;
-
-            const iconMap = { sub: 'sub', sosmed: 'sosmed', share: 'share' };
-            const iconFa = { sub: 'fa-users', sosmed: 'fa-share-alt', share: 'fa-share' };
-            const btnText = { sub: 'Subscribe', sosmed: 'Ikuti', share: 'Share' };
-
-            container.innerHTML = state.socialMissions.map(m => {
-                const reward = state.rewardPoints[m.id] || m.reward;
-                return `
-                            <div class="mission-card" data-mission-id="${m.id}">
-                                <div class="m-icon ${iconMap[m.icon] || 'sub'}"><i class="fas ${iconFa[m.icon] || 'fa-share'}"></i></div>
-                                <div class="m-info">
-                                    <div class="m-title">${m.name}</div>
-                                    <div class="m-desc">1x sehari</div>
-                                    <div class="m-reward">+${reward} poin</div>
-                                </div>
-                                <button class="m-btn social-btn" data-mission="${m.id}">${btnText[m.icon] || 'Kerjakan'}</button>
-                            </div>
-                        `;
-            }).join('');
-
-            container.querySelectorAll('[data-mission]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const type = this.dataset.mission;
-                    const mission = state.socialMissions.find(m => m.id === type);
-                    if (mission) {
-                        if (mission.link && mission.link !== '') {
-                            window.open(mission.link, '_blank');
-                        }
-                        const reward = state.rewardPoints[type] || mission.reward;
-                        doMission(type, reward, 8, mission.name);
-                    }
-                });
-            });
-        }
-
-        // ============================================================
-        //  MISSIONS
-        // ============================================================
-        async function doMission(type, reward, duration, label) {
-            const mission = state.missions[type];
-            if (!mission) return;
-
-            if (!state.userId) {
-                showToast('Silakan login terlebih dahulu!', false);
-                return;
-            }
-
-            if (type === 'scroll') {
-                if (scrollActive) return showToast('⏳ Misi scroll sedang berjalan!');
-                startScrollMission();
-                return;
-            }
-
-            if (['sub', 'sosmed', 'share'].includes(type)) {
-                const today = new Date().toDateString();
-                if (mission.lastDone === today) {
-                    showToast('⏳ Misi ini hanya 1x sehari!', false);
-                    return;
-                }
-                const bonus = state.vip ? 2 : 1;
-                const finalReward = reward * bonus;
-                state.poin += finalReward;
-                mission.lastDone = today;
-
-                await completeMission(state.userId, type, finalReward);
-
-                updateUI();
-                addLogLocal(`✅ +${finalReward} poin dari ${label}${bonus > 1 ? ' (VIP x2)' : ''}`);
-                showToast(`+${finalReward} poin dari ${label}!`);
-                return;
-            }
-
-            if (type === 'yt' || type === 'iklan') {
-                const rewardAmount = type === 'yt' ? state.rewardPoints.yt : state.rewardPoints.iklan;
-                const labelName = type === 'yt' ? 'YouTube' : 'Iklan';
-
-                const maxCount = state.missions[type].max;
-                if (state.missions[type].count >= maxCount) {
-                    showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                    return;
-                }
-
-                startFullscreenVideo(duration, rewardAmount, labelName, async () => {
-                    const bonus = state.vip ? 2 : 1;
-                    const finalReward = rewardAmount * bonus;
-                    await completeMission(state.userId, type, finalReward);
-                    updateUI();
-                });
-            }
-        }
-
-        async function completeMission(userId, type, reward) {
-            try {
-                const { data: user } = await supabase
-                    .from('users')
-                    .select('poin')
-                    .eq('id', userId)
-                    .single();
-
-                const newPoin = (user?.poin || 0) + reward;
-
-                await supabase
-                    .from('users')
-                    .update({ poin: newPoin })
-                    .eq('id', userId);
-
-                const today = new Date().toISOString().split('T')[0];
-                const { data: mission } = await supabase
-                    .from('missions')
-                    .select('count')
-                    .eq('user_id', userId)
-                    .eq('type', type)
-                    .single();
-
-                const newCount = (mission?.count || 0) + 1;
-
-                await supabase
-                    .from('missions')
-                    .update({
-                        count: newCount,
-                        last_done: today
-                    })
-                    .eq('user_id', userId)
-                    .eq('type', type);
-
-                await addLog(userId, `✅ +${reward} poin dari ${type}`);
-
-                return { success: true };
-            } catch (error) {
-                console.error('Complete mission error:', error);
-                return { success: false };
-            }
-        }
-
-        // ============================================================
-        //  FULLSCREEN VIDEO
-        // ============================================================
-        let fsActive = false;
-        let fsInterval = null;
-        let fsRemaining = 0;
-        let fsTotal = 0;
-        let fsType = '';
-        let fsCallback = null;
-
-        function startFullscreenVideo(duration, reward, type, callback) {
-            if (fsActive) {
-                showToast('⏳ Video sedang diputar!');
-                return;
-            }
-
-            fsActive = true;
-            fsRemaining = duration;
-            fsTotal = duration;
-            fsType = type;
-            fsCallback = callback;
-
-            document.getElementById('fsTimer').textContent = `${duration}s`;
-            document.getElementById('fsProgressFill').style.width = '0%';
-            document.getElementById('fsLabel').textContent = `Menonton ${type}`;
-            document.getElementById('fsReward').textContent = `+${reward} poin${state.vip ? ' (VIP x2)' : ''}`;
-            document.getElementById('fsWarning').classList.remove('show');
-            document.getElementById('fullscreenOverlay').classList.add('active');
-
-            const videoUrl = document.getElementById('adminYtLink')?.value || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-            document.getElementById('fsVideoFrame').src = videoUrl + '?autoplay=1&rel=0&controls=0&mute=1';
-
-            let elapsed = 0;
-            fsInterval = setInterval(() => {
-                elapsed++;
-                const remaining = duration - elapsed;
-                fsRemaining = remaining;
-                document.getElementById('fsTimer').textContent = `${remaining}s`;
-                document.getElementById('fsProgressFill').style.width = `${(elapsed / duration) * 100}%`;
-
-                if (elapsed >= duration) {
-                    clearInterval(fsInterval);
-                    fsInterval = null;
-                    finishFullscreenVideo(reward, type);
-                }
-            }, 1000);
-
-            document.addEventListener('visibilitychange', handleFsVisibilityChange);
-        }
-
-        function handleFsVisibilityChange() {
-            if (document.hidden && fsActive) {
-                if (fsInterval) {
-                    clearInterval(fsInterval);
-                    fsInterval = null;
-                    document.getElementById('fsWarning').classList.add('show');
-                    document.getElementById('fsWarning').textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
-                }
-            } else if (!document.hidden && fsActive) {
-                if (!fsInterval && fsRemaining > 0) {
-                    document.getElementById('fsWarning').classList.remove('show');
-                    const remaining = fsRemaining;
-                    const total = fsTotal;
-                    const elapsed = total - remaining;
-
-                    fsInterval = setInterval(() => {
-                        const newRemaining = fsRemaining - 1;
-                        fsRemaining = newRemaining;
-                        document.getElementById('fsTimer').textContent = `${newRemaining}s`;
-                        document.getElementById('fsProgressFill').style.width = `${((total - newRemaining) / total) * 100}%`;
-
-                        if (newRemaining <= 0) {
-                            clearInterval(fsInterval);
-                            fsInterval = null;
-                            const reward = fsType === 'YouTube' ? state.rewardPoints.yt : fsType === 'Iklan' ? state
-                                .rewardPoints.iklan : 0;
-                            finishFullscreenVideo(reward, fsType);
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function finishFullscreenVideo(reward, type) {
-            fsActive = false;
-            document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-
-            if (fsInterval) {
-                clearInterval(fsInterval);
-                fsInterval = null;
-            }
-
-            document.getElementById('fullscreenOverlay').classList.remove('active');
-            document.getElementById('fsVideoFrame').src = 'about:blank';
-
-            if (fsCallback) {
-                fsCallback();
-                fsCallback = null;
-            }
-        }
-
-        document.getElementById('fsCloseBtn').addEventListener('click', function() {
-            if (fsActive) {
-                if (confirm('Batalkan misi? Poin tidak akan didapatkan.')) {
-                    fsActive = false;
-                    document.removeEventListener('visibilitychange', handleFsVisibilityChange);
-                    if (fsInterval) {
-                        clearInterval(fsInterval);
-                        fsInterval = null;
-                    }
-                    document.getElementById('fullscreenOverlay').classList.remove('active');
-                    document.getElementById('fsVideoFrame').src = 'about:blank';
-                    showToast('⏹️ Misi dibatalkan');
-                }
-            }
+        // ========== LOGOUT ==========
+        document.getElementById('btnLogout').addEventListener('click', async function() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
         });
 
-        // ============================================================
-        //  SCROLL MISSION
-        // ============================================================
-        let scrollActive = false;
-        let scrollInterval = null;
-        let scrollRemaining = 0;
-        let scrollTotal = 10;
-
-        function startScrollMission() {
-            if (scrollActive) {
-                showToast('⏳ Misi scroll sedang berjalan!');
-                return;
-            }
-
-            const maxCount = state.missions.scroll.max;
-            if (state.missions.scroll.count >= maxCount) {
-                showToast(`⏳ Batas ${maxCount}x hari ini tercapai!`);
-                return;
-            }
-
-            const scrollUrl = document.getElementById('adminScrollLink')?.value || state.scrollLink;
-            document.getElementById('scrollIframe').src = scrollUrl;
-
-            scrollActive = true;
-            scrollRemaining = scrollTotal;
-
-            document.getElementById('scrollTimer').textContent = `${scrollRemaining}s`;
-            document.getElementById('scrollProgressFill').style.width = '0%';
-            document.getElementById('scrollReward').textContent = `+${state.rewardPoints.scroll} poin${state.vip ? ' (VIP x2)' : ''}`;
-            document.getElementById('scrollWarning').classList.remove('show');
-            document.getElementById('scrollOverlay').classList.add('active');
-
-            let elapsed = 0;
-            scrollInterval = setInterval(() => {
-                elapsed++;
-                const remaining = scrollTotal - elapsed;
-                scrollRemaining = remaining;
-                document.getElementById('scrollTimer').textContent = `${remaining}s`;
-                document.getElementById('scrollProgressFill').style.width = `${(elapsed / scrollTotal) * 100}%`;
-
-                if (elapsed >= scrollTotal) {
-                    clearInterval(scrollInterval);
-                    scrollInterval = null;
-                    finishScrollMission();
-                }
-            }, 1000);
-
-            document.addEventListener('visibilitychange', handleScrollVisibilityChange);
-        }
-
-        function handleScrollVisibilityChange() {
-            if (document.hidden && scrollActive) {
-                if (scrollInterval) {
-                    clearInterval(scrollInterval);
-                    scrollInterval = null;
-                    document.getElementById('scrollWarning').classList.add('show');
-                    document.getElementById('scrollWarning').textContent = '⚠️ Jangan tutup layar! Timer berhenti sementara';
-                }
-            } else if (!document.hidden && scrollActive) {
-                if (!scrollInterval && scrollRemaining > 0) {
-                    document.getElementById('scrollWarning').classList.remove('show');
-                    const remaining = scrollRemaining;
-                    const total = scrollTotal;
-                    const elapsed = total - remaining;
-
-                    scrollInterval = setInterval(() => {
-                        const newRemaining = scrollRemaining - 1;
-                        scrollRemaining = newRemaining;
-                        document.getElementById('scrollTimer').textContent = `${newRemaining}s`;
-                        document.getElementById('scrollProgressFill').style.width = `${((total - newRemaining) / total) * 100}%`;
-
-                        if (newRemaining <= 0) {
-                            clearInterval(scrollInterval);
-                            scrollInterval = null;
-                            finishScrollMission();
-                        }
-                    }, 1000);
-                }
-            }
-        }
-
-        function finishScrollMission() {
-            scrollActive = false;
-            document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-
-            if (scrollInterval) {
-                clearInterval(scrollInterval);
-                scrollInterval = null;
-            }
-
-            const bonus = state.vip ? 2 : 1;
-            const finalReward = state.rewardPoints.scroll * bonus;
-            state.poin += finalReward;
-            state.missions.scroll.count++;
-
-            document.getElementById('scrollOverlay').classList.remove('active');
-            document.getElementById('scrollIframe').src = 'about:blank';
-
-            updateUI();
-            addLogLocal(`✅ +${finalReward} poin dari Scroll${bonus > 1 ? ' (VIP x2)' : ''}`);
-            showToast(`+${finalReward} poin dari Scroll!`);
-        }
-
-        document.getElementById('scrollCloseBtn').addEventListener('click', function() {
-            if (scrollActive) {
-                if (confirm('Batalkan misi scroll? Poin tidak akan didapatkan.')) {
-                    scrollActive = false;
-                    document.removeEventListener('visibilitychange', handleScrollVisibilityChange);
-                    if (scrollInterval) {
-                        clearInterval(scrollInterval);
-                        scrollInterval = null;
-                    }
-                    document.getElementById('scrollOverlay').classList.remove('active');
-                    document.getElementById('scrollIframe').src = 'about:blank';
-                    showToast('⏹️ Misi scroll dibatalkan');
-                }
-            }
-        });
-
-        // ============================================================
-        //  SLIDER
-        // ============================================================
-        const slides = document.querySelectorAll('.slider-slide');
-        const sliderDots = document.getElementById('sliderDots');
-        const totalSlides = slides.length;
-        let sliderIndex = 0;
-        let sliderInterval = null;
-
-        function initSlider() {
-            sliderDots.innerHTML = '';
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-                dot.dataset.index = i;
-                dot.addEventListener('click', () => goToSlide(i));
-                sliderDots.appendChild(dot);
-            }
-            startSliderAuto();
-        }
-
-        function goToSlide(index) {
-            const oldIndex = sliderIndex;
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active', 'exit');
-                if (i === index) {
-                    slide.classList.add('active');
-                } else if (i === oldIndex) {
-                    slide.classList.add('exit');
-                }
-            });
-            sliderIndex = index;
-            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-            resetSliderAuto();
-        }
-
-        function startSliderAuto() {
-            if (sliderInterval) clearInterval(sliderInterval);
-            sliderInterval = setInterval(() => {
-                const next = (sliderIndex + 1) % totalSlides;
-                goToSlide(next);
-            }, 4000);
-        }
-
-        function resetSliderAuto() {
-            if (sliderInterval) {
-                clearInterval(sliderInterval);
-                startSliderAuto();
-            }
-        }
-
-        document.getElementById('sliderNext').addEventListener('click', () => {
-            const next = (sliderIndex + 1) % totalSlides;
-            goToSlide(next);
-        });
-        document.getElementById('sliderPrev').addEventListener('click', () => {
-            const prev = (sliderIndex - 1 + totalSlides) % totalSlides;
-            goToSlide(prev);
-        });
-
-        // ============================================================
-        //  EVENT LISTENERS
-        // ============================================================
-
-        // --- LOGIN ADMIN ---
-        document.getElementById('btnLogin').addEventListener('click', async function() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                showToast('Masukkan email dan password!', false);
-                return;
-            }
-
-            const result = await loginAdmin(email, password);
-
-            if (result.success) {
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('appMain').classList.add('active');
-                await loadUserData(result.user.id);
-                showToast('✅ Selamat datang Admin!');
-                initSlider();
-            }
-        });
-
-        // Enter key
-        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') document.getElementById('btnLogin').click();
-        });
-        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') document.getElementById('btnLogin').click();
-        });
-
-        // --- DAILY CLAIM ---
-        document.getElementById('btnDailyClaim').addEventListener('click', async function() {
-            if (state.dailyClaimed) return showToast('Sudah claim hari ini!', false);
-            if (!state.userId) return showToast('Silakan login terlebih dahulu!', false);
-
-            try {
-                const today = new Date().toISOString().split('T')[0];
-
-                const { data: user } = await supabase
-                    .from('users')
-                    .select('poin')
-                    .eq('id', state.userId)
-                    .single();
-
-                await supabase
-                    .from('users')
-                    .update({ poin: (user?.poin || 0) + 5 })
-                    .eq('id', state.userId);
-
-                await addLog(state.userId, '✅ Claim daily +5 poin');
-
-                state.poin += 5;
-                state.dailyClaimed = true;
-                updateUI();
-                showToast('🎉 +5 poin daily claim!');
-            } catch (error) {
-                showToast('Gagal claim daily!', false);
-            }
-        });
-
-        // --- UPGRADE VIP ---
-        document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
-            if (state.vip) {
-                showToast('👑 Anda sudah VIP!');
-                return;
-            }
-            if (!state.userId) {
-                showToast('Silakan login terlebih dahulu!', false);
-                return;
-            }
-            document.getElementById('qrisModal').classList.add('active');
-        });
-
-        document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('qrisModal').classList.remove('active');
-        });
-
-        document.getElementById('confirmUpgrade').addEventListener('click', async function() {
-            if (!state.userId) {
-                showToast('Silakan login terlebih dahulu!', false);
-                return;
-            }
-
-            try {
-                await supabase
-                    .from('vip_requests')
-                    .insert({
-                        user_id: state.userId,
-                        status: 'pending'
-                    });
-
-                await addLog(state.userId, '💳 Request upgrade VIP via QRIS - menunggu verifikasi admin');
-
-                document.getElementById('qrisModal').classList.remove('active');
-                showToast('✅ Pembayaran berhasil! Menunggu verifikasi admin.');
-                await loadUserData(state.userId);
-            } catch (error) {
-                showToast('Gagal request VIP!', false);
-            }
-        });
-
-        // --- WITHDRAW ---
-        document.querySelectorAll('[data-redeem]').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const type = this.dataset.redeem;
-                const costs = { pulsa: 10000, uang: 10000, pulsa20: 20000 };
-                const names = { pulsa: 'Pulsa 10K', uang: 'Uang 10K', pulsa20: 'Pulsa 20K' };
-                const cost = costs[type];
-                const name = names[type];
-
-                if (!state.userId) {
-                    showToast('Silakan login terlebih dahulu!', false);
-                    return;
-                }
-
-                if (state.poin < cost) {
-                    showToast(`Butuh ${cost.toLocaleString()} poin!`, false);
-                    return;
-                }
-
-                try {
-                    const { data: user } = await supabase
-                        .from('users')
-                        .select('poin')
-                        .eq('id', state.userId)
-                        .single();
-
-                    await supabase
-                        .from('users')
-                        .update({ poin: (user?.poin || 0) - cost })
-                        .eq('id', state.userId);
-
-                    await supabase
-                        .from('withdraw_requests')
-                        .insert({
-                            user_id: state.userId,
-                            item: name,
-                            points: cost,
-                            status: 'pending'
-                        });
-
-                    await addLog(state.userId,
-                        `💳 Request WD ${name} - ${cost} poin (pending approval)`);
-
-                    state.poin -= cost;
-                    updateUI();
-                    showToast(`✅ Request WD ${name} terkirim! Menunggu approval admin.`);
-                } catch (error) {
-                    showToast('Gagal request WD!', false);
-                }
-            });
-        });
-
-        // --- COPY REFERRAL LINK ---
-        document.getElementById('copyRefLink').addEventListener('click', function() {
-            const text = document.getElementById('refLinkText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 Link referral dicopy!');
-            }).catch(() => {
-                showToast('Salin manual: ' + text);
-            });
-        });
-
-        // --- LOGOUT ---
-        document.getElementById('btnLogout').addEventListener('click', function() {
-            state.isLoggedIn = false;
-            state.userId = null;
-            document.getElementById('appMain').classList.remove('active');
-            document.getElementById('loginPage').style.display = 'flex';
-            showToast('🚪 Logout berhasil');
-        });
-
-        // --- NAVIGATION ---
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                this.classList.add('active');
-                const page = this.dataset.page;
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(`page-${page}`).classList.add('active');
-            });
-        });
-
-        // --- DASHBOARD MISSIONS ---
-        document.querySelectorAll('#dashboardMissions [data-mission]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const type = this.dataset.mission;
-                const missions = {
-                    yt: { reward: state.rewardPoints.yt, duration: 15, label: 'YouTube' },
-                    iklan: { reward: state.rewardPoints.iklan, duration: 15, label: 'Iklan' },
-                    scroll: { reward: state.rewardPoints.scroll, duration: 10, label: 'Scroll' }
-                };
-                const m = missions[type];
-                if (m) doMission(type, m.reward, m.duration, m.label);
-            });
-        });
-
-        // ============================================================
-        //  INIT
-        // ============================================================
-
-        // Cek koneksi Supabase
-        checkConnection();
-
-        console.log('🚀 MisiNonton Admin Panel siap!');
-        console.log('📱 Koneksi Supabase: ' + SUPABASE_URL);
-        console.log('🔑 Admin: admin@misi-nonton.com / admin123');
-        console.log('💡 Login menggunakan akun admin di atas');
+        // ========== INIT ==========
+        checkAuth();
+        console.log('🚀 Admin Dashboard connected to Supabase!');
     </script>
 </body>
 </html>
