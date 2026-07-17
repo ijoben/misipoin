@@ -16,13 +16,62 @@
 
         .container { max-width: 480px; margin: 0 auto; padding: 0 16px 90px 16px; position: relative; z-index: 1; }
 
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; margin-bottom: 8px; border-bottom: 1px solid var(--border-color); }
-        .logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--secondary), #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo i { -webkit-text-fill-color: var(--secondary); margin-right: 8px; }
-        .header-actions { display: flex; gap: 8px; }
-        .header-actions a { color: var(--text-secondary); text-decoration: none; font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border-color); transition: 0.3s; }
-        .header-actions a:hover { background: rgba(255,255,255,0.05); border-color: var(--secondary); }
+        /* ========== HEADER DENGAN LOGOUT ========== */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 16px 0; 
+            margin-bottom: 8px; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        .logo { 
+            font-size: 20px; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, var(--secondary), #F59E0B); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        .logo i { 
+            -webkit-text-fill-color: var(--secondary); 
+            margin-right: 8px; 
+        }
+        
+        /* Header Right - Tombol Beranda & Logout */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header-right .header-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+            cursor: pointer;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-right .header-btn:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--secondary);
+        }
+        .header-right .header-btn.logout-btn {
+            color: #EF4444;
+            border-color: rgba(239,68,68,0.2);
+        }
+        .header-right .header-btn.logout-btn:hover {
+            background: rgba(239,68,68,0.1);
+            border-color: #EF4444;
+        }
+        .header-right .header-btn i {
+            font-size: 14px;
+        }
 
         /* Stats Admin */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
@@ -101,6 +150,8 @@
             .form-row { grid-template-columns: 1fr; }
             .nav-item span { font-size: 6px; }
             .nav-item i { font-size: 14px; }
+            .header-right .header-btn { font-size: 11px; padding: 6px 8px; }
+            .header-right .header-btn span { display: none; }
         }
     </style>
 </head>
@@ -110,11 +161,18 @@
     <div class="glow-orb glow-orb-2"></div>
 
     <div class="container">
-        <!-- Header -->
+        <!-- ========== HEADER DENGAN LOGOUT DI KANAN ATAS ========== -->
         <div class="header">
             <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
-            <div class="header-actions">
-                <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+            <div class="header-right">
+                <a href="index.html" class="header-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Beranda</span>
+                </a>
+                <button class="header-btn logout-btn" id="btnLogout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
             </div>
         </div>
 
@@ -312,6 +370,20 @@
                 const target = document.getElementById(`page-${page}`);
                 if (target) target.classList.add('active');
             });
+        });
+
+        // ========== LOGOUT ==========
+        document.getElementById('btnLogout').addEventListener('click', async function() {
+            try {
+                await supabaseClient.auth.signOut();
+                showToast('🚪 Logout berhasil!');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 500);
+            } catch (error) {
+                showToast('❌ Gagal logout', false);
+                console.error('Logout error:', error);
+            }
         });
 
         // ========== CHECK AUTH ==========
@@ -663,16 +735,11 @@
             showToast(`✅ Misi "${name}" ditambahkan!`);
         });
 
-        // ========== LOGOUT ==========
-        document.getElementById('btnLogout')?.addEventListener('click', async function() {
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
-        });
-
         // ========== INIT ==========
         checkAuth();
         console.log('🚀 Admin Dashboard connected!');
         console.log('📋 Bottom Nav: Statistik | Deposit | WD | Kelola Misi | Setting');
+        console.log('👤 Klik Logout di kanan atas untuk keluar');
     </script>
 </body>
 </html>
