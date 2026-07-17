@@ -1569,11 +1569,11 @@
             <div id="loginForm">
                 <div class="input-group">
                     <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="loginEmail" placeholder="masukkan email anda">
+                    <input type="email" id="loginEmail" placeholder="masukkan email anda" value="user@demo.com">
                 </div>
                 <div class="input-group">
                     <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••">
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="password123">
                 </div>
                 <button class="btn-login" id="btnLogin">
                     <i class="fas fa-arrow-right"></i> Masuk
@@ -1677,7 +1677,7 @@
             <!-- PAGES -->
             <!-- DASHBOARD -->
             <div class="page active" id="page-dashboard">
-                <!-- ========== SLIDER CAROUSEL ========== -->
+                <!-- SLIDER CAROUSEL -->
                 <div class="slider-wrapper">
                     <div class="slider-container" id="sliderContainer">
                         <div class="slider-slide active" data-index="0">
@@ -1718,10 +1718,7 @@
                         </div>
                     </div>
 
-                    <!-- Dots -->
                     <div class="slider-controls" id="sliderDots"></div>
-
-                    <!-- Arrows -->
                     <div class="slider-arrows">
                         <button class="slider-arrow" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
                         <button class="slider-arrow" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
@@ -1936,12 +1933,10 @@
                     </div>
                 </div>
 
-                <!-- Admin Toggle Button -->
                 <button class="admin-toggle-btn" id="toggleAdminMode">
                     <i class="fas fa-shield-alt"></i> Aktifkan Mode Admin
                 </button>
 
-                <!-- Admin Panel - Verifikasi & Approve VIP -->
                 <div class="admin-panel" id="adminVipPanel">
                     <h4><i class="fas fa-crown"></i> Verifikasi & Approve VIP</h4>
                     <div id="vipRequests">
@@ -1954,7 +1949,6 @@
                     </div>
                 </div>
 
-                <!-- Admin Panel - Setting Poin Misi -->
                 <div class="admin-panel" id="adminRewardPanel">
                     <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
                     <label class="sub-label">YouTube (default: 10)</label>
@@ -1974,7 +1968,6 @@
                     </button>
                 </div>
 
-                <!-- Admin Panel - Kelola Misi Sosial -->
                 <div class="admin-panel" id="adminSocialPanel">
                     <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
                     <div id="adminMissionList"></div>
@@ -1990,7 +1983,6 @@
                     </div>
                 </div>
 
-                <!-- Admin Panel - Setting Bonus Referral -->
                 <div class="admin-panel" id="adminBonusPanel">
                     <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
                     <label class="sub-label">Level 1 (2 arah)</label>
@@ -2004,7 +1996,6 @@
                     </button>
                 </div>
 
-                <!-- Admin Panel - Approve WD -->
                 <div class="admin-panel" id="adminWdPanel">
                     <h4><i class="fas fa-check-circle"></i> Approve WD</h4>
                     <div id="wdRequests">
@@ -2017,7 +2008,6 @@
                     </div>
                 </div>
 
-                <!-- Admin Panel - Link Settings -->
                 <div class="admin-panel" id="adminLinkPanel">
                     <h4><i class="fas fa-link"></i> Link Settings</h4>
                     <label class="sub-label">Link YouTube (untuk fullscreen)</label>
@@ -2087,7 +2077,7 @@
         // ========== SUPABASE CONFIG ==========
         const supabaseUrl = 'https://vpslolhtabvharyiaytb.supabase.co';
         const supabaseKey = 'sb_publishable_sQoiv8Ggs4NRMpKRC0vr1A_KZ5xij1g';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         // ========== STATE ==========
         const state = {
@@ -2119,19 +2109,8 @@
                 { id: 'sosmed', name: 'Follow Sosmed', reward: 10, icon: 'sosmed', link: 'https://instagram.com/xxx' },
                 { id: 'share', name: 'Share', reward: 20, icon: 'share', link: 'https://twitter.com/xxx' }
             ],
-            ref: { 
-                l1: 0, 
-                l2: 0, 
-                l3: 0,
-                bonusL1: 5,
-                bonusL2: 3,
-                bonusL3: 1
-            },
+            ref: { l1: 0, l2: 0, l3: 0, bonusL1: 5, bonusL2: 3, bonusL3: 1 },
             logs: [],
-            videoRunning: false,
-            isLoggedIn: false,
-            wdRequests: [],
-            vipRequests: [],
             fsActive: false,
             fsInterval: null,
             fsRemaining: 0,
@@ -2142,7 +2121,6 @@
             scrollInterval: null,
             scrollRemaining: 0,
             scrollTotal: 10,
-            scrollCallback: null,
             sliderIndex: 0,
             sliderInterval: null
         };
@@ -2208,11 +2186,8 @@
             const oldIndex = state.sliderIndex;
             slides.forEach((slide, i) => {
                 slide.classList.remove('active', 'exit');
-                if (i === index) {
-                    slide.classList.add('active');
-                } else if (i === oldIndex) {
-                    slide.classList.add('exit');
-                }
+                if (i === index) slide.classList.add('active');
+                else if (i === oldIndex) slide.classList.add('exit');
             });
             state.sliderIndex = index;
             document.querySelectorAll('.slider-dot').forEach((dot, i) => {
@@ -2222,13 +2197,11 @@
         }
 
         function nextSlide() {
-            const next = (state.sliderIndex + 1) % totalSlides;
-            goToSlide(next);
+            goToSlide((state.sliderIndex + 1) % totalSlides);
         }
 
         function prevSlide() {
-            const prev = (state.sliderIndex - 1 + totalSlides) % totalSlides;
-            goToSlide(prev);
+            goToSlide((state.sliderIndex - 1 + totalSlides) % totalSlides);
         }
 
         function startSliderAuto() {
@@ -2243,8 +2216,8 @@
             }
         }
 
-        document.getElementById('sliderNext')?.addEventListener('click', nextSlide);
-        document.getElementById('sliderPrev')?.addEventListener('click', prevSlide);
+        document.getElementById('sliderNext').addEventListener('click', nextSlide);
+        document.getElementById('sliderPrev').addEventListener('click', prevSlide);
 
         // ========== LOGIN TABS ==========
         document.querySelectorAll('.login-tabs button').forEach(btn => {
@@ -2259,7 +2232,6 @@
 
         // ========== AUTH FUNCTIONS ==========
 
-        // === GET USER IP ===
         async function getUserIP() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
@@ -2271,26 +2243,21 @@
             }
         }
 
-        // === CHECK IP BLOCKED ===
         async function checkIPBlocked(ip) {
             try {
-                const { data, error } = await supabase
+                const { data } = await supabaseClient
                     .from('ip_blocklist')
                     .select('*')
                     .eq('ip_address', ip)
                     .single();
                 return !!data;
-            } catch {
-                return false;
-            }
+            } catch { return false; }
         }
 
-        // === LOGIN ===
         async function loginUser(email, password) {
             try {
-                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
+                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
+                    email, password
                 });
 
                 if (authError) throw authError;
@@ -2298,28 +2265,22 @@
                 currentUser = authData.user;
                 currentUserId = authData.user.id;
 
-                // Get user data
-                const { data: userData, error: userError } = await supabase
+                const { data: userData, error: userError } = await supabaseClient
                     .from('users')
                     .select('*')
                     .eq('id', currentUserId)
                     .single();
 
                 if (userError) {
-                    // Create user profile if not exists
-                    const { data: newUser, error: insertError } = await supabase
+                    const { error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             id: currentUserId, 
                             email: email,
                             username: email.split('@')[0],
                             is_verified: authData.user.email_confirmed_at ? true : false
-                        }])
-                        .select()
-                        .single();
-
+                        }]);
                     if (insertError) throw insertError;
-                    
                     state.poin = 0;
                     state.vip = false;
                     state.isVerified = authData.user.email_confirmed_at ? true : false;
@@ -2327,30 +2288,27 @@
                     state.poin = userData.poin || 0;
                     state.vip = userData.is_vip || false;
                     state.isVerified = userData.is_verified || false;
-                    
                     document.getElementById('userUsername').textContent = userData.username || '-';
                     document.getElementById('userEmail').textContent = userData.email;
                     document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
+                    document.getElementById('refLinkText').textContent = 
+                        `https://misi-nonton.com/ref/${userData.referral_code || 'ABC123'}`;
                 }
 
-                // Check daily claim
                 const today = new Date().toISOString().split('T')[0];
-                const { data: dailyData } = await supabase
+                const { data: dailyData } = await supabaseClient
                     .from('daily_claims')
                     .select('*')
                     .eq('user_id', currentUserId)
                     .eq('claim_date', today)
                     .single();
-
                 state.dailyClaimed = dailyData?.claimed || false;
 
-                // Load data
                 await loadMissions();
                 await loadReferrals();
                 await loadMissionSettings();
                 await loadBonusSettings();
 
-                // Update UI
                 updateUI();
                 addLog(`✅ Login sebagai ${email}`);
                 showToast(`✅ Selamat datang, ${email}!`);
@@ -2365,19 +2323,16 @@
             }
         }
 
-        // === REGISTER ===
         async function registerUser(email, password, username, referralCode) {
             try {
-                const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email: email,
-                    password: password
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                    email, password
                 });
 
                 if (authError) throw authError;
 
                 if (authData.user) {
-                    // Create user profile
-                    const { error: insertError } = await supabase
+                    const { error: insertError } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             id: authData.user.id, 
@@ -2388,16 +2343,15 @@
 
                     if (insertError) throw insertError;
 
-                    // Handle referral if provided
                     if (referralCode) {
-                        const { data: referrer } = await supabase
+                        const { data: referrer } = await supabaseClient
                             .from('users')
                             .select('id')
                             .eq('referral_code', referralCode)
                             .single();
 
                         if (referrer) {
-                            await supabase
+                            await supabaseClient
                                 .from('referrals')
                                 .insert([{
                                     referrer_id: referrer.id,
@@ -2418,21 +2372,16 @@
             }
         }
 
-        // === LOAD MISSIONS ===
         async function loadMissions() {
             if (!currentUserId) return;
-
             const today = new Date().toISOString().split('T')[0];
-            
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('missions')
                 .select('*')
                 .eq('user_id', currentUserId)
                 .eq('completed_at', today);
-
             if (error) return;
 
-            // Reset daily counts
             ['yt', 'iklan', 'scroll', 'sub', 'sosmed', 'share'].forEach(type => {
                 if (state.missions[type]) {
                     state.missions[type].count = 0;
@@ -2446,18 +2395,15 @@
                     state.missions[m.type].lastDone = m.last_done;
                 }
             });
-
             updateQuotaDisplay();
         }
 
-        // === SAVE MISSION ===
         async function saveMission(type, reward) {
             if (!currentUserId) return false;
-
             const today = new Date().toISOString().split('T')[0];
 
             try {
-                const { data: existing, error: checkError } = await supabase
+                const { data: existing } = await supabaseClient
                     .from('missions')
                     .select('id, count_today')
                     .eq('user_id', currentUserId)
@@ -2465,34 +2411,18 @@
                     .eq('completed_at', today)
                     .single();
 
-                if (checkError && checkError.code !== 'PGRST116') throw checkError;
-
                 if (existing) {
-                    await supabase
+                    await supabaseClient
                         .from('missions')
-                        .update({
-                            count_today: existing.count_today + 1,
-                            last_done: new Date().toISOString()
-                        })
+                        .update({ count_today: existing.count_today + 1, last_done: new Date().toISOString() })
                         .eq('id', existing.id);
                 } else {
-                    await supabase
+                    await supabaseClient
                         .from('missions')
-                        .insert([{
-                            user_id: currentUserId,
-                            type: type,
-                            completed_at: today,
-                            count_today: 1,
-                            last_done: new Date().toISOString()
-                        }]);
+                        .insert([{ user_id: currentUserId, type, completed_at: today, count_today: 1, last_done: new Date().toISOString() }]);
                 }
 
-                // Update user poin
-                await supabase
-                    .from('users')
-                    .update({ poin: state.poin })
-                    .eq('id', currentUserId);
-
+                await supabaseClient.from('users').update({ poin: state.poin }).eq('id', currentUserId);
                 return true;
             } catch (error) {
                 console.error('Save mission error:', error);
@@ -2500,28 +2430,21 @@
             }
         }
 
-        // === UPDATE USER POIN ===
         async function updateUserPoin() {
             if (!currentUserId) return;
-
             try {
-                await supabase
-                    .from('users')
-                    .update({ poin: state.poin })
-                    .eq('id', currentUserId);
+                await supabaseClient.from('users').update({ poin: state.poin }).eq('id', currentUserId);
             } catch (error) {
                 console.error('Update poin error:', error);
             }
         }
 
-        // === DAILY CLAIM ===
         async function claimDaily() {
             if (!currentUserId) return false;
-
             const today = new Date().toISOString().split('T')[0];
 
             try {
-                const { data: existing } = await supabase
+                const { data: existing } = await supabaseClient
                     .from('daily_claims')
                     .select('id')
                     .eq('user_id', currentUserId)
@@ -2533,13 +2456,9 @@
                     return false;
                 }
 
-                await supabase
+                await supabaseClient
                     .from('daily_claims')
-                    .insert([{
-                        user_id: currentUserId,
-                        claim_date: today,
-                        claimed: true
-                    }]);
+                    .insert([{ user_id: currentUserId, claim_date: today, claimed: true }]);
 
                 state.poin += 5;
                 await updateUserPoin();
@@ -2554,26 +2473,24 @@
             }
         }
 
-        // === LOAD REFERRALS ===
         async function loadReferrals() {
             if (!currentUserId) return;
-
             try {
-                const { data: l1 } = await supabase
+                const { data: l1 } = await supabaseClient
                     .from('referrals')
                     .select('*')
                     .eq('referrer_id', currentUserId)
                     .eq('level', 1);
                 state.ref.l1 = l1?.length || 0;
 
-                const { data: l2 } = await supabase
+                const { data: l2 } = await supabaseClient
                     .from('referrals')
                     .select('*')
                     .eq('referrer_id', currentUserId)
                     .eq('level', 2);
                 state.ref.l2 = l2?.length || 0;
 
-                const { data: l3 } = await supabase
+                const { data: l3 } = await supabaseClient
                     .from('referrals')
                     .select('*')
                     .eq('referrer_id', currentUserId)
@@ -2586,13 +2503,11 @@
             }
         }
 
-        // === LOAD MISSION SETTINGS ===
         async function loadMissionSettings() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('mission_settings')
                     .select('*');
-
                 if (error) throw error;
 
                 data.forEach(setting => {
@@ -2603,20 +2518,17 @@
                         state.missions[setting.mission_type].max = setting.max_daily || 5;
                     }
                 });
-
                 updateUI();
             } catch (error) {
                 console.error('Load mission settings error:', error);
             }
         }
 
-        // === LOAD BONUS SETTINGS ===
         async function loadBonusSettings() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('bonus_settings')
                     .select('*');
-
                 if (error) throw error;
 
                 data.forEach(bonus => {
@@ -2624,29 +2536,23 @@
                     if (bonus.level === 2) state.ref.bonusL2 = bonus.bonus_points;
                     if (bonus.level === 3) state.ref.bonusL3 = bonus.bonus_points;
                 });
-
                 updateUI();
             } catch (error) {
                 console.error('Load bonus settings error:', error);
             }
         }
 
-        // === REQUEST VIP ===
         async function requestVIP() {
             if (!currentUserId) return false;
-
             if (state.poin < 10000) {
                 showToast('Poin tidak cukup! Butuh 10.000 poin', false);
                 return false;
             }
 
             try {
-                await supabase
+                await supabaseClient
                     .from('vip_requests')
-                    .insert([{
-                        user_id: currentUserId,
-                        status: 'pending'
-                    }]);
+                    .insert([{ user_id: currentUserId, status: 'pending' }]);
 
                 state.poin -= 10000;
                 await updateUserPoin();
@@ -2661,24 +2567,17 @@
             }
         }
 
-        // === REQUEST WITHDRAWAL ===
         async function requestWithdrawal(type, amount) {
             if (!currentUserId) return false;
-
             if (state.poin < amount) {
                 showToast(`Butuh ${amount.toLocaleString()} poin!`, false);
                 return false;
             }
 
             try {
-                await supabase
+                await supabaseClient
                     .from('withdrawals')
-                    .insert([{
-                        user_id: currentUserId,
-                        amount: amount,
-                        type: type,
-                        status: 'pending'
-                    }]);
+                    .insert([{ user_id: currentUserId, amount, type, status: 'pending' }]);
 
                 state.poin -= amount;
                 await updateUserPoin();
@@ -2693,10 +2592,9 @@
             }
         }
 
-        // === LOGOUT ===
         async function logout() {
             try {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 currentUser = null;
                 currentUserId = null;
                 appMain.classList.remove('active');
@@ -3100,7 +2998,12 @@
                 return;
             }
 
-            await loginUser(email, password);
+            const success = await loginUser(email, password);
+            if (success) {
+                loginPage.style.display = 'none';
+                appMain.classList.add('active');
+                initSlider();
+            }
             
             this.disabled = false;
             this.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
@@ -3169,7 +3072,7 @@
         });
 
         // === VIP UPGRADE ===
-        document.getElementById('btnUpgradeVIP').addEventListener('click', async function() {
+        document.getElementById('btnUpgradeVIP').addEventListener('click', function() {
             if (state.vip) {
                 showToast('👑 Anda sudah VIP!');
                 return;
@@ -3217,7 +3120,8 @@
                 this.classList.add('active');
                 const page = this.dataset.page;
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(`page-${page}`).classList.add('active');
+                const target = document.getElementById(`page-${page}`);
+                if (target) target.classList.add('active');
             });
         });
 
@@ -3241,8 +3145,7 @@
         // === TOGGLE ADMIN MODE ===
         document.getElementById('toggleAdminMode').addEventListener('click', function() {
             state.isAdmin = !state.isAdmin;
-            const adminPanels = document.querySelectorAll('.admin-panel');
-            adminPanels.forEach(p => p.classList.toggle('show', state.isAdmin));
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.toggle('show', state.isAdmin));
             this.classList.toggle('active', state.isAdmin);
             this.innerHTML = state.isAdmin ? 
                 '<i class="fas fa-shield-alt"></i> Mode Admin Aktif' : 
@@ -3254,10 +3157,9 @@
             }
         });
 
-        // === LOAD ADMIN DATA ===
+        // ========== ADMIN FUNCTIONS ==========
         async function loadAdminData() {
-            // Load VIP requests
-            const { data: vipData } = await supabase
+            const { data: vipData } = await supabaseClient
                 .from('vip_requests')
                 .select('*, users(email)')
                 .eq('status', 'pending')
@@ -3279,8 +3181,7 @@
                 `).join('');
             }
 
-            // Load WD requests
-            const { data: wdData } = await supabase
+            const { data: wdData } = await supabaseClient
                 .from('withdrawals')
                 .select('*, users(email)')
                 .eq('status', 'pending')
@@ -3302,7 +3203,6 @@
                 `).join('');
             }
 
-            // Load mission settings
             document.getElementById('rewardYtInput').value = state.rewardPoints.yt;
             document.getElementById('rewardIklanInput').value = state.rewardPoints.iklan;
             document.getElementById('rewardScrollInput').value = state.rewardPoints.scroll;
@@ -3316,25 +3216,22 @@
             renderAdminMissions();
         }
 
-        // === ADMIN VIP APPROVE/REJECT ===
         window.approveVIP = async function(id) {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
             try {
-                await supabase
+                await supabaseClient
                     .from('vip_requests')
                     .update({ status: 'approved', approved_at: new Date().toISOString() })
                     .eq('id', id);
 
-                // Update user to VIP
-                const { data: req } = await supabase
+                const { data: req } = await supabaseClient
                     .from('vip_requests')
                     .select('user_id')
                     .eq('id', id)
                     .single();
 
                 if (req) {
-                    await supabase
+                    await supabaseClient
                         .from('users')
                         .update({ is_vip: true })
                         .eq('id', req.user_id);
@@ -3350,13 +3247,11 @@
 
         window.rejectVIP = async function(id) {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
             try {
-                await supabase
+                await supabaseClient
                     .from('vip_requests')
                     .update({ status: 'rejected' })
                     .eq('id', id);
-
                 showToast('❌ Request VIP ditolak');
                 addLog('❌ Admin reject VIP');
                 loadAdminData();
@@ -3365,16 +3260,13 @@
             }
         };
 
-        // === ADMIN WD APPROVE/REJECT ===
         window.approveWD = async function(id) {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
             try {
-                await supabase
+                await supabaseClient
                     .from('withdrawals')
                     .update({ status: 'approved' })
                     .eq('id', id);
-
                 showToast('✅ WD disetujui!');
                 addLog('✅ Admin approve WD');
                 loadAdminData();
@@ -3385,13 +3277,11 @@
 
         window.rejectWD = async function(id) {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
-            
             try {
-                await supabase
+                await supabaseClient
                     .from('withdrawals')
                     .update({ status: 'rejected' })
                     .eq('id', id);
-
                 showToast('❌ WD ditolak');
                 addLog('❌ Admin reject WD');
                 loadAdminData();
@@ -3400,7 +3290,6 @@
             }
         };
 
-        // === ADMIN SAVE REWARD POINTS ===
         document.getElementById('saveRewardBtn').addEventListener('click', async function() {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
             
@@ -3428,7 +3317,7 @@
                 ];
 
                 for (const update of updates) {
-                    await supabase
+                    await supabaseClient
                         .from('mission_settings')
                         .upsert(update, { onConflict: 'mission_type' });
                 }
@@ -3455,7 +3344,6 @@
             }
         });
 
-        // === ADMIN SAVE BONUS ===
         document.getElementById('saveBonusBtn').addEventListener('click', async function() {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
             
@@ -3476,7 +3364,7 @@
                 ];
 
                 for (const update of updates) {
-                    await supabase
+                    await supabaseClient
                         .from('bonus_settings')
                         .upsert(update, { onConflict: 'level' });
                 }
@@ -3496,7 +3384,6 @@
             }
         });
 
-        // === ADMIN SAVE LINKS ===
         document.getElementById('saveAdminLinks').addEventListener('click', function() {
             if (!state.isAdmin) return showToast('❌ Hanya admin!', false);
             
@@ -3520,7 +3407,6 @@
             addLog('🔧 Admin update semua link');
         });
 
-        // === ADMIN SOCIAL MISSIONS ===
         function renderAdminMissions() {
             const container = document.getElementById('adminMissionList');
             if (!container) return;
@@ -3610,12 +3496,12 @@
 
         // ========== CHECK SESSION ==========
         async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 currentUserId = session.user.id;
                 
-                const { data: userData } = await supabase
+                const { data: userData } = await supabaseClient
                     .from('users')
                     .select('*')
                     .eq('id', currentUserId)
