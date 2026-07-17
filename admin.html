@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ========== ALL STYLES SAME AS INDEX ========== */
         * {
             margin: 0;
             padding: 0;
@@ -65,7 +64,6 @@
             z-index: 1;
         }
 
-        /* ========== LOADING OVERLAY ========== */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -104,7 +102,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ========== LOGIN PAGE ========== */
         .login-page {
             min-height: 100vh;
             display: flex;
@@ -222,18 +219,65 @@
             font-weight: 600;
         }
 
-        .login-page .demo-badge {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #475569;
+        .demo-accounts {
+            margin-top: 16px;
             background: rgba(255, 255, 255, 0.03);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
         }
 
-        /* ========== MAIN APP ========== */
+        .demo-accounts .demo-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-accounts .demo-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .demo-accounts .demo-row:last-child {
+            border-bottom: none;
+        }
+
+        .demo-accounts .demo-row .role {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .demo-accounts .demo-row .email {
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .demo-accounts .demo-row .pass {
+            font-family: monospace;
+            font-size: 11px;
+            color: #34D399;
+        }
+
+        .demo-accounts .demo-click {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .demo-accounts .demo-click:hover {
+            color: var(--secondary);
+        }
+
         .app-main {
             display: none;
         }
@@ -242,7 +286,6 @@
             display: block;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -299,7 +342,6 @@
             transform: scale(0.95);
         }
 
-        /* Admin Badge */
         .admin-badge {
             background: var(--secondary);
             color: #0A0A0F;
@@ -310,7 +352,6 @@
             margin-left: 8px;
         }
 
-        /* Stat Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -347,7 +388,6 @@
             margin-top: 2px;
         }
 
-        /* ========== SLIDER CAROUSEL ========== */
         .slider-wrapper {
             background: linear-gradient(145deg, rgba(108, 60, 225, 0.08), rgba(251, 191, 36, 0.04));
             border-radius: 20px;
@@ -497,7 +537,6 @@
             border-color: var(--secondary);
         }
 
-        /* ========== FULLSCREEN VIDEO OVERLAY ========== */
         .fullscreen-overlay {
             position: fixed;
             top: 0;
@@ -614,7 +653,6 @@
             display: block;
         }
 
-        /* ========== SCROLL MISSION OVERLAY ========== */
         .scroll-overlay {
             position: fixed;
             top: 0;
@@ -729,7 +767,6 @@
             display: inline;
         }
 
-        /* ========== ADMIN PANELS ========== */
         .admin-section-title {
             color: var(--secondary);
             font-size: 18px;
@@ -880,7 +917,6 @@
             color: #EF4444;
         }
 
-        /* Mission Cards */
         .mission-grid {
             display: flex;
             flex-direction: column;
@@ -990,7 +1026,6 @@
             white-space: nowrap;
         }
 
-        /* VIP Card */
         .vip-card {
             background: linear-gradient(135deg, rgba(108, 60, 225, 0.2), rgba(139, 92, 246, 0.1));
             border-radius: 16px;
@@ -1052,7 +1087,6 @@
             color: #0A0A0F;
         }
 
-        /* Daily Claim */
         .daily-card {
             background: rgba(59, 130, 246, 0.1);
             border-radius: 16px;
@@ -1109,7 +1143,6 @@
             cursor: not-allowed;
         }
 
-        /* Referral Section */
         .ref-section {
             background: var(--bg-card);
             border-radius: 16px;
@@ -1197,7 +1230,6 @@
             margin-top: 2px;
         }
 
-        /* Downline Section */
         .downline-section {
             background: var(--bg-card);
             border-radius: 16px;
@@ -1300,7 +1332,6 @@
             display: block;
         }
 
-        /* Pages */
         .page {
             display: none;
             animation: fadeUp 0.3s ease;
@@ -1315,7 +1346,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 12px;
@@ -1384,7 +1414,6 @@
             border-radius: 50%;
         }
 
-        /* Log Page */
         .log-item {
             background: var(--bg-card);
             border-radius: 12px;
@@ -1402,7 +1431,6 @@
             font-size: 11px;
         }
 
-        /* WD Page */
         .wd-card {
             background: var(--bg-card);
             border-radius: 16px;
@@ -1465,7 +1493,6 @@
             cursor: not-allowed;
         }
 
-        /* Akun Page */
         .account-card {
             background: var(--bg-card);
             border-radius: 16px;
@@ -1520,7 +1547,6 @@
             transform: scale(0.97);
         }
 
-        /* Go to User */
         .go-user-link {
             display: block;
             text-align: center;
@@ -1543,7 +1569,6 @@
             margin-right: 6px;
         }
 
-        /* QRIS Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1644,48 +1669,20 @@
             transform: scale(0.95);
         }
 
-        /* Responsive */
         @media (max-width: 420px) {
-            .stats-grid {
-                gap: 6px;
-            }
-            .stat-card {
-                padding: 10px 8px;
-            }
-            .stat-card .stat-value {
-                font-size: 16px;
-            }
-            .mission-card {
-                padding: 12px 14px;
-            }
-            .login-page .login-box {
-                padding: 28px 20px;
-            }
-            .vip-card {
-                padding: 14px 16px;
-            }
-            .daily-card {
-                padding: 14px 16px;
-            }
-            .slider-slide p {
-                max-width: 100%;
-            }
-            .downline-item {
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .admin-mission-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .admin-mission-item .am-actions {
-                display: flex;
-                justify-content: flex-end;
-                gap: 4px;
-            }
+            .stats-grid { gap: 6px; }
+            .stat-card { padding: 10px 8px; }
+            .stat-card .stat-value { font-size: 16px; }
+            .mission-card { padding: 12px 14px; }
+            .login-page .login-box { padding: 28px 20px; }
+            .vip-card { padding: 14px 16px; }
+            .daily-card { padding: 14px 16px; }
+            .slider-slide p { max-width: 100%; }
+            .downline-item { flex-wrap: wrap; gap: 6px; }
+            .admin-mission-item { flex-direction: column; align-items: stretch; }
+            .admin-mission-item .am-actions { display: flex; justify-content: flex-end; gap: 4px; }
         }
 
-        /* Toast */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -1711,14 +1708,8 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -1753,10 +1744,23 @@
                 <i class="fas fa-arrow-right"></i> Masuk sebagai Admin
             </button>
 
+            <!-- Demo Account Info -->
+            <div class="demo-accounts">
+                <div class="demo-title">🔑 AKUN ADMIN</div>
+                <div class="demo-row">
+                    <span class="role">👑 Admin</span>
+                    <span class="email">admin@misi-nonton.com</span>
+                    <span class="pass">admin123</span>
+                </div>
+                <div class="demo-click" onclick="fillDemo('admin@misi-nonton.com','admin123')" style="color:var(--secondary);">
+                    ⚡ Klik untuk isi otomatis akun admin
+                </div>
+            </div>
+
             <div class="login-footer">
                 <p style="margin-bottom:4px;">Kembali ke <a href="index.html">Halaman User</a></p>
                 <div class="demo-badge" id="statusConnection">
-                    <i class="fas fa-circle" style="color:#EF4444;"></i> Belum terhubung
+                    <i class="fas fa-circle" style="color:#EF4444;"></i> Mengecek koneksi...
                 </div>
             </div>
         </div>
@@ -1836,7 +1840,6 @@
             <!-- PAGES -->
             <!-- DASHBOARD -->
             <div class="page active" id="page-dashboard">
-                <!-- ========== SLIDER CAROUSEL ========== -->
                 <div class="slider-wrapper">
                     <div class="slider-container" id="sliderContainer">
                         <div class="slider-slide active" data-index="0">
@@ -1876,18 +1879,13 @@
                             <span class="slide-badge">📅 1x Sehari</span>
                         </div>
                     </div>
-
-                    <!-- Dots -->
                     <div class="slider-controls" id="sliderDots"></div>
-
-                    <!-- Arrows -->
                     <div class="slider-arrows">
                         <button class="slider-arrow" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
                         <button class="slider-arrow" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
 
-                <!-- Missions - YT, Iklan, Scroll -->
                 <div class="mission-grid" id="dashboardMissions">
                     <div class="mission-card">
                         <div class="m-icon yt"><i class="fab fa-youtube"></i></div>
@@ -1898,7 +1896,6 @@
                         </div>
                         <button class="m-btn" data-mission="yt" id="ytBtn">Tonton</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon iklan"><i class="fas fa-ad"></i></div>
                         <div class="m-info">
@@ -1908,7 +1905,6 @@
                         </div>
                         <button class="m-btn" data-mission="iklan" id="iklanBtn">Tonton</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon scroll"><i class="fas fa-arrows-alt-v"></i></div>
                         <div class="m-info">
@@ -1920,7 +1916,6 @@
                     </div>
                 </div>
 
-                <!-- VIP Card -->
                 <div class="vip-card" id="vipCard">
                     <div class="vip-left">
                         <i class="fas fa-crown"></i>
@@ -1932,7 +1927,6 @@
                     <button class="vip-btn" id="btnUpgradeVIP">Upgrade via QRIS</button>
                 </div>
 
-                <!-- Daily Claim -->
                 <div class="daily-card">
                     <div class="daily-left">
                         <i class="fas fa-calendar-check"></i>
@@ -1944,7 +1938,6 @@
                     <button class="daily-btn" id="btnDailyClaim">Claim</button>
                 </div>
 
-                <!-- Referral -->
                 <div class="ref-section">
                     <div class="ref-header">
                         <h4><i class="fas fa-link"></i> Referral</h4>
@@ -2002,7 +1995,6 @@
                         </div>
                         <button class="m-btn social-btn" data-mission="sub">Subscribe</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon sosmed"><i class="fas fa-share-alt"></i></div>
                         <div class="m-info">
@@ -2012,7 +2004,6 @@
                         </div>
                         <button class="m-btn social-btn" data-mission="sosmed">Ikuti</button>
                     </div>
-
                     <div class="mission-card">
                         <div class="m-icon share"><i class="fas fa-share"></i></div>
                         <div class="m-info">
@@ -2112,7 +2103,6 @@
 
                 <!-- ========== ADMIN PANELS ========== -->
 
-                <!-- ADMIN SECTION TITLE -->
                 <div class="admin-section-title">
                     <i class="fas fa-shield-alt"></i> Panel Manajemen Admin
                 </div>
@@ -2265,7 +2255,7 @@
 
     <script>
         // ============================================================
-        //  🔑 GANTI DENGAN CREDENTIAL SUPABASE ANDA
+        //  🔑 CREDENTIAL SUPABASE
         // ============================================================
         const SUPABASE_URL = 'https://vpslolhtabvharyiaytb.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_sQoiv8Ggs4NRMpKRC0vr1A_KZ5xij1g';
@@ -2313,26 +2303,102 @@
         };
 
         // ============================================================
-        //  FUNGSI SUPABASE
+        //  FUNGSI UTILITY
         // ============================================================
 
-        // --- CHECK ADMIN ---
-        async function checkIfAdmin(userId) {
-            try {
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('is_admin')
-                    .eq('id', userId)
-                    .single();
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').classList.toggle('active', show);
+        }
 
-                if (error) return false;
-                return data?.is_admin || false;
-            } catch (e) {
+        function showToast(msg, isSuccess = true) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            toast.style.borderLeftColor = isSuccess ? '#34D399' : '#EF4444';
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = '0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function fillDemo(email, password) {
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            showToast('✅ Akun ' + email + ' siap login!');
+        }
+
+        // ============================================================
+        //  CEK KONEKSI SUPABASE
+        // ============================================================
+        async function checkConnection() {
+            try {
+                const { error } = await supabase.from('users').select('count', { count: 'exact', head: true });
+                if (error) throw error;
+                document.getElementById('statusConnection').innerHTML =
+                    '<i class="fas fa-circle" style="color:#34D399;"></i> Terhubung ke Supabase ✅';
+                console.log('✅ Koneksi Supabase berhasil!');
+                return true;
+            } catch (error) {
+                console.error('❌ Koneksi Supabase gagal:', error.message);
+                document.getElementById('statusConnection').innerHTML =
+                    '<i class="fas fa-circle" style="color:#EF4444;"></i> Gagal koneksi: ' + error.message;
                 return false;
             }
         }
 
-        // --- LOAD USER DATA ---
+        // ============================================================
+        //  LOGIN ADMIN
+        // ============================================================
+        async function loginAdmin(email, password) {
+            try {
+                showLoading(true);
+
+                const hashedPassword = btoa(password);
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', hashedPassword)
+                    .single();
+
+                if (error) throw error;
+                if (!data) throw new Error('Email atau password salah');
+
+                // Cek apakah admin
+                if (!data.is_admin) {
+                    throw new Error('Anda tidak memiliki akses admin!');
+                }
+
+                state.isLoggedIn = true;
+                state.userId = data.id;
+                state.isAdmin = true;
+                state.poin = data.poin || 0;
+                state.vip = data.vip || false;
+
+                // Update IP
+                const ip = '192.168.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255);
+                await supabase
+                    .from('users')
+                    .update({ ip_address: ip })
+                    .eq('id', data.id);
+
+                showLoading(false);
+                return { success: true, user: data };
+            } catch (error) {
+                console.error('Login admin error:', error);
+                showLoading(false);
+                showToast('❌ ' + error.message, false);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ============================================================
+        //  LOAD USER DATA
+        // ============================================================
         async function loadUserData(userId) {
             try {
                 showLoading(true);
@@ -2348,18 +2414,6 @@
                     return;
                 }
 
-                // Cek apakah admin
-                state.isAdmin = user.is_admin || false;
-                if (!state.isAdmin) {
-                    showLoading(false);
-                    showToast('❌ Anda tidak memiliki akses admin!', false);
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                    return;
-                }
-
-                state.userId = userId;
                 state.poin = user.poin || 0;
                 state.vip = user.vip || false;
 
@@ -2403,23 +2457,6 @@
                         if (b.level === 1) state.ref.bonusL1 = b.bonus_points;
                         if (b.level === 2) state.ref.bonusL2 = b.bonus_points;
                         if (b.level === 3) state.ref.bonusL3 = b.bonus_points;
-                    });
-                }
-
-                // Get admin settings
-                const { data: settings } = await supabase
-                    .from('admin_settings')
-                    .select('*');
-
-                if (settings) {
-                    settings.forEach(s => {
-                        if (s.key === 'yt_link') document.getElementById('adminYtLink').value = s.value;
-                        if (s.key === 'scroll_link') {
-                            state.scrollLink = s.value;
-                            document.getElementById('adminScrollLink').value = s.value;
-                        }
-                        if (s.key === 'sosmed_link') document.getElementById('adminSosmedLink').value = s.value;
-                        if (s.key === 'share_link') document.getElementById('adminShareLink').value = s.value;
                     });
                 }
 
@@ -2493,7 +2530,7 @@
                 document.getElementById('avatarUser').innerHTML = user.email.charAt(0).toUpperCase() +
                     '<span class="verify-badge"><i class="fas fa-check"></i></span>';
 
-                // Update admin panels
+                // Render admin panels
                 renderVIPRequests();
                 renderWDRequests();
                 renderAdminMissions();
@@ -2509,24 +2546,6 @@
         // ============================================================
         //  UI FUNCTIONS
         // ============================================================
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('active', show);
-        }
-
-        function showToast(msg, isSuccess = true) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = msg;
-            toast.style.borderLeftColor = isSuccess ? '#34D399' : '#EF4444';
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = '0.3s';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
         function updateUI() {
             document.getElementById('statPoin').textContent = state.poin;
             const todayMisi = Object.values(state.missions).filter(m => m.lastDone === new Date().toDateString()).length;
@@ -2667,20 +2686,17 @@
             showLoading(true);
 
             try {
-                // Update user VIP status
                 await supabase
                     .from('users')
                     .update({ vip: true })
                     .eq('id', userId);
 
-                // Update VIP request status
                 await supabase
                     .from('vip_requests')
                     .update({ status: 'approved' })
                     .eq('user_id', userId)
                     .eq('status', 'pending');
 
-                // Update mission max counts
                 await supabase
                     .from('missions')
                     .update({ max_count: 20 })
@@ -3493,7 +3509,7 @@
         //  EVENT LISTENERS
         // ============================================================
 
-        // --- LOGIN ---
+        // --- LOGIN ADMIN ---
         document.getElementById('btnLogin').addEventListener('click', async function() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -3503,46 +3519,14 @@
                 return;
             }
 
-            showLoading(true);
+            const result = await loginAdmin(email, password);
 
-            try {
-                const hashedPassword = btoa(password);
-
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('email', email)
-                    .eq('password', hashedPassword)
-                    .single();
-
-                if (error || !data) {
-                    showLoading(false);
-                    showToast('Email atau password salah!', false);
-                    return;
-                }
-
-                // Cek admin
-                if (!data.is_admin) {
-                    showLoading(false);
-                    showToast('❌ Anda tidak memiliki akses admin!', false);
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                    return;
-                }
-
-                state.isLoggedIn = true;
-                state.userId = data.id;
-
+            if (result.success) {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appMain').classList.add('active');
-
-                await loadUserData(data.id);
+                await loadUserData(result.user.id);
                 showToast('✅ Selamat datang Admin!');
                 initSlider();
-            } catch (error) {
-                showLoading(false);
-                showToast('Login gagal: ' + error.message, false);
             }
         });
 
@@ -3722,29 +3706,16 @@
         });
 
         // ============================================================
-        //  CHECK CONNECTION
-        // ============================================================
-        async function checkConnection() {
-            try {
-                const { error } = await supabase.from('users').select('count', { count: 'exact', head: true });
-                if (error) throw error;
-                document.getElementById('statusConnection').innerHTML =
-                    '<i class="fas fa-circle" style="color:#34D399;"></i> Terhubung ke Supabase';
-                console.log('✅ Koneksi Supabase berhasil!');
-            } catch (error) {
-                console.error('❌ Koneksi Supabase gagal:', error.message);
-                document.getElementById('statusConnection').innerHTML =
-                    '<i class="fas fa-circle" style="color:#EF4444;"></i> Gagal koneksi: ' + error.message;
-            }
-        }
-
-        // ============================================================
         //  INIT
         // ============================================================
+
+        // Cek koneksi Supabase
         checkConnection();
+
         console.log('🚀 MisiNonton Admin Panel siap!');
         console.log('📱 Koneksi Supabase: ' + SUPABASE_URL);
-        console.log('💡 Login menggunakan akun admin');
+        console.log('🔑 Admin: admin@misi-nonton.com / admin123');
+        console.log('💡 Login menggunakan akun admin di atas');
     </script>
 </body>
 </html>
