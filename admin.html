@@ -31,11 +31,11 @@
         .stat-card .stat-value { font-size: 18px; font-weight: 700; color: white; }
         .stat-card .stat-label { font-size: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Bottom Nav Admin */
-        .bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 460px; background: rgba(15,15,26,0.92); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 8px; z-index: 100; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 6px 8px; border-radius: 14px; transition: 0.3s; border: none; background: none; color: #475569; font-size: 9px; min-width: 40px; position: relative; }
-        .nav-item i { font-size: 18px; transition: 0.3s; }
-        .nav-item span { font-size: 8px; font-weight: 500; }
+        /* Bottom Nav Admin - 5 Menu */
+        .bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 460px; background: rgba(15,15,26,0.92); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 4px; z-index: 100; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 6px 4px; border-radius: 14px; transition: 0.3s; border: none; background: none; color: #475569; font-size: 8px; min-width: 36px; position: relative; flex: 1; }
+        .nav-item i { font-size: 16px; transition: 0.3s; }
+        .nav-item span { font-size: 7px; font-weight: 500; text-align: center; line-height: 1.2; }
         .nav-item.active { color: var(--secondary); background: rgba(251,191,36,0.08); }
         .nav-item.active i { transform: translateY(-2px); }
         .nav-item:active { transform: scale(0.9); }
@@ -99,6 +99,8 @@
             .stat-card { padding: 8px 6px; }
             .stat-card .stat-value { font-size: 14px; }
             .form-row { grid-template-columns: 1fr; }
+            .nav-item span { font-size: 6px; }
+            .nav-item i { font-size: 14px; }
         }
     </style>
 </head>
@@ -112,7 +114,7 @@
         <div class="header">
             <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
             <div class="header-actions">
-                <a href="index.html"><i class="fas fa-home"></i></a>
+                <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
             </div>
         </div>
 
@@ -140,8 +142,9 @@
             </div>
         </div>
 
-        <!-- PAGES -->
-        <!-- STATISTIK -->
+        <!-- ========== PAGES ========== -->
+
+        <!-- 1. STATISTIK -->
         <div class="page active" id="page-statistik">
             <div class="card">
                 <h4><i class="fas fa-chart-line"></i> Statistik User</h4>
@@ -167,8 +170,8 @@
             </div>
         </div>
 
-        <!-- VIP / DEPOSIT -->
-        <div class="page" id="page-vip">
+        <!-- 2. DEPOSIT / VIP -->
+        <div class="page" id="page-deposit">
             <div class="card">
                 <h4><i class="fas fa-crown"></i> Request Upgrade VIP</h4>
                 <div id="vipRequests">
@@ -177,68 +180,91 @@
             </div>
         </div>
 
-        <!-- WD -->
+        <!-- 3. WD -->
         <div class="page" id="page-wd">
             <div class="card">
-                <h4><i class="fas fa-wallet"></i> Request Penarikan</h4>
+                <h4><i class="fas fa-wallet"></i> Request Penarikan (WD)</h4>
                 <div id="wdRequests">
                     <div class="empty-state"><i class="fas fa-check-circle"></i><p>Tidak ada request WD</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- MISI / SETTING -->
-        <div class="page" id="page-misi">
+        <!-- 4. KELOLA MISI -->
+        <div class="page" id="page-kelolamisi">
+            <div class="card">
+                <h4><i class="fas fa-tasks"></i> Kelola Misi Sosial</h4>
+                <div id="adminMissionList"></div>
+                <div style="margin-top:12px;">
+                    <div class="form-row">
+                        <div class="form-group"><label>Nama Misi</label><input type="text" id="newMissionName" placeholder="Nama misi"></div>
+                        <div class="form-group"><label>Poin</label><input type="number" id="newMissionReward" placeholder="Poin"></div>
+                    </div>
+                    <div class="form-group"><label>Link</label><input type="text" id="newMissionLink" placeholder="Link misi"></div>
+                    <button class="btn-save success" id="addMissionBtn"><i class="fas fa-plus"></i> Tambah Misi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. SETTING -->
+        <div class="page" id="page-setting">
             <div class="card">
                 <h4><i class="fas fa-edit"></i> Setting Poin Misi</h4>
-                <div class="form-group"><label>YouTube</label><input type="number" id="rewardYtInput" value="10"></div>
-                <div class="form-group"><label>Iklan</label><input type="number" id="rewardIklanInput" value="5"></div>
-                <div class="form-group"><label>Scroll Website</label><input type="number" id="rewardScrollInput" value="8"></div>
+                <div class="form-group"><label>YouTube (default: 10)</label><input type="number" id="rewardYtInput" value="10"></div>
+                <div class="form-group"><label>Iklan (default: 5)</label><input type="number" id="rewardIklanInput" value="5"></div>
+                <div class="form-group"><label>Scroll Website (default: 8)</label><input type="number" id="rewardScrollInput" value="8"></div>
                 <div class="form-row">
-                    <div class="form-group"><label>Subscribe</label><input type="number" id="rewardSubInput" value="15"></div>
-                    <div class="form-group"><label>Follow Sosmed</label><input type="number" id="rewardSosmedInput" value="10"></div>
+                    <div class="form-group"><label>Subscribe (default: 15)</label><input type="number" id="rewardSubInput" value="15"></div>
+                    <div class="form-group"><label>Follow Sosmed (default: 10)</label><input type="number" id="rewardSosmedInput" value="10"></div>
                 </div>
-                <div class="form-group"><label>Share</label><input type="number" id="rewardShareInput" value="20"></div>
+                <div class="form-group"><label>Share (default: 20)</label><input type="number" id="rewardShareInput" value="20"></div>
                 <button class="btn-save warning" id="saveRewardBtn"><i class="fas fa-save"></i> Simpan Poin</button>
             </div>
 
             <div class="card">
-                <h4><i class="fas fa-coins"></i> Bonus Referral</h4>
+                <h4><i class="fas fa-coins"></i> Setting Bonus Referral</h4>
                 <div class="form-row">
-                    <div class="form-group"><label>Level 1</label><input type="number" id="bonusL1Input" value="5"></div>
-                    <div class="form-group"><label>Level 2</label><input type="number" id="bonusL2Input" value="3"></div>
-                    <div class="form-group"><label>Level 3</label><input type="number" id="bonusL3Input" value="1"></div>
+                    <div class="form-group"><label>Level 1 (2 arah)</label><input type="number" id="bonusL1Input" value="5"></div>
+                    <div class="form-group"><label>Level 2 (1 arah)</label><input type="number" id="bonusL2Input" value="3"></div>
+                    <div class="form-group"><label>Level 3 (1 arah)</label><input type="number" id="bonusL3Input" value="1"></div>
                 </div>
                 <button class="btn-save success" id="saveBonusBtn"><i class="fas fa-save"></i> Simpan Bonus</button>
             </div>
 
             <div class="card">
                 <h4><i class="fas fa-link"></i> Link Settings</h4>
-                <div class="form-group"><label>YouTube</label><input type="text" id="adminYtLink" value="https://www.youtube.com/embed/dQw4w9WgXcQ"></div>
-                <div class="form-group"><label>Scroll</label><input type="text" id="adminScrollLink" value="https://misi-poin.com/scroll"></div>
-                <div class="form-group"><label>Sosmed</label><input type="text" id="adminSosmedLink" value="https://instagram.com"></div>
-                <div class="form-group"><label>Share</label><input type="text" id="adminShareLink" value="https://twitter.com"></div>
+                <div class="form-group"><label>Link YouTube (Fullscreen)</label><input type="text" id="adminYtLink" value="https://www.youtube.com/embed/dQw4w9WgXcQ"></div>
+                <div class="form-group"><label>Link Website Scroll</label><input type="text" id="adminScrollLink" value="https://misi-poin.com/scroll"></div>
+                <div class="form-group"><label>Link Sosmed (Follow)</label><input type="text" id="adminSosmedLink" value="https://instagram.com"></div>
+                <div class="form-group"><label>Link Share</label><input type="text" id="adminShareLink" value="https://twitter.com"></div>
                 <button class="btn-save" id="saveAdminLinks"><i class="fas fa-save"></i> Simpan Link</button>
-            </div>
-
-            <div class="card">
-                <h4><i class="fas fa-list"></i> Kelola Misi Sosial</h4>
-                <div id="adminMissionList"></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Nama</label><input type="text" id="newMissionName" placeholder="Nama misi"></div>
-                    <div class="form-group"><label>Poin</label><input type="number" id="newMissionReward" placeholder="Poin"></div>
-                </div>
-                <div class="form-group"><label>Link</label><input type="text" id="newMissionLink" placeholder="Link misi"></div>
-                <button class="btn-save success" id="addMissionBtn"><i class="fas fa-plus"></i> Tambah Misi</button>
             </div>
         </div>
 
-        <!-- Bottom Navigation Admin -->
+        <!-- Bottom Navigation Admin - 5 Menu -->
         <div class="bottom-nav">
-            <button class="nav-item active" data-page="statistik"><i class="fas fa-chart-bar"></i><span>Statistik</span></button>
-            <button class="nav-item" data-page="vip"><i class="fas fa-crown"></i><span>VIP</span><span class="badge-dot" id="vipBadge"></span></button>
-            <button class="nav-item" data-page="wd"><i class="fas fa-wallet"></i><span>WD</span><span class="badge-dot" id="wdBadge"></span></button>
-            <button class="nav-item" data-page="misi"><i class="fas fa-cog"></i><span>Misi</span></button>
+            <button class="nav-item active" data-page="statistik">
+                <i class="fas fa-chart-bar"></i>
+                <span>Statistik</span>
+            </button>
+            <button class="nav-item" data-page="deposit">
+                <i class="fas fa-crown"></i>
+                <span>Deposit</span>
+                <span class="badge-dot" id="vipBadge"></span>
+            </button>
+            <button class="nav-item" data-page="wd">
+                <i class="fas fa-wallet"></i>
+                <span>WD</span>
+                <span class="badge-dot" id="wdBadge"></span>
+            </button>
+            <button class="nav-item" data-page="kelolamisi">
+                <i class="fas fa-tasks"></i>
+                <span>Kelola Misi</span>
+            </button>
+            <button class="nav-item" data-page="setting">
+                <i class="fas fa-cog"></i>
+                <span>Setting</span>
+            </button>
         </div>
     </div>
 
@@ -345,7 +371,6 @@
                 document.getElementById('statTotalPoin').textContent = poin.toLocaleString();
                 document.getElementById('statPending').textContent = pending;
 
-                // Badge notifications
                 document.getElementById('vipBadge').style.display = (vipReqs?.length || 0) > 0 ? 'block' : 'none';
                 document.getElementById('wdBadge').style.display = (wdReqs?.length || 0) > 0 ? 'block' : 'none';
             } catch (error) { console.error('Load stats error:', error); }
@@ -647,6 +672,7 @@
         // ========== INIT ==========
         checkAuth();
         console.log('🚀 Admin Dashboard connected!');
+        console.log('📋 Bottom Nav: Statistik | Deposit | WD | Kelola Misi | Setting');
     </script>
 </body>
 </html>
