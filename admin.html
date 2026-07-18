@@ -16,7 +16,7 @@
 
         .container { max-width: 480px; margin: 0 auto; padding: 0 16px 90px 16px; position: relative; z-index: 1; }
 
-        /* ========== HEADER DENGAN LOGOUT ========== */
+        /* Header dengan Logout */
         .header { 
             display: flex; 
             justify-content: space-between; 
@@ -37,7 +37,6 @@
             margin-right: 8px; 
         }
         
-        /* Header Right - Tombol Beranda & Logout */
         .header-right {
             display: flex;
             align-items: center;
@@ -73,14 +72,14 @@
             font-size: 14px;
         }
 
-        /* Stats Admin */
+        /* Stats */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
         .stat-card { background: var(--bg-card); border-radius: 12px; padding: 12px 8px; text-align: center; border: 1px solid var(--border-color); }
         .stat-card .stat-icon { font-size: 18px; color: var(--secondary); margin-bottom: 2px; }
         .stat-card .stat-value { font-size: 18px; font-weight: 700; color: white; }
         .stat-card .stat-label { font-size: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Bottom Nav Admin - 5 Menu */
+        /* Bottom Nav - 5 Menu */
         .bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 460px; background: rgba(15,15,26,0.92); backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 4px; z-index: 100; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 6px 4px; border-radius: 14px; transition: 0.3s; border: none; background: none; color: #475569; font-size: 8px; min-width: 36px; position: relative; flex: 1; }
         .nav-item i { font-size: 16px; transition: 0.3s; }
@@ -161,11 +160,11 @@
     <div class="glow-orb glow-orb-2"></div>
 
     <div class="container">
-        <!-- ========== HEADER DENGAN LOGOUT DI KANAN ATAS ========== -->
+        <!-- Header dengan Logout -->
         <div class="header">
             <div class="logo"><i class="fas fa-shield-alt"></i> Admin Panel</div>
             <div class="header-right">
-                <a href="index.html" class="header-btn">
+                <a href="/" class="header-btn">
                     <i class="fas fa-home"></i>
                     <span>Beranda</span>
                 </a>
@@ -200,8 +199,7 @@
             </div>
         </div>
 
-        <!-- ========== PAGES ========== -->
-
+        <!-- PAGES -->
         <!-- 1. STATISTIK -->
         <div class="page active" id="page-statistik">
             <div class="card">
@@ -337,6 +335,7 @@
 
         let currentUser = null;
         let currentUserId = null;
+        let userRole = 'user';
 
         const rewardPoints = { yt: 10, iklan: 5, scroll: 8, sub: 15, sosmed: 10, share: 20 };
         let socialMissions = [
@@ -378,7 +377,7 @@
                 await supabaseClient.auth.signOut();
                 showToast('🚪 Logout berhasil!');
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = '/';
                 }, 500);
             } catch (error) {
                 showToast('❌ Gagal logout', false);
@@ -390,7 +389,7 @@
         async function checkAuth() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) {
-                window.location.href = 'index.html';
+                window.location.href = '/';
                 return;
             }
 
@@ -400,12 +399,13 @@
             const { data: userData, error } = await supabaseClient
                 .from('users').select('*').eq('id', currentUserId).single();
 
-            if (error || userData.email !== 'admin@misiononton.com' || !userData.is_vip || !userData.is_verified) {
+            if (error || userData.role !== 'admin' || !userData.is_vip || !userData.is_verified) {
                 showToast('❌ Akses ditolak! Hanya admin.', false);
-                setTimeout(() => window.location.href = 'index.html', 1500);
+                setTimeout(() => window.location.href = '/', 1500);
                 return;
             }
 
+            userRole = userData.role;
             await loadAllData();
         }
 
@@ -471,6 +471,7 @@
                                 ${u.username || '-'} • Poin: ${u.poin || 0}
                                 <span class="badge ${u.is_vip ? 'badge-success' : 'badge-warning'}">${u.is_vip ? '👑 VIP' : 'Free'}</span>
                                 <span class="badge ${u.is_verified ? 'badge-success' : 'badge-danger'}">${u.is_verified ? '✅' : '⏳'}</span>
+                                <span class="badge ${u.role === 'admin' ? 'badge-info' : ''}">${u.role || 'user'}</span>
                             </div>
                         </div>
                         <div class="item-actions">
@@ -739,6 +740,7 @@
         checkAuth();
         console.log('🚀 Admin Dashboard connected!');
         console.log('📋 Bottom Nav: Statistik | Deposit | WD | Kelola Misi | Setting');
+        console.log('👤 Role: admin');
         console.log('👤 Klik Logout di kanan atas untuk keluar');
     </script>
 </body>
