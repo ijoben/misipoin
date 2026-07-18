@@ -199,6 +199,11 @@
         .account-card .field .value.verified { color: #34D399; }
         .account-card .field .value.unverified { color: #F59E0B; }
 
+        .admin-link-btn { background: rgba(108,60,225,0.15); border: 1px solid rgba(108,60,225,0.3); border-radius: 12px; padding: 12px 16px; color: var(--secondary); cursor: pointer; transition: 0.3s; width: 100%; font-size: 14px; margin-top: 8px; display: none; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+        .admin-link-btn.visible { display: flex; }
+        .admin-link-btn:hover { background: rgba(108,60,225,0.25); }
+        .admin-link-btn i { font-size: 18px; }
+
         .btn-logout { width: 100%; padding: 14px; border-radius: 14px; border: none; background: rgba(239,68,68,0.15); color: #EF4444; font-weight: 600; cursor: pointer; transition: 0.3s; border: 1px solid rgba(239,68,68,0.2); }
         .btn-logout:active { transform: scale(0.97); }
 
@@ -355,7 +360,6 @@
 
             <!-- DASHBOARD -->
             <div class="page active" id="page-dashboard">
-                <!-- Slider -->
                 <div class="slider-wrapper">
                     <div class="slider-container" id="sliderContainer">
                         <div class="slider-slide active" data-index="0">
@@ -402,7 +406,6 @@
                     </div>
                 </div>
 
-                <!-- Missions -->
                 <div class="mission-grid" id="dashboardMissions">
                     <div class="mission-card">
                         <div class="m-icon yt"><i class="fab fa-youtube"></i></div>
@@ -433,7 +436,6 @@
                     </div>
                 </div>
 
-                <!-- VIP Card -->
                 <div class="vip-card" id="vipCard">
                     <div class="vip-left">
                         <i class="fas fa-crown"></i>
@@ -445,7 +447,6 @@
                     <button class="vip-btn" id="btnUpgradeVIP">Upgrade 10K</button>
                 </div>
 
-                <!-- Daily Claim -->
                 <div class="daily-card">
                     <div class="daily-left">
                         <i class="fas fa-calendar-check"></i>
@@ -457,7 +458,6 @@
                     <button class="daily-btn" id="btnDailyClaim">Claim</button>
                 </div>
 
-                <!-- Referral -->
                 <div class="ref-section">
                     <div class="ref-header">
                         <h4><i class="fas fa-link"></i> Referral</h4>
@@ -550,7 +550,13 @@
                     <div class="field"><span class="label"><i class="fas fa-crown"></i> VIP</span><span class="value" id="akunVip">Tidak Aktif</span></div>
                     <div class="field"><span class="label"><i class="fas fa-star"></i> Total Poin</span><span class="value" id="akunPoin">0</span></div>
                     <div class="field"><span class="label"><i class="fas fa-link"></i> Kode Referral</span><span class="value" id="akunRefCode">-</span></div>
+                    <div class="field"><span class="label"><i class="fas fa-shield-alt"></i> Role</span><span class="value" id="userRole">user</span></div>
                 </div>
+
+                <a href="/admin" class="admin-link-btn" id="adminLinkBtn">
+                    <i class="fas fa-shield-alt"></i> Dashboard Admin
+                    <i class="fas fa-arrow-right"></i>
+                </a>
 
                 <button class="btn-logout" id="btnLogout" style="margin-top:12px;">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -635,6 +641,7 @@
 
         let currentUser = null;
         let currentUserId = null;
+        let userRole = 'user';
 
         // ========== DOM REFS ==========
         const loginPage = document.getElementById('loginPage');
@@ -756,7 +763,7 @@
 
                 if (userError && userError.code === 'PGRST116') {
                     const { data: newUser, error: insertError } = await supabaseClient
-                        .from('users').insert([{ id: currentUserId, email: email, username: email.split('@')[0], is_verified: false, is_vip: false, poin: 0 }])
+                        .from('users').insert([{ id: currentUserId, email: email, username: email.split('@')[0], is_verified: false, is_vip: false, poin: 0, role: 'user' }])
                         .select().single();
                     if (insertError) throw insertError;
                     userData = newUser;
@@ -765,11 +772,13 @@
                 state.poin = userData.poin || 0;
                 state.vip = userData.is_vip || false;
                 state.isVerified = userData.is_verified || false;
-                state.isAdmin = userData.email === 'admin@misiononton.com' && userData.is_vip && userData.is_verified;
+                userRole = userData.role || 'user';
+                state.isAdmin = userRole === 'admin';
 
                 document.getElementById('userUsername').textContent = userData.username || '-';
                 document.getElementById('userEmail').textContent = userData.email;
                 document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
+                document.getElementById('userRole').textContent = userRole;
                 document.getElementById('refLinkText').textContent = `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
 
                 const today = new Date().toISOString().split('T')[0];
@@ -782,11 +791,11 @@
                 await loadMissionSettings();
                 await loadBonusSettings();
 
-                // ✅ CEK ADMIN - Auto redirect ke admin.html
+                // ✅ CEK ADMIN - Auto redirect
                 if (state.isAdmin) {
                     showToast('👑 Selamat datang Admin!', true);
                     setTimeout(() => {
-                        window.location.href = 'admin.html';
+                        window.location.href = '/admin';
                     }, 1000);
                     return true;
                 }
@@ -818,7 +827,7 @@
 
                 if (authData.user) {
                     const { error: insertError } = await supabaseClient
-                        .from('users').insert([{ id: authData.user.id, email: email, username: username || email.split('@')[0], is_verified: false, is_vip: false, poin: 0 }]);
+                        .from('users').insert([{ id: authData.user.id, email: email, username: username || email.split('@')[0], is_verified: false, is_vip: false, poin: 0, role: 'user' }]);
 
                     if (insertError) {
                         if (insertError.message.includes('row-level security')) {
@@ -971,6 +980,7 @@
                 currentUser = null;
                 currentUserId = null;
                 state.isAdmin = false;
+                userRole = 'user';
                 appMain.classList.remove('active');
                 loginPage.style.display = 'flex';
                 showToast('🚪 Logout berhasil');
@@ -989,6 +999,19 @@
             document.getElementById('refL1').textContent = state.ref.l1;
             document.getElementById('refL2').textContent = state.ref.l2;
             document.getElementById('refL3').textContent = state.ref.l3;
+
+            // ========== ADMIN LINK - HANYA UNTUK ROLE ADMIN ==========
+            const adminLink = document.getElementById('adminLinkBtn');
+            const isAdminUser = userRole === 'admin';
+            
+            if (isAdminUser) {
+                adminLink.style.display = 'flex';
+                adminLink.classList.add('visible');
+            } else {
+                adminLink.style.display = 'none';
+                adminLink.classList.remove('visible');
+                state.isAdmin = false;
+            }
 
             const vipBtn = document.getElementById('btnUpgradeVIP');
             if (state.vip) {
@@ -1017,6 +1040,7 @@
 
             document.getElementById('userStatus').textContent = state.isVerified ? '✅ Terverifikasi' : '⏳ Belum Verifikasi';
             document.getElementById('userStatus').className = state.isVerified ? 'value verified' : 'value unverified';
+            document.getElementById('userRole').textContent = userRole;
 
             updateQuotaDisplay();
             renderSocialMissions();
@@ -1373,17 +1397,19 @@
                     state.poin = userData.poin || 0;
                     state.vip = userData.is_vip || false;
                     state.isVerified = userData.is_verified || false;
-                    state.isAdmin = userData.email === 'admin@misiononton.com' && userData.is_vip && userData.is_verified;
+                    userRole = userData.role || 'user';
+                    state.isAdmin = userRole === 'admin';
                     
                     // ✅ AUTO REDIRECT ADMIN
                     if (state.isAdmin) {
-                        window.location.href = 'admin.html';
+                        window.location.href = '/admin';
                         return;
                     }
                     
                     document.getElementById('userUsername').textContent = userData.username || '-';
                     document.getElementById('userEmail').textContent = userData.email;
                     document.getElementById('akunRefCode').textContent = userData.referral_code || '-';
+                    document.getElementById('userRole').textContent = userRole;
                     document.getElementById('refLinkText').textContent = `https://misi-poin.com/ref/${userData.referral_code || 'ABC123'}`;
                 }
                 loginPage.style.display = 'none';
@@ -1407,7 +1433,8 @@
 
         console.log('🚀 MisiPoin Pro connected to Supabase!');
         console.log('📊 Database: ' + supabaseUrl);
-        console.log('👑 Admin akan auto redirect ke admin.html');
+        console.log('👑 Admin: admin@misipoin.com / admin123');
+        console.log('🔑 Role system aktif!');
     </script>
 </body>
 </html>
